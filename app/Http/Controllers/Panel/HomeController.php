@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -11,4 +10,10 @@ class HomeController extends Controller
     {
         return view('panel.pages.home');
     }
+
+    public function loginGet()
+    {
+        return view('panel.pages.login');
+    }
+
 }

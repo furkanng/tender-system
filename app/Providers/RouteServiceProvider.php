@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::prefix("/")->middleware("web")->group(base_path("routes/web/front.php"));
             Route::prefix("kullanici")->middleware("web")->group(base_path("routes/web/user.php"));
-            Route::prefix("panel")->middleware("web")->group(base_path("routes/web/panel.php"));
+            Route::prefix("admin")->middleware("web")->group(base_path("routes/web/panel.php"));
         });
     }
 }

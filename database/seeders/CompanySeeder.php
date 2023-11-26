@@ -18,6 +18,7 @@ class CompanySeeder extends Seeder
                 ['id' => 1, 'name' => "Autogong", 'email' => 'vatanoto', "password" => "513545", "created_at" => now(), "updated_at" => now()],
                 ['id' => 2, 'name' => "Otopert", 'email' => 'karaca353535@hotmail.com', "password" => "1100", "created_at" => now(), "updated_at" => now()],
                 ['id' => 3, 'name' => "PertBorsasi", 'email' => 'vatanotomotiv', "password" => "1536", "created_at" => now(), "updated_at" => now()],
+                ['id' => 99, 'name' => "Oto İhale Sistemi", 'email' => null, "password" => null, "created_at" => now(), "updated_at" => now()],
             ];
 
         Company::query()->insert($defaultData);
