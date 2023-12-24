@@ -12,7 +12,6 @@ class Tender extends Model
     protected $table = "tenders";
     protected $fillable = [
         "company_id",
-        "tender_no",
         "name",
         "brand",
         "model",

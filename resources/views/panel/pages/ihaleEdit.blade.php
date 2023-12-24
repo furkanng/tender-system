@@ -46,34 +46,92 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                <div class="row">
-                    <div class="col"><h5 class="card-header">Araç Görselleri</h5></div>
-                    <div class="col" style="display: flex; justify-content: end"><h5 class="card-header">
-                            ({{count(json_decode($tenders->images))}}) Tane</h5></div>
-                </div>
-
-
-                <div class="card-body">
-                    @php $imageCounter = 0 @endphp
-                    <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        @foreach(json_decode($tenders->images) as $image)
-                            @if($imageCounter < 9)
-                                <a href={{ $image }}>
-                                    <img
-                                        src="{{ $image }}"
-                                        alt="user-avatar"
-                                        class="d-block rounded"
-                                        height="100"
-                                        width="100"
-                                        id="uploadedAvatar"
-                                    />
-                                </a>
-                                @php $imageCounter++ @endphp
+                <div class="row mb-5">
+                    <div class="col-3"><h5 class="card-header">Araç Görselleri</h5></div>
+                    <div class="col-6">
+                        @if($tenders->company_id == 99)
+                            <form method="POST" action="{{route("panel.tender.images.update",["id" => $tenders->id])}}"
+                                  enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <label for="formFileMultiple" class="d-flex justify-content-center form-label mx-2">Çoklu
+                                    Resim Yükle</label>
+                                <div class="d-flex flex-row">
+                                    <input class="form-control" type="file" id="formFileMultiple" name="images[]"
+                                           multiple/>
+                                    <button type="submit" class="btn btn-outline-success me-2 mx-2">Ekle</button>
+                                </div>
+                            </form>
+                        @endif</div>
+                    <div class="col-3" style="display: flex; justify-content: end">
+                        <h5 class="card-header">
+                            @if($tenders->company_id !== 99)
+                                {{isset($tenders->images) ? count(json_decode($tenders->images)): 0}} Tane
+                            @else
+                                @php $images =\App\Models\TenderImages::where("tender_id",$tenders->id)->get() @endphp
+                                {{isset($images) ? count($images): 0}} Tane
                             @endif
-                        @endforeach
+                        </h5>
                     </div>
                 </div>
 
+                @if(isset($tenders->images) && $tenders->company_id !== 99)
+                    <div class="card-body">
+                        @php $imageCounter = 0 @endphp
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            @foreach(json_decode($tenders->images) as $image)
+                                @if($imageCounter < 9)
+                                    <a target="_blank" href={{ $image }}>
+                                        <img
+                                            src="{{ $image }}"
+                                            alt="images"
+                                            class="d-block rounded"
+                                            height="100"
+                                            width="100"
+                                            id="images"
+                                        />
+                                    </a>
+                                    @php $imageCounter++ @endphp
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="card-body">
+                        @php $images = \App\Models\TenderImages::where("tender_id", $tenders->id)->get() @endphp
+                        @php $imageCounter = 0 @endphp
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            @foreach($images as $image)
+                                @if($imageCounter < 9)
+                                    <div class="position-relative">
+                                        <a target="_blank" href="{{ $image->url }}">
+                                            <img
+                                                src="{{ $image->url }}"
+                                                alt="images"
+                                                class="d-block rounded"
+                                                height="100"
+                                                width="100"
+                                                id="images"
+                                            />
+                                        </a>
+                                        <!-- Resim Silme Butonu -->
+                                        <form action="{{route("panel.tender.images.destroy",["id" => $image->id])}}"
+                                              method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm position-absolute top-0 end-0">
+                                                Sil
+                                            </button>
+                                        </form>
+                                    </div>
+                                    @php $imageCounter++ @endphp
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
+                @endif
                 <hr class="my-0"/>
                 <div class="card-body">
                     <form method="POST"
@@ -81,6 +139,17 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tender_no" class="form-label">İhale No</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="tender_no"
+                                    name="tender_no"
+                                    value="{{($tenders->tender_no)}}"
+                                    disabled
+                                />
+                            </div>
                             <div class="mb-3 col-md-6">
                                 <label for="name" class="form-label">İhale Adı</label>
                                 <input
@@ -204,20 +273,31 @@
                                     class="form-control"
                                     id="tender_type"
                                     name="tender_type"
-                                    value="{{$tenders->tender_type}}"
-                                    disabled
+                                    value="{{strtoupper($tenders->tender_type)}}"
                                 />
                             </div>
                             <div class="mb-3 col-md-6">
-                                <label for="car_type" class="form-label">Oluşturulma Tarihi</label>
+                                <label for="closed_date" class="form-label">Kapanış Tarihi</label>
                                 <input
-                                    type="text"
+                                    type="datetime-local"
                                     class="form-control"
-                                    id="car_type"
-                                    name="car_type"
-                                    value="{{$tenders->created_at}}"
-                                    disabled
+                                    id="closed_date"
+                                    name="closed_date"
+                                    value="{{$tenders->closed_date}}"
+                                    @if($tenders->company_id !== 99) disabled @endif
                                 />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <div class="form-check form-switch mt-4">
+                                    <input style="width: 50px; height: 30px" name="status" class="form-check-input"
+                                           type="checkbox"
+                                           id="flexSwitchCheckChecked"
+                                           value="{{$tenders->status}}"
+                                           @if($tenders->status == 1) checked @endif
+                                    />
+                                    <label class="form-check-label mx-2" for="flexSwitchCheckChecked"
+                                    >Durum</label>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-2">
@@ -232,8 +312,81 @@
                     <div class="mb-3 col-md-6">
                         <div class="card">
                             <div class="card-body">
+                                @if($tenders->company_id !== 99)
+                                    <p class="card-text">
+                                        {{$tenders->serviceName . " ".$tenders->servicePhone." ". $tenders->address . " ". $tenders->city . " ". $tenders->district}}
+                                    </p>
+                                @else
+                                    <form method="POST"
+                                          action="{{ route("panel.tender.update", ['id' => $tenders->id]) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="serviceName" class="form-label">Servis Adı</label>
+                                                <input
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="serviceName"
+                                                    name="serviceName"
+                                                    value="{{$tenders->serviceName}}"
+                                                />
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="address" class="form-label">Adres</label>
+                                                <input
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="address"
+                                                    name="address"
+                                                    value="{{$tenders->address}}"
+                                                />
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="servicePhone" class="form-label">Servis Telefon</label>
+                                                <input
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="servicePhone"
+                                                    name="servicePhone"
+                                                    value="{{$tenders->servicePhone}}"
+                                                />
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="city" class="form-label">Şehir</label>
+                                                <input
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="city"
+                                                    name="city"
+                                                    value="{{$tenders->city}}"
+                                                />
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="district" class="form-label">İlçe</label>
+                                                <input
+                                                    class="form-control"
+                                                    type="text"
+                                                    id="district"
+                                                    name="district"
+                                                    value="{{$tenders->district}}"
+                                                />
+                                            </div>
+                                            <div class="mt-2">
+                                                <button type="submit" class="btn btn-primary me-2">Kaydet</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Hasar Bilgileri</h4>
                                 <p class="card-text">
-                                    {{$tenders->serviceName . " ".$tenders->servicePhone." ". $tenders->address . " ". $tenders->city . " ". $tenders->district}}
+                                    {{$tenders->damages !== "" ? $tenders->damages : "Hasar Kayıtı Bulunamamıştır"}}
                                 </p>
                             </div>
                         </div>
@@ -242,7 +395,12 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="card-text">
-                                    {{$tenders->damages}}
+                                    Oluşturulma tarihi :
+                                    {{$tenders->created_at}}
+                                </p>
+                                <p class="card-text">
+                                    Güncellenme tarihi :
+                                    {{$tenders->updated_at}}
                                 </p>
                             </div>
                         </div>

@@ -11,10 +11,28 @@ class TenderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tenders = Tender::query()->orderBy("created_at", "DESC")->paginate(20);
-        return view('panel.pages.ihale', compact("tenders"));
+        $filter = $request->input('filter');
+
+        $query = $filter
+            ? Tender::where('tender_no', 'LIKE', '%' . $filter . '%')
+                ->orWhere('name', 'LIKE', '%' . $filter . '%')
+                ->orWhere('brand', 'LIKE', '%' . $filter . '%')
+                ->orWhere('model', 'LIKE', '%' . $filter . '%')
+                ->orWhere('year', 'LIKE', '%' . $filter . '%')
+                ->orWhere('plate', 'LIKE', '%' . $filter . '%')
+                ->orWhere('fuel_type', 'LIKE', '%' . $filter . '%')
+                ->orWhere('sase_no', 'LIKE', '%' . $filter . '%')
+                ->orWhere('servicePhone', 'LIKE', '%' . $filter . '%')
+                ->orWhere('city', 'LIKE', '%' . $filter . '%')
+                ->orWhere('district', 'LIKE', '%' . $filter . '%')
+                ->orderBy("created_at", "DESC")
+            : Tender::orderBy("created_at", "DESC");
+
+        $tenders = $query->paginate(20);
+
+        return view('panel.pages.ihale', compact('tenders'));
     }
 
     /**
@@ -31,7 +49,7 @@ class TenderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "tender_no" => "required",
+            "tender_no" => "required",//todo exist
             "tender_type" => "required",
             "brand" => "required",
             "name" => "required",
@@ -67,8 +85,17 @@ class TenderController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            "tender_type" => "sometimes|required",
+            "brand" => "sometimes|required",
+            "name" => "sometimes|required",
+        ]);
         $model = Tender::findOrFail($id);
-        $model->fill($request->all())->save();
+        $model->mergeFillable([
+            "status", "tender_no"
+        ])->fill([
+            'status' => $request->has('status') ? 1 : 0,
+        ])->fill($request->except(["status"]))->save();
         return redirect()->route('panel.tender.index')->with('success', 'İşlem Başarılı');
     }
 

@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get("test", function (Request $request) {
-    return (new \App\Service\Autogong\AutogongService())->getTender();
+    return (new \App\Service\Otopert\OtopertService())->getArchiveData();
 
 });

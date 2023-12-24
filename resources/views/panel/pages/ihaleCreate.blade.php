@@ -5,26 +5,23 @@
     <div class="nav-align-top mb-4">
         <div class="tab-content">
             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                <h5 class="card-header">Araç Görselleri</h5>
-                <div class="card-body">
-                    <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        <img
-                            src="#"
-                            alt="user-avatar"
-                            class="d-block rounded"
-                            height="100"
-                            width="100"
-                            id="uploadedAvatar"
-                        />
-                    </div>
-                </div>
-
-                <hr class="my-0"/>
                 <div class="card-body">
                     <form method="POST"
                           action="{{route("panel.tender.store")}}">
                         @csrf
                         <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tender_no" class="form-label">İhale No *</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text" id="tender_no">WS-</span>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="tender_no"
+                                        name="tender_no"
+                                    />
+                                </div>
+                            </div>
                             <div class="mb-3 col-md-6">
                                 <label for="name" class="form-label">İhale Adı *</label>
                                 <input
@@ -129,18 +126,6 @@
                                     id="car_type"
                                     name="car_type"
                                 />
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <label for="tender_no" class="form-label">İhale No *</label>
-                                <div class="input-group input-group-merge">
-                                    <span class="input-group-text" id="tender_no">WS-</span>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="tender_no"
-                                        name="tender_no"
-                                    />
-                                </div>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="serviceName" class="form-label">Servis Adı</label>

@@ -13,6 +13,7 @@ class Archive extends Model
 
     protected $fillable = [
         "company_id",
+        "company_name",
         "tender_no",
         "plate",
         "car",

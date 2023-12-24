@@ -41,7 +41,7 @@ trait GetArchiveTrait
                 $durum = str_replace(" Durum", "", $durum);
 
                 return [
-                    "firmaId" => 3,
+                    "firmaId" => 1,
                     'ihaleNo' => $matches[1],
                     'plaka' => $matches[2],
                     'arac' => $matches[3],
@@ -95,6 +95,7 @@ trait GetArchiveTrait
                 // Veritabanında kayıt yok, yeni kayıt oluştur
                 DB::table("archives")->insert([
                     "company_id" => 1,
+                    "company_name" => "Autogong",
                     'tender_no' => $product['ihaleNo'],
                     'plate' => $product['plaka'],
                     'car' => $product['arac'],
@@ -104,6 +105,7 @@ trait GetArchiveTrait
                     'my_bid' => $product['teklifim'],
                     'bid_win' => $product['kazananTeklif'],
                     'status' => $product['durum'],
+                    'created_at' => now(),
                 ]);
                 // Loglama
                 \Log::info('Yeni kayıt oluşturuldu: ' . $product['ihaleNo']);
@@ -121,6 +123,5 @@ trait GetArchiveTrait
         for ($page = $startPage; $page <= $endPage; $page++) {
             ArchiveJob::dispatch($page);
         }
-
     }
 }
