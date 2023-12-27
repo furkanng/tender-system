@@ -18,7 +18,7 @@ trait GetTenderTrait
             "cookies" => $this->jar
         ])->getBody()->getContents();
 
-        CarDetailJob::dispatch($response);
+        CarDetailJob::dispatchSync($response);
     }
 
     public function getCarDetails($desiredPart)
@@ -47,13 +47,11 @@ trait GetTenderTrait
             $dateInfo
         );
 
-        $lastDateTime = $dateInfo;
-
         $carDetails = $this->getCarDetailData($crawler);
 
         $carDetails[0]['Name'] = $carName;
         $carDetails[0]['TenderNo'] = $desiredPart;
-        $carDetails[0]['TenderClosedDate'] = $lastDateTime;
+        $carDetails[0]['TenderClosedDate'] = Carbon::parse($dateInfo)->timestamp;
         $carDetails[0]['Images'] = $carImagesEncoded;
 
         $allDetailsData[] = $carDetails;

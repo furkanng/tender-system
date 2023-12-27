@@ -15,7 +15,7 @@ trait GetArchiveTrait
     public function getArchive($page)
     {
         $response = $this->client->request("GET", self::ARSIV_URL . "?per_page=$page", [
-            'timeout' => 20,
+            'timeout' => 60,
             'cookies' => $this->jar,
         ])->getBody()->getContents();
 
