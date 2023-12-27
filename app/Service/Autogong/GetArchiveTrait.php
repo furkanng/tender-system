@@ -6,6 +6,7 @@ use App\Jobs\Autogong\ArchiveJob;
 use App\Models\Archive;
 use App\Models\Bid;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -100,7 +101,7 @@ trait GetArchiveTrait
                     'plate' => $product['plaka'],
                     'car' => $product['arac'],
                     'city' => $product['sehir'],
-                    'date' => $product['tarih'],
+                    'date' => Carbon::parse($product['tarih'])->timestamp,
                     'order' => $product['sira'],
                     'my_bid' => $product['teklifim'],
                     'bid_win' => $product['kazananTeklif'],

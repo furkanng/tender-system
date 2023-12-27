@@ -3,6 +3,7 @@
 namespace App\Jobs\Autogong;
 
 use App\Models\Tender;
+use Carbon\Carbon;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -68,10 +69,13 @@ class TenderJob implements ShouldQueue
             if ($ihaleTipi == "A") {
                 $ihaleTipi = "AÇIK";
             }
+
+            $closedDate = Carbon::parse($guncellenmisTarih ?? [])->timestamp;
+
             return [
                 "ihaleNo" => $ihaleNo,
                 "ihaleTipi" => $ihaleTipi,
-                "kapanisTarihi" => $guncellenmisTarih ?? $kapanisTarihi
+                "kapanisTarihi" => $closedDate
             ];
         });
 

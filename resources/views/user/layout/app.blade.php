@@ -20,6 +20,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{asset("panel/assets/vendor/fonts/boxicons.css")}}"/>
     <!-- Libraries Stylesheet -->
     <link href="{{asset("user/lib/owlcarousel/assets/owl.carousel.min.css")}}" rel="stylesheet">
     <link href="{{asset("user/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css")}}" rel="stylesheet"/>
@@ -37,7 +38,7 @@
     <div id="spinner"
          class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">Yükleniyor...</span>
         </div>
     </div>
     <!-- Spinner End -->

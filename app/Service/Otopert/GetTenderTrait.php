@@ -47,8 +47,7 @@ trait GetTenderTrait
             $dateInfo
         );
 
-        $dateTime = Carbon::createFromFormat('d F Y', $dateInfo);
-        $lastDateTime = $dateTime->format('d.m.Y');
+        $lastDateTime = $dateInfo;
 
         $carDetails = $this->getCarDetailData($crawler);
 

@@ -3,6 +3,7 @@
 namespace App\Service\Otopert;
 
 use App\Models\Archive;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -77,13 +78,12 @@ trait GetArchiveTrait
                 }
             } else {
 
-
                 DB::table('archives')->insert([
                     'company_id' => 2,
                     'tender_no' => $item['tender_no'],
                     'plate' => $item['plate'],
                     'car' => $item['car'],
-                    'date' => $item['date'],
+                    'date' => Carbon::parse($item['date'] ?? [])->timestamp,
                     'order' => $item['order'],
                     'my_bid' => $item['my_bid'],
                     'status' => $item['status'],

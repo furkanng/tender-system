@@ -49,19 +49,25 @@ class TenderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "tender_no" => "required",//todo exist
+            "tender_no" => "required|unique:App\Models\Tender,tender_no",
             "tender_type" => "required",
             "brand" => "required",
             "name" => "required",
         ]);
-        (new Tender())->mergeFillable([
-            "status", "tender_no"
-        ])->fill([
-            'status' => $request->has('status') ? 1 : 0,
-            'tender_no' => "WS-" . $request->get('tender_no')
-        ])->fill($request->except(["status", "tender_no"]))->save();
-        return redirect()->route('panel.tender.index')->with('success', 'İşlem Başarılı');
+
+        $tender = new Tender();
+        $tender->mergeFillable(["status", "tender_no"])
+            ->fill([
+                'status' => $request->has('status') ? 1 : 0,
+                'tender_no' => "WS-" . $request->get('tender_no'),
+                'company_id' => 99
+            ])
+            ->fill($request->except(["status", "tender_no"]))
+            ->save();
+
+        return redirect()->route('panel.tender.edit', ['id' => $tender->id])->with('success', 'İşlem Başarılı');
     }
+
 
     /**
      * Display the specified resource.

@@ -42,7 +42,8 @@
                 <tbody class="table-border-bottom-0">
                 @foreach($archives as $archive)
                     <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i>{{$archive->company_name}}</td>
+                        @php $company = \App\Models\Company::where("id",$archive->company_id)->first(); @endphp
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i>{{$company->name}}</td>
                         <td>{{$archive->car}}</td>
                         <td><span class="badge bg-label-primary me-1">{{$archive->tender_no}}</span></td>
                         <td>{{$archive->city}}</td>
