@@ -79,8 +79,12 @@
                     <div class="card-body">
                         @php $imageCounter = 0 @endphp
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            <swiper-container class="mySwiper" pagination="true" pagination-clickable="true" space-between="15"
+                                slides-per-view="5" navigation="true">
                             @foreach(json_decode($tenders->images) as $image)
-                                @if($imageCounter < 9)
+                                @if($imageCounter < 20)
+                                
+                                <swiper-slide>
                                     <a target="_blank" href={{ $image }}>
                                         <img
                                             src="{{ $image }}"
@@ -91,9 +95,14 @@
                                             id="images"
                                         />
                                     </a>
+
+                                </swiper-slide>
+                    
                                     @php $imageCounter++ @endphp
                                 @endif
                             @endforeach
+                                     
+                        </swiper-container>
                         </div>
                     </div>
                 @else
