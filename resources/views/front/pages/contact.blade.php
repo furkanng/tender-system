@@ -20,7 +20,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-map-marker-alt text-primary"></i>
                                     </div>
-                                    <span>Fatih Sanayi Sitesi. 106 Sokak. No:9 Selvitepe Mahallesi. Turgutlu / MANİSA</span>
+                                    <span>{{$contactInfo->address}}</span>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-envelope-open text-primary"></i>
                                     </div>
-                                    <span>info@example.com</span>
+                                    <span>{{$contactInfo->email}}</span>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-phone-alt text-primary"></i>
                                     </div>
-                                    <span>0 (535) 302 11 00</span>
+                                    <span>{{$contactInfo->phone}}</span>
                                 </div>
                             </div>
                         </div>

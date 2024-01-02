@@ -32,8 +32,8 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">Without menu</div>
+                    <a href="{{route("panel.contact.index")}}" class="menu-link">
+                        <div data-i18n="Without menu">İletişim Bilgileri</div>
                     </a>
                 </li>
                 <li class="menu-item">

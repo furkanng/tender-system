@@ -5,6 +5,7 @@ use App\Http\Controllers\Panel\AuthController;
 use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\TenderController;
 use App\Http\Controllers\Panel\TenderImagesController;
+use App\Http\Controllers\Panel\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('giris-yap', [AuthController::class, 'login'])->name('panel.login');
@@ -12,6 +13,11 @@ Route::get('giris-yap', [HomeController::class, 'loginGet'])->name('panel.login.
 
 Route::middleware("adminMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('panel.home');
+    Route::resource("contact", ContactController::class)->names([
+        'index' => 'panel.contact.index',
+        'store'=>'panel.contact.store'
+    ]);
+
     Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
         'index' => 'panel.tender.index',
         'create' => 'panel.tender.create',
