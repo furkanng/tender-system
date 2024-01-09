@@ -62,7 +62,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item"
-                                       href="{{route("panel.archive.show", ['id' => $archive->id])}}"
+                                       href="{{route("panel.archive.edit", ['id' => $archive->id])}}"
                                     ><i class="bx bx-edit-alt me-1"></i>İncele</a
                                     >
                                     <a class="dropdown-item" href="javascript:void(0);"

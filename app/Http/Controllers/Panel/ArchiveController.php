@@ -59,7 +59,8 @@ class ArchiveController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $archive = Archive::findOrFail($id);
+        return view('panel.pages.arsivEdit', compact("archive"));
     }
 
     /**

@@ -30,6 +30,8 @@ Route::middleware("adminMiddleware")->group(function () {
         'index' => 'panel.archive.index',
         'show' => 'panel.archive.show',
         'destroy' => 'panel.archive.destroy',
+        'edit'=>'panel.archive.edit',
+        'update'=>'panel.archive.update'
     ]);
     Route::resource("tender-images", TenderImagesController::class)
         ->parameters(["tender-images" => "id"])->names([
