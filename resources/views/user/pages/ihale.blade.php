@@ -74,9 +74,10 @@
                         </div>
                         <div class="align-items-center align-content-center col-md-3 border-left mt-1">
                             <div class="d-flex flex-row align-items-center">
-                                <h4 class="mr-1">$14.99</h4><span class="strike-text">$20.99</span>
+                               
                             </div>
-                            <h6 class="text-success">Free shipping</h6>
+                            <h6 class="text-success">Bitiş
+                                Tarihi: {{\Carbon\Carbon::createFromTimestamp($tender["closed_date"])->format('d.m.Y')}}</h6>
                             <div class="d-flex flex-column mt-4">
                                 <button class="btn btn-primary btn-sm" type="button">Teklif Ver</button>
                                 <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale

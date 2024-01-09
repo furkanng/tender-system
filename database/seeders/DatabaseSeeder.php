@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CompanySeeder::class,
-
+            ContactSeeder::class,
         ]);
 
     }

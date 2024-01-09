@@ -13,6 +13,7 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
+        \DB::table("companies")->delete();
         $defaultData =
             [
                 ['id' => 1, 'name' => "Autogong", 'email' => 'vatanoto', "password" => "513545", "created_at" => now(), "updated_at" => now()],
