@@ -14,8 +14,7 @@ class ContactController extends Controller
     public function index()
     {
         $contactInfos = Contact::query()->first();
-        
-        return view('panel.pages.contact',compact('contactInfos'));
+        return view('panel.pages.contact', compact('contactInfos'));
     }
 
     /**
@@ -31,47 +30,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        /*
         $request->validate([
-            "address"=>"required",
-            "email"=>"required|email",
-            "phone"=>"required|numeric|size:11"
+            "address" => "required|sometimes",
+            "email" => "required|sometimes|email",
+            "phone" => "required|sometimes"
         ]);
-*/
-        /*
-        $contact = new Contact();
 
-        $contact->address = $request->address;
-        $contact->email = $request->email;
-        $contact->phone = $request->phone;*/
-        try {
-            $contactValue = Contact::query()->first();
-            $contact = Contact::updateOrCreate(
-                ['id' => $contactValue->id], 
-                [
-                    'address' => $request->address,
-                    'phone' => $request->phone,
-                    'email' => $request->email,
-                ]
-            );
-            
-            if($contact->wasRecentlyCreated){
-                return redirect()->route('panel.contact.index')->with('success','Kayıt İşlemi Başarılı');
-    
-            }
-            else{
-                return redirect()->route('panel.contact.index')->with('success','Güncelleme İşlemi Başarılı');
-            }
-        } catch (\Throwable $th) {
-            return redirect()->route('panel.contact.index')->with('error','Kayıt İşlemi Başarısız');
+        $model = Contact::findOrFail(1);
+        $model->fill($request->all())->save();
 
-        }
-
-       
-
-
-        
-
+        return redirect()->route('panel.contact.index')->with('success', 'Kayıt İşlemi Başarılı');
     }
 
     /**
@@ -93,9 +61,10 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+
+
     }
 
     /**

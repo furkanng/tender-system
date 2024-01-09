@@ -13,9 +13,10 @@ Route::get('giris-yap', [HomeController::class, 'loginGet'])->name('panel.login.
 
 Route::middleware("adminMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('panel.home');
-    Route::resource("contact", ContactController::class)->names([
+
+    Route::resource("contact", ContactController::class)->parameters(["contact" => "id"])->names([
         'index' => 'panel.contact.index',
-        'store'=>'panel.contact.store'
+        'store' => 'panel.contact.store'
     ]);
 
     Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
