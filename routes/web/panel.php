@@ -6,6 +6,7 @@ use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\TenderController;
 use App\Http\Controllers\Panel\TenderImagesController;
 use App\Http\Controllers\Panel\ContactController;
+use App\Http\Controllers\Panel\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('giris-yap', [AuthController::class, 'login'])->name('panel.login');
@@ -26,6 +27,14 @@ Route::middleware("adminMiddleware")->group(function () {
         'edit' => 'panel.tender.edit',
         'update' => 'panel.tender.update',
         'destroy' => 'panel.tender.destroy',
+    ]);
+    Route::resource("user", UserController::class)->parameters(["user" => "id"])->names([
+        'index' => 'panel.user.index',
+        'create' => 'panel.user.create',
+        'store' => 'panel.user.store',
+        'edit' => 'panel.user.edit',
+        'update' => 'panel.user.update',
+        'destroy' => 'panel.user.destroy',
     ]);
     Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
         'index' => 'panel.archive.index',

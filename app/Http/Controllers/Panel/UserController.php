@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\Archive;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class ArchiveController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,18 +16,18 @@ class ArchiveController extends Controller
         $filter = $request->input('filter');
 
         $query = $filter
-            ? Archive::where('tender_no', 'LIKE', '%' . $filter . '%')
-                //->orWhere('company_name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('plate', 'LIKE', '%' . $filter . '%')
-                ->orWhere('car', 'LIKE', '%' . $filter . '%')
+            ? User::where('name', 'LIKE', '%' . $filter . '%')
+                ->orWhere('email', 'LIKE', '%' . $filter . '%')
+                ->orWhere('role', 'LIKE', '%' . $filter . '%')
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
                 ->orWhere('status', 'LIKE', '%' . $filter . '%')
-                ->orderBy("date", "DESC")
-            : Archive::orderBy("date", "DESC");
+                ->orderBy("created_at", "DESC")
+            : User::orderBy("created_at", "DESC");
 
-        $archives = $query->paginate(20);
-        $archives->appends(['filter' => $filter]);
-        return view('panel.pages.arsiv', compact('archives'));
+        $users = $query->paginate(20);
+        $users->appends(['filter' => $filter]);
+
+        return view('panel.pages.users.user',compact('users'));
     }
 
     /**
@@ -59,8 +59,7 @@ class ArchiveController extends Controller
      */
     public function edit(string $id)
     {
-        $archive = Archive::findOrFail($id);
-        return view('panel.pages.arsivEdit', compact("archive"));
+        //
     }
 
     /**

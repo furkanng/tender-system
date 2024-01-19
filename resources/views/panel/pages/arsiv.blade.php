@@ -47,7 +47,20 @@
                         <td>{{$archive->car}}</td>
                         <td><span class="badge bg-label-primary me-1">{{$archive->tender_no}}</span></td>
                         <td>{{$archive->city}}</td>
-                        <td><span class="badge bg-label-secondary me-1">{{$archive->date}}</span></td>
+                        <td><span class="badge bg-label-secondary me-1">
+                            @php
+                            
+                            $date = Carbon\Carbon::parse((int)$archive->date);
+
+                            // İstediğiniz tarih formatını kullanma
+                            $dateFormat = $date->format('Y-m-d');
+
+                            // Sonucu ekrana yazdırma
+                            echo $dateFormat;
+                            @endphp 
+                        
+                        
+                        </span></td>
                         <td>@if($archive->status == "KAZANDINIZ")
                                 <span class="badge bg-label-success me-1">{{$archive->status}}</span>
                             @else

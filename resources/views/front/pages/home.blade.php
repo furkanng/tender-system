@@ -249,6 +249,8 @@
                     <div class="row g-4">
                        
                         @foreach ( $lastSixTenders as $item)
+                        @if ($item->company_id != 99 && !empty($item->images))
+                        
                         @php
                         $imagesArray = json_decode($item->images, true);
                         $firstImage = isset($imagesArray[0]) ? $imagesArray[0] : null;
@@ -257,10 +259,10 @@
                             class="col-lg-4 col-md-6 wow fadeInUp"
                             data-wow-delay="0.5s"
                         >
-                            <div class="property-item rounded overflow-hidden">
+                            <div class="property-item rounded overflow-hidden" style="height:530px">
                                 <div class="position-relative overflow-hidden">
                                     <a href=""
-                                    ><img class="img-fluid" src="{{$firstImage}}" alt="" style="height:30vh !important"
+                                    ><img class="img-fluid" src="{{$firstImage}}" alt="" style=""
                                         /></a>
                                     <div
                                         class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"
@@ -285,21 +287,22 @@
                                 </div>
                                 <div class="d-flex border-top">
                                     <small class="flex-fill text-center border-end py-2"
-                                    ><i class="fa fa-ruler-combined text-primary me-2"></i
+                                    ><i class="fa fa-cog text-primary me-2"></i
                                         >{{$item->gear}}</small
                                     >
                                     <small class="flex-fill text-center border-end py-2"
-                                    ><i class="fa fa-bed text-primary me-2"></i>{{$item->car_type}}</small
+                                    ><i class="fa fa-car text-primary me-2"></i>{{$item->car_type}}</small
                                     >
                                     <small class="flex-fill text-center py-2"
-                                    ><i class="fa fa-bath text-primary me-2"></i>
-                                    {{$item->damages}}
+                                    ><i class="fa fa-gas-pump text-primary me-2"></i>
+                                    {{$item->fuel_type}}
                                         </small
                                     >
                                 </div>
                             </div>
                         </div>
-    
+        
+                        @endif
                         @endforeach
                         <div
                             class="col-12 text-center wow fadeInUp"

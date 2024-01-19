@@ -31,6 +31,7 @@ class TenderController extends Controller
             : Tender::orderBy("created_at", "DESC");
 
         $tenders = $query->paginate(20);
+        $tenders->appends(['filter' => $filter]);
 
         return view('panel.pages.ihale', compact('tenders'));
     }

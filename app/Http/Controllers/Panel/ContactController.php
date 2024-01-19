@@ -36,7 +36,7 @@ class ContactController extends Controller
             "phone" => "required|sometimes"
         ]);
 
-        $model = Contact::findOrFail(1);
+        $model = Contact::findOrFail(2);
         $model->fill($request->all())->save();
 
         return redirect()->route('panel.contact.index')->with('success', 'Kayıt İşlemi Başarılı');
