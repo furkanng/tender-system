@@ -33,27 +33,22 @@
             <ul class="menu-sub">
                 <li class="menu-item">
                     <a href="{{route("panel.contact.index")}}" class="menu-link">
-                        <div data-i18n="Without menu">İletişim Bilgileri</div>
+                        <div data-i18n="Without menu">İletişim Ayarları</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
-                        <div data-i18n="Without navbar">Without navbar</div>
+                    <a href="{{route("panel.api.index")}}" class="menu-link">
+                        <div data-i18n="Without menu">Api Ayarları</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="layouts-container.html" class="menu-link">
-                        <div data-i18n="Container">Container</div>
+                    <a href="{{route("panel.mail.index")}}" class="menu-link">
+                        <div data-i18n="Without menu">Mail Ayarları</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="layouts-fluid.html" class="menu-link">
-                        <div data-i18n="Fluid">Fluid</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-blank.html" class="menu-link">
-                        <div data-i18n="Blank">Blank</div>
+                    <a href="{{route("panel.media.index")}}" class="menu-link">
+                        <div data-i18n="Without menu">Sosyal Medya Ayarları</div>
                     </a>
                 </li>
             </ul>

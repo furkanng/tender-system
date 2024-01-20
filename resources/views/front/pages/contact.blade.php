@@ -20,7 +20,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-map-marker-alt text-primary"></i>
                                     </div>
-                                    <span>{{$contactInfo->address ?? null}}</span>
+                                    <span>{{$contact["contact_address"] ?? ""}}</span>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-envelope-open text-primary"></i>
                                     </div>
-                                    <span>{{$contactInfo->email  ?? null}}</span>
+                                    <span>{{$contact["contact_email"]  ?? ""}}</span>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                     <div class="icon me-3" style="width: 45px; height: 45px;">
                                         <i class="fa fa-phone-alt text-primary"></i>
                                     </div>
-                                    <span>{{$contactInfo->phone  ?? null}}</span>
+                                    <span>{{$contact["contact_phone"]  ?? ""}}</span>
                                 </div>
                             </div>
                         </div>

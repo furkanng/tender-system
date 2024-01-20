@@ -20,7 +20,6 @@
                           action="{{route("panel.contact.store")}}">
                         @csrf
 
-
                         <div class="row">
                             <div class="mb-3 col-md-12">
                                 <label for="address" class="form-label">Adres</label>
@@ -29,9 +28,9 @@
                                         type="text"
                                         class="form-control"
                                         id="address"
-                                        name="address"
+                                        name="contact_address"
                                         autofocus
-                                        value="{{  $contactInfos->address ?? '' }}"
+                                        value="{{  $contact["contact_address"] }}"
                                     />
                                 </div>
                             </div>
@@ -41,24 +40,20 @@
                                     class="form-control"
                                     type="email"
                                     id="email"
-                                    name="email"
-                                    value="{{ $contactInfos->email ?? '' }}"
+                                    name="contact_email"
+                                    value="{{ $contact["contact_email"]}}"
                                 />
                             </div>
                             <div class="mb-3 col-md-12">
                                 <label for="phone" class="form-label">Telefon</label>
-                                <input class="form-control" type="text" name="phone" id="phone"
-                                       placeholder="0505 555 55 55" value="{{ $contactInfos->phone ?? '' }}"
+                                <input class="form-control" type="text" name="contact_phone" id="phone"
+                                       placeholder="0505 555 55 55" value="{{ $contact["contact_phone"] }}"
                                 />
                             </div>
-
-
                         </div>
-
 
                         <div class="mt-2">
                             <button type="submit" class="btn btn-primary me-2">Kaydet</button>
-                            <button type="reset" class="btn btn-outline-secondary">Geri</button>
                         </div>
                     </form>
                 </div>

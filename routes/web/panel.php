@@ -3,9 +3,12 @@
 use App\Http\Controllers\Panel\ArchiveController;
 use App\Http\Controllers\Panel\AuthController;
 use App\Http\Controllers\Panel\HomeController;
+use App\Http\Controllers\Panel\Setting\ApiController;
+use App\Http\Controllers\Panel\Setting\ContactController;
+use App\Http\Controllers\Panel\Setting\MailController;
+use App\Http\Controllers\Panel\Setting\MediaController;
 use App\Http\Controllers\Panel\TenderController;
 use App\Http\Controllers\Panel\TenderImagesController;
-use App\Http\Controllers\Panel\ContactController;
 use App\Http\Controllers\Panel\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +21,21 @@ Route::middleware("adminMiddleware")->group(function () {
     Route::resource("contact", ContactController::class)->parameters(["contact" => "id"])->names([
         'index' => 'panel.contact.index',
         'store' => 'panel.contact.store'
+    ]);
+
+    Route::resource("api", ApiController::class)->parameters(["api" => "id"])->names([
+        'index' => 'panel.api.index',
+        'store' => 'panel.api.store'
+    ]);
+
+    Route::resource("mail", MailController::class)->parameters(["mail" => "id"])->names([
+        'index' => 'panel.mail.index',
+        'store' => 'panel.mail.store'
+    ]);
+
+    Route::resource("media", MediaController::class)->parameters(["media" => "id"])->names([
+        'index' => 'panel.media.index',
+        'store' => 'panel.media.store'
     ]);
 
     Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
@@ -40,8 +58,8 @@ Route::middleware("adminMiddleware")->group(function () {
         'index' => 'panel.archive.index',
         'show' => 'panel.archive.show',
         'destroy' => 'panel.archive.destroy',
-        'edit'=>'panel.archive.edit',
-        'update'=>'panel.archive.update'
+        'edit' => 'panel.archive.edit',
+        'update' => 'panel.archive.update'
     ]);
     Route::resource("tender-images", TenderImagesController::class)
         ->parameters(["tender-images" => "id"])->names([

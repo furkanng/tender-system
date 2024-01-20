@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Contact;
+use App\Models\Setting;
 use App\Models\Tender;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        $model = new Setting();
+        $contact = $model->get("contact_settings");
         $lastSixTenders = Tender::orderBy('id', 'desc')->take(6)->get();
-
-
-        return view('front.pages.home',['lastSixTenders' => $lastSixTenders]);
+        return view('front.pages.home', compact(["lastSixTenders", "contact"]));
     }
 
     public function login()
@@ -33,9 +33,9 @@ class HomeController extends Controller
 
     public function contact()
     {
-
-        $contactInfo = Contact::query()->first();
-        return view('front.pages.contact',compact('contactInfo'));
+        $model = new Setting();
+        $contact = $model->get("contact_settings");
+        return view('front.pages.contact', compact('contact'));
     }
 
 }

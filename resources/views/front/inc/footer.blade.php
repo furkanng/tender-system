@@ -8,17 +8,16 @@
             <div class="col-lg-4 col-md-6">
                 <h5 class="text-white mb-4">İletişim</h5>
                 <p class="mb-2">
-                    <i class="fa fa-map-marker-alt me-3"></i>Fatih Sanayi Sitesi. 106 Sokak. No:9 Selvitepe Mahallesi.
-                    Turgutlu / MANİSA
+                    <i class="fa fa-map-marker-alt me-3"></i>{{$contact["contact_address"]}}
                 </p>
-                <a href="tel:+905353021100">
+                <a href="tel:+9{{ str_replace(' ', '', $contact["contact_phone"])}}">
                     <p class="mb-2">
-                        <i class="fa fa-phone-alt me-3"></i>0 (535) 302 11 00
+                        <i class="fa fa-phone-alt me-3"></i>{{$contact["contact_phone"]}}
                     </p>
                 </a>
-                <a href="mailto:someone@example.com">
+                <a href="mailto:{{$contact["contact_email"]}}">
                     <p class="mb-2">
-                        <i class="fa fa-envelope me-3"></i>info@example.com
+                        <i class="fa fa-envelope me-3"></i>{{$contact["contact_email"]}}
                     </p>
                 </a>
                 <div class="d-flex pt-2">
