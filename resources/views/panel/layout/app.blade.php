@@ -74,6 +74,19 @@
       object-fit: cover;
     }
     </style>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Bootstrap JS ve Popper.js (jQuery'ye benzer bir kütüphane) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 </head>
 
 <body>
@@ -92,11 +105,12 @@
             @include("panel.inc.navbar")
 
             <!-- / Navbar -->
-
+            <x-modal/>
             <!-- Content wrapper -->
             <div class="content-wrapper">
                 <!-- Content -->
                 <div class="container-xxl flex-grow-1 container-p-y">
+
                     @yield('content')
                 </div>
                 <!-- / Content -->
@@ -141,7 +155,6 @@
         document.getElementById('response').style.display = 'none';
     }, 2000);
 </script>
-
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>

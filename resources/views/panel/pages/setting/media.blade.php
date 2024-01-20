@@ -4,14 +4,11 @@
 @section('content')
     <div class="nav-align-top mb-4">
         @if(session('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-danger" role="alert">
-                {{ session('error') }}
-            </div>
+            <script>
+                $(document).ready(function () {
+                    $('#successModal').modal('show');
+                });
+            </script>
         @endif
         <div class="tab-content">
             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
