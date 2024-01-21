@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body text-center">
                     <h4>Harika!</h4>
-                    <p>{{session("success")}}</p>
+                    <p>{{session("message")}}</p>
                 </div>
             </div>
         </div>

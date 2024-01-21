@@ -36,6 +36,6 @@ class ContactController extends Controller
             $model->set($key, [$value]);
         }
 
-        return redirect()->back()->with('success', 'Kayıt İşlemi Başarılı');
+        return redirect()->back()->with('message', 'Kayıt İşlemi Başarılı');
     }
 }

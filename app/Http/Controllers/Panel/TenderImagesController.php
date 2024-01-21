@@ -28,9 +28,9 @@ class TenderImagesController extends Controller
                     "url" => config("app.url") . "/storage/images/" . $filename,
                 ])->saveQuietly();
             }
-            return redirect()->back()->with('success', 'Resimler başarıyla yüklendi.');
+            return redirect()->back()->with('message', 'Resimler başarıyla yüklendi.');
         }
-        return redirect()->back()->with('error', 'Yüklenecek resim bulunamadı.');
+        return redirect()->back()->with('message', 'Yüklenecek resim bulunamadı.');
 
     }
 
@@ -45,6 +45,6 @@ class TenderImagesController extends Controller
 
         $image->delete();
 
-        return redirect()->back()->with('success', 'Resim başarıyla silindi.');
+        return redirect()->back()->with('message', 'Resim başarıyla silindi.');
     }
 }

@@ -30,6 +30,31 @@
 
     <!-- Template Stylesheet -->
     <link href="{{asset("user/css/style.css")}}" rel="stylesheet">
+
+    <script src="{{ asset('panel/js/swiper-element-bundle.min.js') }}"></script>
+
+    <style>
+        swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            /* display: flex; */
+            justify-content: center;
+            align-items: center;
+        }
+
+        swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>

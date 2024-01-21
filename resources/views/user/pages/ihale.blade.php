@@ -45,25 +45,25 @@
 
                             <table class="table table-striped">
                                 <tbody>
-                                @if(isset($tender["brand"]))
+                                @if(!empty($tender["brand"]))
                                     <tr>
                                         <td>Marka :</td>
                                         <td>{{$tender["brand"]}}</td>
                                     </tr>
                                 @endif
-                                @if(isset($tender["model"]))
+                                @if(!empty($tender["model"]))
                                     <tr>
                                         <td>Model :</td>
                                         <td>{{$tender["model"]}}</td>
                                     </tr>
                                 @endif
-                                @if(isset($tender["year"]))
+                                @if(!empty($tender["year"]))
                                     <tr>
                                         <td>Model Yılı :</td>
                                         <td>{{$tender["year"]}}</td>
                                     </tr>
                                 @endif
-                                @if(isset($tender["km"]))
+                                @if(!empty($tender["km"]))
                                     <tr>
                                         <td>KM :</td>
                                         <td>{{$tender["km"]}}</td>
@@ -74,12 +74,14 @@
                         </div>
                         <div class="align-items-center align-content-center col-md-3 border-left mt-1">
                             <div class="d-flex flex-row align-items-center">
-                               
+
                             </div>
                             <h6 class="text-success">Bitiş
                                 Tarihi: {{\Carbon\Carbon::createFromTimestamp($tender["closed_date"])->format('d.m.Y')}}</h6>
                             <div class="d-flex flex-column mt-4">
-                                <button class="btn btn-primary btn-sm" type="button">Teklif Ver</button>
+                                <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
+                                    <button class="btn btn-primary btn-sm" type="button">Teklif Ver</button>
+                                </a>
                                 <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale
                                     No: {{$tender["tender_no"]}}
                                 </button>

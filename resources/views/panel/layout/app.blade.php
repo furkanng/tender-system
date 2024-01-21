@@ -78,8 +78,6 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <!-- Bootstrap JS ve Popper.js (jQuery'ye benzer bir kütüphane) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

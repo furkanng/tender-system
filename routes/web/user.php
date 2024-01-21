@@ -12,11 +12,7 @@ Route::middleware("userMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('user.home');
     Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
         'index' => 'user.tender.index',
-        'create' => 'user.tender.create',
-        'store' => 'user.tender.store',
-        'edit' => 'user.tender.edit',
-        'update' => 'user.tender.update',
-        'destroy' => 'user.tender.destroy',
+        'show' => 'user.tender.show',
     ]);
 
 

@@ -66,54 +66,63 @@
                     <div class="col-3" style="display: flex; justify-content: end">
                         <h5 class="card-header">
                             @if($tenders->company_id !== 99)
-                                {{isset($tenders->images) ? count(json_decode($tenders->images)): 0}} Tane
+                                {{!empty($tenders->images) ? count(json_decode($tenders->images)): 0}} Tane
                             @else
                                 @php $images =\App\Models\TenderImages::where("tender_id",$tenders->id)->get() @endphp
-                                {{isset($images) ? count($images): 0}} Tane
+                                {{!empty($images) ? count($images): 0}} Tane
                             @endif
                         </h5>
                     </div>
                 </div>
-
-                @if(isset($tenders->images) && $tenders->company_id !== 99)
+                @if(session('message'))
+                    <script>
+                        $(document).ready(function () {
+                            $('#successModal').modal('show');
+                        });
+                    </script>
+                @endif
+                @if(!empty($tenders->images) && $tenders->company_id != 99)
                     <div class="card-body">
                         @php $imageCounter = 0 @endphp
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
-                            <swiper-container class="mySwiper" pagination="true" pagination-clickable="true" space-between="15"
-                                slides-per-view="5" navigation="true">
-                            @foreach(json_decode($tenders->images) as $image)
-                                @if($imageCounter < 20)
-                                
-                                <swiper-slide>
-                                    <a target="_blank" href={{ $image }}>
-                                        <img
-                                            src="{{ $image }}"
-                                            alt="images"
-                                            class="d-block rounded"
-                                            height="100"
-                                            width="100"
-                                            id="images"
-                                        />
-                                    </a>
+                            <swiper-container class="mySwiper" pagination="true" pagination-clickable="true"
+                                              space-between="15"
+                                              slides-per-view="5" navigation="true">
+                                @foreach(json_decode($tenders->images) as $image)
+                                    @if($imageCounter < 20)
 
-                                </swiper-slide>
-                    
-                                    @php $imageCounter++ @endphp
-                                @endif
-                            @endforeach
-                                     
-                        </swiper-container>
+                                        <swiper-slide>
+                                            <a target="_blank" href={{ $image }}>
+                                                <img
+                                                    src="{{ $image }}"
+                                                    alt="images"
+                                                    class="d-block rounded"
+                                                    height="100"
+                                                    width="100"
+                                                    id="images"
+                                                />
+                                            </a>
+
+                                        </swiper-slide>
+
+                                        @php $imageCounter++ @endphp
+                                    @endif
+                                @endforeach
+
+                            </swiper-container>
                         </div>
                     </div>
                 @else
                     <div class="card-body">
                         @php $images = \App\Models\TenderImages::where("tender_id", $tenders->id)->get() @endphp
-                        @php $imageCounter = 0 @endphp
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
-                            @foreach($images as $image)
-                                @if($imageCounter < 9)
-                                    <div class="position-relative">
-                                        <a target="_blank" href="{{ $image->url }}">
+                            <swiper-container class="mySwiper" pagination="true" pagination-clickable="true"
+                                              space-between="15"
+                                              slides-per-view="5" navigation="true">
+                                @foreach($images as $image)
+
+                                    <swiper-slide>
+                                        <a target="_blank" href={{ $image->url }}>
                                             <img
                                                 src="{{ $image->url }}"
                                                 alt="images"
@@ -133,10 +142,10 @@
                                                 Sil
                                             </button>
                                         </form>
-                                    </div>
-                                    @php $imageCounter++ @endphp
-                                @endif
-                            @endforeach
+
+                                    </swiper-slide>
+                                @endforeach
+                            </swiper-container>
                         </div>
                     </div>
 

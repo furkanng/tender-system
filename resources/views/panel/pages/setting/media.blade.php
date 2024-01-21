@@ -3,7 +3,7 @@
 @section('title', 'Contact Page')
 @section('content')
     <div class="nav-align-top mb-4">
-        @if(session('success'))
+        @if(session('message'))
             <script>
                 $(document).ready(function () {
                     $('#successModal').modal('show');
