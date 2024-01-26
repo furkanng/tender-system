@@ -59,7 +59,8 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('panel.pages.users.userEdit',compact('user'));
     }
 
     /**
@@ -67,7 +68,12 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        
+        $user = User::findOrFail($id);
+
+        $user->fill($request->all())->save();
+        return redirect()->route('panel.user.index')->with('message', 'İşlem Başarılı');
+
     }
 
     /**

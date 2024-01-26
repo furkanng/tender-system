@@ -15,10 +15,11 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->guard("user")->check()) {
+        $user = auth()->guard("user")->user();
+        if (auth()->guard("user")->check() && $user->role != 0) {
             return $next($request);
         } else {
-            return redirect()->route("front.login");
+            return redirect()->route("front.login")->with('error', 'Yetkili Role Sahip Değilsiniz!');
         }
 
     }

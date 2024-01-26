@@ -26,7 +26,13 @@
         </div>
     </div>
 
-
+    @if(session('message'))
+    <script>
+        $(document).ready(function () {
+            $('#successModal').modal('show');
+        });
+    </script>
+@endif
     <div class="table-responsive text-nowrap">
         <table class="table table-hover">
             <thead>
@@ -51,10 +57,10 @@
                             if($user->role == 1){
                                 $role ="Onaylı";
                             }
-                            else if($user->role == 2){
+                            else if($user->role == 0){
                                 $role ="Onaysız";
                             }
-                            else if($user->role == 3){
+                            else if($user->role == 2){
                                 $role ="VIP";
                             }
 
@@ -63,15 +69,19 @@
 
                     </td>
                     <td>
+                        <form method="POST" action="{{ route("panel.user.update", ['id' => $user->id]) }}">
+                        @csrf
+                        @method('PUT')
                         <div class="mb-3 col-md-12">
-                            <select class="form-select" id="roleType" name="roleType"
+                            <select class="form-select" id="role" name="role"
                                     aria-label="Default select example">
-                                <option selected value="KAPALI">Onaylı</option>
-                                <option value="AÇIK">VIP</option>
-                                <option value="AÇIK">Onaysız</option>
+                                <option {{ $user->role == '1' ? 'selected' : '' }} value="1">Onaylı</option>
+                                <option {{ $user->role == '2' ? 'selected' : '' }} value="2">VIP</option>
+                                <option {{ $user->role == '0' ? 'selected' : '' }} value="0">Onaysız</option>
                             </select>
-                            <input class="btn btn-primary" type="button" value="Kaydet">
+                            <input class="btn btn-primary" type="submit" value="Kaydet">
                         </div>
+                    </form>
                     </td>
 
                     <td><span class="badge bg-label-secondary me-1">
