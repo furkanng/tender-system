@@ -83,7 +83,7 @@ class CarDetailJob implements ShouldQueue
             if (!$car) {
                 DB::table("tenders")->insert([
                     'company_id' => 2,
-                    'tender_no' => $item['TenderNo'],
+                    'tender_no' => rtrim($item['TenderNo'], '/'),
                     'plate' => $item['Plate'],
                     'name' => $item['Name'],
                     'brand' => $item['Brand'],

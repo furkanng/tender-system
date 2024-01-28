@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
@@ -35,7 +35,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('panel.pages.users.userCreate');
     }
 
     /**
@@ -43,7 +43,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "name"=>"required",
+            "email"=>"required|unique:App\Models\User,email",
+            "password"=>"required",
+
+        ]);
+        $user = new User();
+        $user->fill([
+            'password'=>Hash::make($request->password)
+        ])->fill($request->all())->save();
+        return redirect()->route('panel.user.index')->with('message','Kayıt Başarılı');
     }
 
     /**

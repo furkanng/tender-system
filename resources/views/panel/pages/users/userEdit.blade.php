@@ -98,14 +98,19 @@
                 />
             </div>
             <div class="mb-3 col-md-6">
+                <div class="form-check form-switch mt-4">
+                
                 <label class="form-check-label mx-2" for="flexSwitchCheckChecked"
                 >Durum</label>
+                <input type="hidden" value="{{$user->status}}" id="status_hidden" name="status">
                 <input style="width: 50px; height: 30px" name="status" class="form-check-input"
                 type="checkbox"
                 id="flexSwitchCheckChecked"
                 value="{{$user->status}}"
                 @if($user->status == 1) checked @endif
          />
+             
+        </div>
       
             </div>
            
@@ -118,3 +123,15 @@
     </form>
 </div>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var switchInput = document.getElementById('flexSwitchCheckChecked');
+        var statusHiddenInput = document.getElementById('status_hidden');
+        switchInput.addEventListener('change', function () {
+            // Switch'ın değeri değiştiğinde bu fonksiyon çalışır
+            var value = this.checked ? '1' : '0';
+            this.value = value;
+            statusHiddenInput.value = value;
+        });
+    });
+</script>
