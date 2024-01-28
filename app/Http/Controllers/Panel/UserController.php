@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
 class UserController extends Controller
 {
     /**
@@ -27,7 +28,7 @@ class UserController extends Controller
         $users = $query->paginate(20);
         $users->appends(['filter' => $filter]);
 
-        return view('panel.pages.users.user',compact('users'));
+        return view('panel.pages.users.user', compact('users'));
     }
 
     /**
@@ -44,16 +45,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "name"=>"required",
-            "email"=>"required|unique:App\Models\User,email",
-            "password"=>"required",
+            "name" => "required",
+            "email" => "required|unique:App\Models\User,email",
+            "password" => "required",
 
         ]);
         $user = new User();
-        $user->fill([
-            'password'=>Hash::make($request->password)
-        ])->fill($request->all())->save();
-        return redirect()->route('panel.user.index')->with('message','Kayıt Başarılı');
+        $user->fill(array_merge([
+            'password' => Hash::make($request->password)
+        ], ["status" => $request->has("status") ? 1 : 0]))->fill($request->all())->save();
+        return redirect()->route('panel.user.index')->with('message', 'Kayıt Başarılı');
     }
 
     /**
@@ -70,7 +71,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        return view('panel.pages.users.userEdit',compact('user'));
+        return view('panel.pages.users.userEdit', compact('user'));
     }
 
     /**
@@ -78,10 +79,9 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
         $user = User::findOrFail($id);
-
-        $user->fill($request->all())->save();
+        $user->fill(array_merge($request->all(),
+            ["status" => $request->has("status") ? 1 : 0]))->save();
         return redirect()->route('panel.user.index')->with('message', 'İşlem Başarılı');
 
     }
