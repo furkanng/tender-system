@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Panel\ArchiveController;
 use App\Http\Controllers\Panel\AuthController;
+use App\Http\Controllers\Panel\BidController;
 use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\Setting\ApiController;
 use App\Http\Controllers\Panel\Setting\ContactController;
@@ -53,7 +54,17 @@ Route::middleware("adminMiddleware")->group(function () {
         'edit' => 'panel.user.edit',
         'update' => 'panel.user.update',
         'destroy' => 'panel.user.destroy',
+    ]); 
+    Route::resource("bid", BidController::class)->parameters(["bid" => "id"])->names([
+        'index' => 'panel.bid.index',
+        'create' => 'panel.bid.create',
+        'store' => 'panel.bid.store',
+        'edit' => 'panel.bid.edit',
+        'update' => 'panel.bid.update',
+        'destroy' => 'panel.bid.destroy',
     ]);
+    Route::get('transfer-bids', [BidController::class, 'transferBids'])->name('panel.transferBid');
+
     Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
         'index' => 'panel.archive.index',
         'show' => 'panel.archive.show',

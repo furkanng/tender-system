@@ -7,6 +7,7 @@
         <div class="row g-5">
             <div class="col-lg-4 col-md-6">
                 <h5 class="text-white mb-4">İletişim</h5>
+                {{--  
                 <p class="mb-2">
                     <i class="fa fa-map-marker-alt me-3"></i>{{$contact["contact_address"]}}
                 </p>
@@ -20,6 +21,7 @@
                         <i class="fa fa-envelope me-3"></i>{{$contact["contact_email"]}}
                     </p>
                 </a>
+                --}}
                 <div class="d-flex pt-2">
                     <a class="btn btn-outline-light btn-social" href=""
                     ><i class="fab fa-twitter"></i

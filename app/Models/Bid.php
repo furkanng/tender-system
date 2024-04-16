@@ -24,4 +24,21 @@ class Bid extends Model
         "tender_closed_date",
         "tender_company_id",
     ];
+
+    public function user(){  
+        
+        return $this->belongsTo(User::class,'user_id','id');  
+
+   }
+   public function tender()  {
+    
+        return $this->belongsTo(Tender::class,'tender_id','id');  
+   }
+   public function company()  {
+    
+        return $this->belongsTo(Company::class,'company_id','id');  
+    }
+
+
+
 }

@@ -2,7 +2,27 @@
 * demo.css
 * File include item demo only specific css only
 ******************************************************************************/
+.tender-name{
+  max-width: 260px;
+  min-width: 200px;
 
+  text-wrap: pretty;
+}
+.tender-no{
+  max-width: 200px;
+  min-width: 150px;
+  text-wrap: pretty;
+}
+.teklif-veren-isim{
+  max-width: 171px;
+  min-width: 130px;
+  text-wrap: pretty;
+}
+.teklif-veren-numara{
+  max-width: 150px;
+    min-width: 100px;
+    text-wrap: pretty;
+}
 .menu .app-brand.demo {
   height: 64px;
   margin-top: 12px;

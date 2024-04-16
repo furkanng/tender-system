@@ -2,7 +2,13 @@
 
 @section('title', 'Home Page')
 @section('content')
-
+@if(session('message'))
+<script>
+    $(document).ready(function () {
+        $('#successModal').modal('show');
+    });
+</script>
+@endif
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-11">
@@ -11,9 +17,11 @@
                         @if($tender["company_id"] !== 99)
                             @if(isset($tender["images"]))
                                 <div class="col-md-3 mt-1">
+                                    <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
                                     <img style="height: 200px;object-fit: cover;"
                                          class="img-fluid img-responsive rounded product-image"
                                          src="{{json_decode($tender["images"],true)[0]}}">
+                                        </a>
                                 </div>
                             @else
                                 <div class="col-md-3 mt-1">
@@ -27,9 +35,12 @@
 
                             @if(isset($images))
                                 <div class="col-md-3 mt-1">
+                                    <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
+
                                     <img style="height: 200px;object-fit: cover;"
                                          class="img-fluid img-responsive rounded product-image"
                                          src="{{$images->url}}">
+                                        </a>
                                 </div>
                             @else
                                 <div class="col-md-3 mt-1">
@@ -78,14 +89,20 @@
                             </div>
                             <h6 class="text-success">Bitiş
                                 Tarihi: {{\Carbon\Carbon::createFromTimestamp($tender["closed_date"])->format('d.m.Y')}}</h6>
-                            <div class="d-flex flex-column mt-4">
-                                <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
-                                    <button class="btn btn-primary btn-sm" type="button">Teklif Ver</button>
-                                </a>
-                                <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale
-                                    No: {{$tender["tender_no"]}}
-                                </button>
+                            <div class="d-flex flex-row mt-4">
+                            <form action="{{route("user.bid.store",["tender_id" => $tender["id"]])}}" method="post">
+                                @csrf
+                                <input class="form" type="text" name="bid" id="bid" style="width: 100px;
+                                height: 30px;
+                                margin-right: 20px;">
+
+                                <button class="btn btn-primary btn-sm" type="submit">Teklif Ver</button>
+                            </form>
+                                
                             </div>
+                            <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale
+                                No: {{$tender["tender_no"]}}
+                            </button>
                         </div>
                     </div>
                 @endforeach
