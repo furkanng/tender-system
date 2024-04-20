@@ -31,7 +31,9 @@
     <!-- Template Stylesheet -->
     <link href="{{asset("user/css/style.css")}}" rel="stylesheet">
 
-    <script src="{{ asset('panel/js/swiper-element-bundle.min.js') }}"></script>
+    <script src="{{ asset('panel/js/swiper-element-bundle.min.js') }}">
+    
+  </script>
 
     <style>
         swiper-container {
@@ -102,6 +104,7 @@
 
 
 <script>
+ 
     setTimeout(function () {
         document.getElementById('response').style.display = 'none';
     }, 2000);

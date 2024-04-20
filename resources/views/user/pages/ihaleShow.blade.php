@@ -17,8 +17,9 @@
                         <div class="card-body">
                             @php $imageCounter = 0 @endphp
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                <swiper-container class="mySwiper" pagination="true" pagination-clickable="true"
-                                                  space-between="15" slides-per-view="5" navigation="true">
+                                <swiper-container class="mySwiper" init="false"
+                                                  
+                                                  >
                                     @foreach(json_decode($tender->images) as $image)
                                         @if($imageCounter < 20)
                                             <swiper-slide>
@@ -41,7 +42,7 @@
                             @php $images = \App\Models\TenderImages::where("tender_id", $tender->id)->get() @endphp
                             @php $imageCounter = 0 @endphp
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                <swiper-container class="mySwiper" pagination="true" pagination-clickable="true"
+                                <swiper-container class="mySwiper"  pagination="true" pagination-clickable="true"
                                                   space-between="15" slides-per-view="5" navigation="true">
                                     @foreach($images as $image)
                                         @if($imageCounter < 20)
@@ -79,5 +80,29 @@
             </div>
         </div>
     </div>
-
+    <script>
+        const swiperEl = document.querySelector('.mySwiper')
+        
+        Object.assign(swiperEl, {
+            slidesPerView:1,
+            spaceBetween:2,
+            pagination:{
+                clickable: true,
+            },
+       
+            navigation:true,
+          breakpoints: {
+            640: {
+              slidesPerView: 3,
+              spaceBetween: 10,
+            },
+            1200:{
+                slidesPerView: 5,
+              spaceBetween: 15,
+            }
+            
+          },
+        });
+        swiperEl.initialize();
+      </script>
 @endsection

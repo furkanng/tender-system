@@ -3,6 +3,7 @@
 @section('title', 'Home Page')
 @section('content')
 
+
     <div class="card">
         <div class="row">
             <div class="col-4">
@@ -86,7 +87,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item"
-                                       href=""
+                                       href="" data-bs-toggle="modal" data-bs-target="#bidEditModal{{$bid->id}}"
                                     ><i class="bx bx-edit-alt me-1"></i>Düzenle</a
                                     >
                                     <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
@@ -97,14 +98,55 @@
                                             İhale Aktar
                                         </button>
                                 </form>
-                                    <a class="dropdown-item" href="javascript:void(0);"
-                                    ><i class="bx bx-trash me-1"></i>Sil</a
+                                <form action="{{ route("panel.bid.destroy", ['id' => $bid->id]) }}"method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="dropdown-item" href="javascript:void(0);"
+                                    ><i class="bx bx-trash me-1"></i>Sil</button
                                     >
+                                         
+                                </form>
                                 
                                 </div>
                             </div>
                         </td>
                     </tr>
+                    <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
+                        @csrf
+                        @method('PUT')
+                    <div class="modal fade" id="bidEditModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidEditModal"
+                        aria-hidden="true">
+                       <div class="modal-dialog modal-dialog-centered">
+                           <div class="modal-content">
+                               <div class="modal-header justify-content-center">
+                                <h5 class="model-title">İhale Düzenle</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                               </div>
+                               <div class="modal-body">
+                                   <div class="row">
+                                     <div class="col mb-3 text-center">
+                                        <img style="max-width:340px"
+                                        class="img-fluid img-responsive rounded product-image"
+                                        src="{{json_decode($bid->tender["images"],true)[0]}}">
+                                     </div>
+                                   </div>
+                                   <div class="row g-2">
+                                     <div class="col mb-0">
+                                       <label for="bid_price" class="form-label">Teklif Miktarı</label>
+                                       <input type="text" id="bid_price" name="bid_price" class="form-control" value="{{$bid->bid_price}}">
+                                     </div>
+                                    
+                                   </div>
+                                 </div>
+                                 <div class="modal-footer">
+                                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
+                                   <button type="submit" class="btn btn-primary">Kaydet</button>
+                                 </div>
+                           </div>
+                       </div>
+                   </div>
+                        
+                </form>
                 @endforeach
                  
                 </tbody>

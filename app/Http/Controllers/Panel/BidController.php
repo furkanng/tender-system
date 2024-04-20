@@ -74,7 +74,14 @@ class BidController extends Controller
             $bid = Bid::findOrFail($id);
             $bid->fill(array_merge($request->all(),
                 ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
-            return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
+             if($request->has("transfer_status")){
+                return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
+
+             }  
+             else{
+                return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
+
+             } 
     }
 
     /**
@@ -82,6 +89,17 @@ class BidController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $bid = Bid::findOrFail($id);
+        if($bid->delete()){
+            return redirect()->route('panel.bid.index')->with('message', 'Teklif Başarıyla Silindi');
+
+        }
+        else{
+            return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');
+
+        }
+        
+
+
     }
 }
