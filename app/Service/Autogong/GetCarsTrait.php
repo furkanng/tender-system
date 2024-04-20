@@ -28,7 +28,7 @@ trait GetCarsTrait
     {
         $tenderNumbers = [];
 
-        for ($sayfa = 1; $sayfa <= 10; $sayfa++) {
+        for ($sayfa = 1; $sayfa <= 2; $sayfa++) {
             $response = $this->client->request("POST", self::ALL_CARS_URL, [
                 'form_params' => [
                     'ref_no' => 1,
@@ -37,6 +37,7 @@ trait GetCarsTrait
                 'timeout' => 20,
                 'cookies' => $this->jar,
             ])->getBody()->getContents();
+
             $tenderNumbers[] = $this->parseNumberData($response);
         }
 
@@ -48,9 +49,9 @@ trait GetCarsTrait
     {
         $crawler = new Crawler($html);
 
-        $numbers = $crawler->filterXpath('//div[@class="right"]')->each(function ($node) {
+        $numbers = $crawler->filterXpath('//div[@class="card-table-info"]')->each(function ($node) {
             $text = $node->text();
-
+            dd($text);
             $data = trim(str_replace("&nbsp", "", $text));
 
             $pattern = '/İHALE NO : (\d+)/u';
@@ -65,7 +66,7 @@ trait GetCarsTrait
                 return null;
             }
         });
-
+        dd($numbers);
         return array_filter($numbers);
     }
 

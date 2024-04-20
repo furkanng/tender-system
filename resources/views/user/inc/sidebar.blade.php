@@ -22,7 +22,8 @@
             <a href="{{route("user.tender.index")}}" class="nav-item nav-link"><i class="fa fa-car me-2"></i>Tüm İhaleler</a>
             <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
             <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-            <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
+            <a href="{{route("user.support.index")}}" class="nav-item nav-link"><i class="bx bx-support me-2"></i>Destek
+                Talebi</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
                         class="far fa-file-alt me-2"></i>Pages</a>

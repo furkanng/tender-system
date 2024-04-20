@@ -8,6 +8,7 @@ use App\Http\Controllers\Panel\Setting\ApiController;
 use App\Http\Controllers\Panel\Setting\ContactController;
 use App\Http\Controllers\Panel\Setting\MailController;
 use App\Http\Controllers\Panel\Setting\MediaController;
+use App\Http\Controllers\Panel\SupportController;
 use App\Http\Controllers\Panel\TenderController;
 use App\Http\Controllers\Panel\TenderImagesController;
 use App\Http\Controllers\Panel\UserController;
@@ -54,7 +55,7 @@ Route::middleware("adminMiddleware")->group(function () {
         'edit' => 'panel.user.edit',
         'update' => 'panel.user.update',
         'destroy' => 'panel.user.destroy',
-    ]); 
+    ]);
     Route::resource("bid", BidController::class)->parameters(["bid" => "id"])->names([
         'index' => 'panel.bid.index',
         'create' => 'panel.bid.create',
@@ -77,6 +78,14 @@ Route::middleware("adminMiddleware")->group(function () {
             'update' => 'panel.tender.images.update',
             'destroy' => 'panel.tender.images.destroy',
         ])->only(["update", "destroy"]);
+
+    Route::resource("support", SupportController::class)->parameters(["support" => "id"])->names([
+        'index' => 'panel.support.index',
+        'create' => 'panel.support.create',
+        'store' => 'panel.support.store',
+        'show' => 'panel.support.show',
+    ]);
+
 
     Route::get('cikis-yap', [AuthController::class, 'logout'])->name('panel.logout');
 });

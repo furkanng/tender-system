@@ -12,7 +12,11 @@ class HomeController extends Controller
     {
         $model = new Setting();
         $contact = $model->get("contact_settings");
-        $lastSixTenders = Tender::orderBy('id', 'desc')->take(6)->get();
+        $lastSixTenders = Tender::orderBy('id', 'desc')
+            ->where("company_id", "!=", 99)
+            ->whereNotNull("images")
+            ->take(6)
+            ->get();
         return view('front.pages.home', compact(["lastSixTenders", "contact"]));
     }
 
