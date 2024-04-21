@@ -4,6 +4,7 @@ use App\Http\Controllers\User\BidController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\SupportController;
+use App\Http\Controllers\User\SupportMessageController;
 use App\Http\Controllers\User\TenderController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,10 +30,12 @@ Route::middleware("userMiddleware")->group(function () {
     Route::resource("support", SupportController::class)->parameters(["support" => "id"])->names([
         'index' => 'user.support.index',
         'create' => 'user.support.create',
-        'edit' => 'user.support.edit',
-        'store' => 'user.support.store',
         'show' => 'user.support.show',
+        'update' => 'user.support.update',
+        'store' => 'user.support.store',
+        'destroy' => 'user.support.destroy',
     ]);
+
     Route::get('cikis-yap', [AuthController::class, 'logout'])->name('user.logout');
 });
 

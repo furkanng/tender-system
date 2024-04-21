@@ -53,7 +53,7 @@
                                         </td>
                                         <td>{{$support->updated_at}}</td>
                                         <td>
-                                            <a href="{{route("user.support.edit",["id" => $support->id])}}">
+                                            <a href="{{route("user.support.show",["id" => $support->id])}}">
                                                 <button class="btn btn-sm btn-info">incele</button>
                                             </a>
                                         </td>

@@ -21,7 +21,8 @@ class Support extends Model
 
     public function message()
     {
-        return $this->hasMany(SupportMessage::class, "support_id", "id");
+        return $this->hasMany(SupportMessage::class, "support_id", "id")
+            ->orderBy('updated_at', 'asc');
     }
 
     public function user()

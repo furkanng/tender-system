@@ -38,7 +38,9 @@
                             </td>
                             <td>{{$support->updated_at}}</td>
                             <td>
-                                <button class="btn btn-sm btn-info">incele</button>
+                                <a href="{{route("panel.support.show",["id" => $support->id])}}">
+                                    <button class="btn btn-sm btn-info">incele</button>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

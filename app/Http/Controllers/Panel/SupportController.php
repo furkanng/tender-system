@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Support;
+use App\Models\SupportMessage;
 use Illuminate\Http\Request;
 
 class SupportController extends Controller
@@ -38,7 +39,8 @@ class SupportController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $support = Support::findOrFail($id);
+        return view("panel.pages.supportEdit", compact("support"));
     }
 
     /**
@@ -54,7 +56,21 @@ class SupportController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "answer" => "required"
+        ]);
+
+        $model = new SupportMessage();
+        $model->fill(array_merge($request->all(), [
+            "admin_id" => auth()->guard("admin")->user()->id,
+            "support_id" => $id
+        ]))->save();
+
+        $support = Support::findOrFail($id);
+        $support->read = "admin";
+        $support->save();
+
+        return redirect()->back();
     }
 
     /**

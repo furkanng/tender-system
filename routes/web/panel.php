@@ -64,6 +64,7 @@ Route::middleware("adminMiddleware")->group(function () {
         'update' => 'panel.bid.update',
         'destroy' => 'panel.bid.destroy',
     ]);
+
     Route::get('transfer-bids', [BidController::class, 'transferBids'])->name('panel.transferBid');
 
     Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
@@ -73,6 +74,7 @@ Route::middleware("adminMiddleware")->group(function () {
         'edit' => 'panel.archive.edit',
         'update' => 'panel.archive.update'
     ]);
+
     Route::resource("tender-images", TenderImagesController::class)
         ->parameters(["tender-images" => "id"])->names([
             'update' => 'panel.tender.images.update',
@@ -81,9 +83,10 @@ Route::middleware("adminMiddleware")->group(function () {
 
     Route::resource("support", SupportController::class)->parameters(["support" => "id"])->names([
         'index' => 'panel.support.index',
-        'create' => 'panel.support.create',
-        'store' => 'panel.support.store',
         'show' => 'panel.support.show',
+        'update' => 'panel.support.update',
+        'store' => 'panel.support.store',
+        'destroy' => 'panel.support.destroy',
     ]);
 
 

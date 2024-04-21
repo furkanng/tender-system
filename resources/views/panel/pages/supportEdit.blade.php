@@ -1,15 +1,9 @@
-@extends('user.layout.app')
+@extends('panel.layout.app')
 
 @section('title', 'Home Page')
 @section('content')
-    @if(session('message'))
-        <script>
-            $(document).ready(function () {
-                $('#successModal').modal('show');
-            });
-        </script>
-    @endif
-    <div class="container mt-5 mb-5">
+
+    <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-center row">
             <div class="col-12" style="max-height: 500px; overflow-y: scroll;">
 
@@ -43,7 +37,7 @@
 
             <div class="mt-3">
                 <div class="col">
-                    <form action="{{route("user.support.update",["id" =>$support->id])}}" method="POST">
+                    <form action="{{route("panel.support.update",["id" =>$support->id])}}" method="POST">
                         @csrf
                         @method("PUT")
                         <div class="input-group">
@@ -58,4 +52,5 @@
 
         </div>
     </div>
+
 @endsection
