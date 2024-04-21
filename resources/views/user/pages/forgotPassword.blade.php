@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sisteme Giriş Yap</title>
+    <title>Şifremi Unuttum !</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -51,32 +51,16 @@
                         <a href="{{route("front.home")}}" class="">
                             <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>OTO İHALE SİSTEMİ</h3>
                         </a>
-                        <h3>Giriş Yap</h3>
                     </div>
-                    <form method="POST" action="{{route("user.login")}}">
+                    <form method="POST" action="{{route("user.forgot")}}">
                         @csrf
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" name="email" id="floatingInput"
                                    placeholder="email adresiniz">
                             <label for="floatingInput">Email Adresi</label>
                         </div>
-                        <div class="form-floating mb-4">
-                            <input type="password" class="form-control" name="password" id="floatingPassword"
-                                   placeholder="şifreniz">
-                            <label for="floatingPassword">Şifre</label>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1">Beni Hatırla</label>
-                            </div>
-                            <a href="{{route("user.forgot.get")}}">Şifremi Unuttum</a>
-                        </div>
-                        <a href="{{route("user.login")}}">
-                            <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Giriş Yap</button>
-                        </a>
-                        <p class="text-center mb-0">Henüz üye değil misiniz ? <a href="{{route("front.register")}}">Kayıt
-                                Ol</a></p>
+
+                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Gönder</button>
                     </form>
 
                     @if (session('success'))

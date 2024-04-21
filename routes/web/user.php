@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('kayit-ol', [AuthController::class, 'register'])->name('user.register');
 Route::post('giris-yap', [AuthController::class, 'login'])->name('user.login');
+Route::post('sifremi-unuttum', [AuthController::class, 'forgotPassword'])->name('user.forgot');
+Route::get('sifremi-unuttum', [AuthController::class, 'forgotPasswordGet'])->name('user.forgot.get');
+Route::get('sifre-yenileme', [AuthController::class, 'resetPasswordGet'])->name('user.reset.get');
+Route::post('sifre-yenileme', [AuthController::class, 'resetPassword'])->name('user.reset');
 
 Route::middleware("userMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('user.home');
