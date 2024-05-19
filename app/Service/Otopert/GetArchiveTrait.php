@@ -50,7 +50,7 @@ trait GetArchiveTrait
         });
 
 
-        foreach ($tableData as $item) { W
+        foreach ($tableData as $item) {
 
             $existingRecord = Archive::where('tender_no', $item['tender_no'])->first();
             if ($existingRecord) {
