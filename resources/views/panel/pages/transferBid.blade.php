@@ -43,7 +43,7 @@
                 </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    
+
                 @foreach($transferBids as $bid)
                     <tr>
                         <td class="tender-no">{{$bid->tender->tender_no}}</td>
@@ -61,23 +61,23 @@
                             {{$bid->company->name}}
                         </td>
                         <td>
-                            
+
                             {{\Carbon\Carbon::createFromTimestamp($bid->tender->closed_date)->format('d.m.Y')}}
                         </td>
                         <td>
                             {{$bid->tender->city}}
                         </td>
                         <td>
-                            {{$bid->user->name}}
+                            {{$bid->user->name ?? ""}}
                         </td>
                         <td>
-                            {{$bid->user->phone}}
+                            {{$bid->user->phone ?? ""}}
                         </td>
                         <td>
                             {{$bid->bid_price}}
                         </td>
 
-                        
+
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -101,7 +101,7 @@
                         </td>
                     </tr>
                 @endforeach
-                 
+
                 </tbody>
             </table>
         </div>

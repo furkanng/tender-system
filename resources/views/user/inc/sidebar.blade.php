@@ -1,7 +1,7 @@
 <!-- Sidebar Start -->
 <div class="sidebar pe-4 pb-3">
     <nav class="navbar bg-light navbar-light">
-        <a href="index.html" class="navbar-brand mx-4 mb-3">
+        <a href="{{route("user.home")}}" class="navbar-brand mx-4 mb-3">
             <h3 class="text-primary" style="font-size: larger"><i class="fa fa-hashtag me-2"></i>Oto İhale Sistemi</h3>
         </a>
         <div class="d-flex align-items-center ms-4 mb-4">
@@ -13,7 +13,13 @@
             </div>
             <div class="ms-3">
                 <h6 class="mb-0">{{strtolower(auth()->guard("user")->user()->name)}}</h6>
-                <span>Admin</span>
+                <span>
+                    @if(auth()->guard("user")->user()->role == 1)
+                        Onaylı
+                    @else
+                        VIP
+                    @endif
+                </span>
             </div>
         </div>
         <div class="navbar-nav w-100">
@@ -21,10 +27,13 @@
                 Sayfa</a>
             <a href="{{route("user.tender.index")}}" class="nav-item nav-link"><i class="fa fa-car me-2"></i>Tüm
                 İhaleler</a>
-            <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
-            <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
+            <a href="{{route("user.bid.index")}}" class="nav-item nav-link"><i
+                    class="fa fa-car me-2"></i>Tekliflerim</a>
+            <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Arşiv</a>
             <a href="{{route("user.support.index")}}" class="nav-item nav-link"><i class="bx bx-support me-2"></i>Destek
                 Talebi</a>
+            <a href="{{route("user.profile.index")}}" class="nav-item nav-link"><i class='bx bx-user me-2'></i></i>
+                Profilim</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
                         class="far fa-file-alt me-2"></i>Pages</a>

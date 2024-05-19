@@ -44,7 +44,7 @@
                 </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
-                    
+
                 @foreach($bids as $bid)
                     <tr>
                         <td class="tender-no">{{$bid->tender->tender_no}}</td>
@@ -62,23 +62,23 @@
                             {{$bid->company->name}}
                         </td>
                         <td>
-                            
+
                             {{\Carbon\Carbon::createFromTimestamp($bid->tender->closed_date)->format('d.m.Y')}}
                         </td>
                         <td>
                             {{$bid->tender->city}}
                         </td>
                         <td>
-                            {{$bid->user->name}}
+                            {{$bid->user->name ?? ""}}
                         </td>
                         <td>
-                            {{$bid->user->phone}}
+                            {{$bid->user->phone ?? ""}}
                         </td>
                         <td>
                             {{$bid->bid_price}}
                         </td>
 
-                        
+
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -104,9 +104,9 @@
                                     <button type="submit" class="dropdown-item" href="javascript:void(0);"
                                     ><i class="bx bx-trash me-1"></i>Sil</button
                                     >
-                                         
+
                                 </form>
-                                
+
                                 </div>
                             </div>
                         </td>
@@ -135,7 +135,7 @@
                                        <label for="bid_price" class="form-label">Teklif Miktarı</label>
                                        <input type="text" id="bid_price" name="bid_price" class="form-control" value="{{$bid->bid_price}}">
                                      </div>
-                                    
+
                                    </div>
                                  </div>
                                  <div class="modal-footer">
@@ -145,10 +145,10 @@
                            </div>
                        </div>
                    </div>
-                        
+
                 </form>
                 @endforeach
-                 
+
                 </tbody>
             </table>
         </div>

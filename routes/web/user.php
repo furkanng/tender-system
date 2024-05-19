@@ -4,8 +4,8 @@ use App\Http\Controllers\User\BidController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\SupportController;
-use App\Http\Controllers\User\SupportMessageController;
 use App\Http\Controllers\User\TenderController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('kayit-ol', [AuthController::class, 'register'])->name('user.register');
@@ -30,6 +30,17 @@ Route::middleware("userMiddleware")->group(function () {
         'update' => 'user.bid.update',
         'destroy' => 'user.bid.destroy',
     ]);
+
+    Route::resource("profile", UserController::class)->parameters(["profile" => "id"])->names([
+        'index' => 'user.profile.index',
+        'show' => 'user.profile.show',
+        'create' => 'user.profile.create',
+        'store' => 'user.profile.store',
+        'edit' => 'user.profile.edit',
+        'update' => 'user.profile.update',
+        'destroy' => 'user.profile.destroy',
+    ]);
+
 
     Route::resource("support", SupportController::class)->parameters(["support" => "id"])->names([
         'index' => 'user.support.index',

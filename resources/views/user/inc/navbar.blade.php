@@ -10,7 +10,7 @@
         <input class="form-control border-0" type="search" placeholder="Ara">
     </form>
     <div class="navbar-nav align-items-center ms-auto">
-        <div class="nav-item dropdown">
+        <!--<div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-envelope me-lg-2"></i>
                 <span class="d-none d-lg-inline-flex">Mesajlar</span>
@@ -51,8 +51,8 @@
                 <hr class="dropdown-divider">
                 <a href="#" class="dropdown-item text-center">See all message</a>
             </div>
-        </div>
-        <div class="nav-item dropdown">
+        </div> -->
+        <!--<div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-bell me-lg-2"></i>
                 <span class="d-none d-lg-inline-flex">Bildirimler</span>
@@ -75,7 +75,7 @@
                 <hr class="dropdown-divider">
                 <a href="#" class="dropdown-item text-center">See all notifications</a>
             </div>
-        </div>
+        </div> -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img class="rounded-circle me-lg-2" src="{{asset("user/img/user.jpg")}}" alt=""
@@ -83,7 +83,7 @@
                 <span class="d-none d-lg-inline-flex">{{strtolower(auth()->guard("user")->user()->name)}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                <a href="#" class="dropdown-item">Profilim</a>
+                <a href="{{route("user.profile.index")}}" class="dropdown-item">Profilim</a>
                 <a href="#" class="dropdown-item">Ayarlar</a>
                 <a href="{{route("user.logout")}}" class="dropdown-item">Çıkış Yap</a>
             </div>
