@@ -35,11 +35,11 @@ class DetailJob implements ShouldQueue
 
         $car = Tender::query()->where("tender_no", $outputData["ihaleNo"])->first();
 
-
         if (!$car) {
             DB::table("tenders")->insert([
                 'company_id' => 1,
                 'tender_no' => $outputData['ihaleNo'],
+                'closed_date' => $outputData['closed_date'],
                 'tender_type' => $outputData['ihaleTipi'],
                 'plate' => $outputData['plaka'],
                 'name' => $outputData['title']['brand'] . ' ' . $outputData['title']['model'],
@@ -62,6 +62,9 @@ class DetailJob implements ShouldQueue
                 'damages' => $outputData['damages'],
                 'created_at' => now(),
             ]);
+        } else {
+            DB::table("tenders")->where("tender_no", $outputData['ihaleNo'])
+                ->update(['closed_date' => $outputData['closed_date']]);
         }
     }
 }

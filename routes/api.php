@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get("test", function (Request $request) {
 
-    #(new \App\Service\Autogong\AutogongService())->allCarsSave();
+    (new \App\Service\Autogong\AutogongService())->allCarsSave();
     #(new \App\Service\Autogong\AutogongService())->archiveSave();
 
     #(new \App\Service\Otopert\OtopertService())->getAllCarsLite();

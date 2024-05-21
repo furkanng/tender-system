@@ -3,6 +3,7 @@
 namespace App\Service\Autogong;
 
 use App\Jobs\Autogong\DetailJob;
+use Illuminate\Support\Carbon;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait GetCarsTrait
@@ -12,7 +13,7 @@ trait GetCarsTrait
         $tenderNumbers = $this->getTenderNumber();
 
         foreach ($tenderNumbers as $key) {
-            DetailJob::dispatchSync($key);
+            DetailJob::dispatch($key);
         }
     }
 
@@ -20,7 +21,7 @@ trait GetCarsTrait
     {
         $tenderNumbers = [];
 
-        for ($sayfa = 1; $sayfa <= 2; $sayfa++) {
+        for ($sayfa = 1; $sayfa <= 1; $sayfa++) {
             $response = $this->client->request("POST", self::ALL_CARS_URL, [
                 'form_params' => [
                     'ref_no' => 1,
@@ -68,10 +69,35 @@ trait GetCarsTrait
         $carDetail["damages"] = $this->parseDamageData($response) ?? null;
         $carDetail['tender_no'] = $number;
         $carDetail['images'] = $this->parseImageData($response) ?? null;
-
-        $carDetail["title"] = $this->parseNameData($response, "name");
+        $carDetail["title"] = $this->parseNameData($response) ?? null;
+        $carDetail["closed_date"] = $this->parseClosedDate($response) ?? null;
 
         return $carDetail;
+    }
+
+    public function parseClosedDate($html)
+    {
+        $crawler = new Crawler($html);
+
+        // JavaScript kodu içerisindeki ihale_bitis_tarihi değerini çekmek için regex kullanıyoruz
+        $pattern = '/"ihale_bitis_tarihi":\s*"([^"]+)"/';
+        preg_match($pattern, $html, $matches);
+
+        // Eşleşen değeri alıyoruz
+        if (!empty($matches) && isset($matches[1])) {
+            $ihaleBitisTarihi = $matches[1];
+        } else {
+            $ihaleBitisTarihi = '';
+        }
+
+        // ihale_bitis_tarihi değerini timestamp'e çeviriyoruz
+        if (!empty($ihaleBitisTarihi)) {
+            $timestamp = Carbon::parse($ihaleBitisTarihi)->timestamp;
+        } else {
+            $timestamp = null; // Eğer ihale_bitis_tarihi değeri boşsa null döndürüyoruz
+        }
+
+        return $timestamp;
     }
 
     public function parseImageData($html)

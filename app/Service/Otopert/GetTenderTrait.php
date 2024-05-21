@@ -4,7 +4,6 @@ namespace App\Service\Otopert;
 
 use App\Jobs\Otopert\CarDetailJob;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\DomCrawler\Crawler;
 
