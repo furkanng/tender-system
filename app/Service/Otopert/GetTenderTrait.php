@@ -18,7 +18,7 @@ trait GetTenderTrait
                 "cookies" => $this->jar
             ])->getBody()->getContents();
 
-            CarDetailJob::dispatchSync($response);
+            CarDetailJob::dispatch($response);
         } catch (\Exception $e) {
             $this->handleError($e);
         }

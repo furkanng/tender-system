@@ -11,16 +11,8 @@ trait GetCarsTrait
     {
         $tenderNumbers = $this->getTenderNumber();
 
-        $flatArray = [];
-
-        foreach ($tenderNumbers as $subArray) {
-            foreach ($subArray as $item) {
-                $flatArray[] = $item[0];
-            }
-        }
-
-        foreach ($flatArray as $key) {
-            DetailJob::dispatch($key);
+        foreach ($tenderNumbers as $key) {
+            DetailJob::dispatchSync($key);
         }
     }
 
@@ -38,35 +30,29 @@ trait GetCarsTrait
                 'cookies' => $this->jar,
             ])->getBody()->getContents();
 
-            $tenderNumbers[] = $this->parseNumberData($response);
+            $pageTenderNumbers = $this->parseNumberData($response);
+            $tenderNumbers = array_merge($tenderNumbers, $pageTenderNumbers);
         }
 
         return $tenderNumbers;
-
     }
 
     public function parseNumberData($html)
     {
         $crawler = new Crawler($html);
 
-        $numbers = $crawler->filterXpath('//div[@class="card-table-info"]')->each(function ($node) {
-            $text = $node->text();
-            dd($text);
-            $data = trim(str_replace("&nbsp", "", $text));
-
-            $pattern = '/İHALE NO : (\d+)/u';
-
-            preg_match($pattern, $data, $matches);
-            if (count($matches) >= 2) {
-                return [
-                    $matches[1],
-                ];
+        $numbers = $crawler->filterXpath('//div[@class="xad-content"]')->each(function ($node) {
+            $id = $node->attr('id');
+            if (preg_match('/arac_liste_(\d+)/', $id, $matches)) {
+                return $matches[1];
             } else {
-                \Log::error("Hatalı veri: " . $data);
+                \Log::error("Hatalı veri: " . $id);
                 return null;
             }
         });
-        dd($numbers);
+
+        $numbers = array_filter($numbers);
+
         return array_filter($numbers);
     }
 
@@ -78,29 +64,14 @@ trait GetCarsTrait
         ])->getBody()->getContents();
 
         $carDetail = $this->parseDetailData($response);
-        $carDetail[0]["location"] = $this->parseLocationData($response)[0] ?? null;
-        $carDetail[0]["damages"] = $this->parseDamageData($response)[0] ?? null;
-        $carDetail[0]['tender_no'] = $number;
-        $carDetail[0]['images'] = $this->parseImageData($response) ?? null;
+        $carDetail["location"] = $this->parseLocationData($response) ?? null;
+        $carDetail["damages"] = $this->parseDamageData($response) ?? null;
+        $carDetail['tender_no'] = $number;
+        $carDetail['images'] = $this->parseImageData($response) ?? null;
 
-        $nameData = $this->parseNameData($response, "name");
-        $carDetail[0]["name"] = $nameData[0] ?? null;
+        $carDetail["title"] = $this->parseNameData($response, "name");
 
-        $brandData = $this->parseNameData($response, "brand");
-        $carDetail[0]["brand"] = $brandData[0] ?? null;
-
-        $modelData = $this->parseNameData($response, "model");
-        $carDetail[0]["model"] = $modelData[0] ?? null;
-
-        $multiDetail[] = $carDetail;
-
-        foreach ($multiDetail as $innerArray) {
-            foreach ($innerArray as $item) {
-                $outputData = $item;
-            }
-        }
-
-        return $outputData;
+        return $carDetail;
     }
 
     public function parseImageData($html)
@@ -128,123 +99,136 @@ trait GetCarsTrait
     {
         $crawler = new Crawler($html);
 
-        return $crawler->filterXpath('//div[@class="content-width single_table box-shadow"]')
-            ->each(function ($node) {
-                $text = $node->text();
+        $data = $crawler->filter('.xad-damage-records .card .card-body .card-table')->each(function ($node) {
+            $text = $node->text();
+            $text = str_replace("&nbsp;", " ", $text);
+            $text = trim($text);
 
-                $veri = str_replace("&nbsp;", " ", $text);
-                return preg_replace('/^HASAR KAYITLARI\s+/', '', $veri);
+            return $text;
+        });
 
-            });
+        // Veriyi düzenle ve istenen formatta döndür
+        return $data[0];
     }
 
     public function parseLocationData($html)
     {
         $crawler = new Crawler($html);
 
-        return $crawler->filterXpath('//div[@class="content-width aracin_bulundugu_yer box-shadow"]')
-            ->each(function ($node) {
-                $text = $node->text();
+        $data = [
+            "ServisAdi" => '',
+            "Adres" => '',
+            "CepTel" => '',
+            "il" => '',
+            "ilce" => '',
+            "contract" => '',
+        ];
 
-                $veri = str_replace("&nbsp;", " ", $text);
+        $crawler->filter('.xad-damage-records .card .card-body .card-table .card-table-content')->each(function ($node) use (&$data) {
+            $title = $node->filter('.card-table-title')->text();
+            $info = $node->filter('.card-table-info')->text();
 
-                $pattern = '/(Servis Adı|Adres|Sabit Tel|İl|İlçe) :/';
-                $veriParcalari = preg_split($pattern, $veri, -1, PREG_SPLIT_DELIM_CAPTURE);
-                $veriParcalari = array_map('trim', $veriParcalari); // Boşlukları temizle
+            switch ($title) {
+                case 'Servis Adı':
+                    // 'Anlaşmasız' veya 'Anlaşmalı' kelimelerini kontrol et ve kaldır
+                    if (strpos($info, 'Anlaşmasız') !== false) {
+                        $data['contract'] = 'Anlaşmasız';
+                        $info = str_replace(' Anlaşmasız', '', $info);
+                    } else {
+                        $data['contract'] = 'Anlaşmalı';
+                        $info = str_replace(' Anlaşmalı', '', $info);
+                    }
+                    // 'span' etiketini kaldır
+                    $info = preg_replace('/<span[^>]*>.*<\/span>/', '', $info);
+                    $data['ServisAdi'] = trim($info);
+                    break;
+                case 'Adres':
+                    $data['Adres'] = $info;
+                    break;
+                case 'Cep Tel':
+                    $data['CepTel'] = $info;
+                    break;
+                case 'İl':
+                    $data['il'] = $info;
+                    break;
+                case 'İlçe':
+                    $data['ilce'] = $info;
+                    break;
+            }
+        });
 
-                return [
-                    "ServisAdi" => $veriParcalari[2] ?? null,
-                    "Adres" => $veriParcalari[4] ?? null,
-                    "SabitTel" => $veriParcalari[6] ?? null,
-                    "il" => $veriParcalari[8] ?? null,
-                    "ilce" => $veriParcalari[10] ?? null,
-                ];
-
-            });
+        return $data;
     }
 
     public function parseDetailData($html)
     {
         $crawler = new Crawler($html);
 
-        return $crawler->filterXpath('//div[@class="content-width arac_detaylari box-shadow"]')
-            ->each(function ($node) {
-                $text = $node->text();
+        // Tek bir araç detayını almak için
+        $detailData = $crawler->filterXpath('//div[@class="xad-detail"]')->each(function ($node) {
+            // İlgili alanların değerlerini alıyoruz
+            $ihaleNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale NO"]]')->text();
+            $ihaleTipi = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale Tipi"]]')->text();
+            $tsrsbBedeli = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="TSRSB Bedeli"]]')->text();
+            $bulunduguIl = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Bulunduğu İl"]]')->text();
+            $plaka = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Plaka"]]')->text();
+            $modelYili = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Model Yılı"]]')->text();
+            $aracKM = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç KM"]]')->text();
+            $yakit = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Yakıt"]]')->text();
+            $vites = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Vites"]]')->text();
+            $aracTuru = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç Türü"]]')->text();
+            $silindir = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Silindir"]]')->text();
+            $shaseNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Şase No"]]')->text();
+            $hasarNedeni = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Hasar Nedeni"]]')->text();
 
-                $veri = str_replace("&nbsp;", " ", $text);
+            return [
+                "ihaleNo" => trim($ihaleNo),
+                "ihaleTipi" => trim($ihaleTipi),
+                "tsrsbBedeli" => trim($tsrsbBedeli),
+                "bulunduguIl" => trim($bulunduguIl),
+                "plaka" => trim($plaka),
+                "modelYili" => trim($modelYili),
+                "aracKM" => trim($aracKM),
+                "yakit" => trim($yakit),
+                "vites" => trim($vites),
+                "aracTuru" => trim($aracTuru),
+                "silindir" => trim($silindir),
+                "shaseNo" => trim($shaseNo),
+                "hasarNedeni" => trim($hasarNedeni)
+            ];
+        });
 
-                preg_match('/İhale Tipi : (.*?) /', $veri, $ihaleTipi);
-
-                preg_match('/TSRSB Bedeli : (.*?) TL/', $veri, $tsrsbBedeli);
-
-                preg_match('/Bulunduğu İl : (.*?) /', $veri, $bulunduguIl);
-
-                preg_match('/Plaka : (.*?) /', $veri, $plaka);
-
-                preg_match('/Model Yılı : (.*?) /', $veri, $modelYili);
-
-                preg_match('/Araç KM : (.*?) /', $veri, $aracKM);
-
-                preg_match('/Yakıt : (.*?) /', $veri, $yakit);
-
-                preg_match('/Vites : (.*?) /', $veri, $vites);
-
-                preg_match('/Araç Türü : (.*?) /', $veri, $aracTuru);
-
-                preg_match('/Silindir : (.*?) /', $veri, $silindir);
-
-                preg_match('/Şase No : (.*?) /', $veri, $shaseNo);
-
-                preg_match('/Hasar Nedeni : (.*?) /', $veri, $hasarNedeni);
-
-                preg_match('/Teklif Katları : (.*?) TL/', $veri, $teklifKatlari);
-
-                return [
-                    "ihaleTipi" => $ihaleTipi[1],
-                    "tsrsbBedeli" => $tsrsbBedeli[1],
-                    "bulunduguIl" => $bulunduguIl[1],
-                    "plaka" => $plaka[1],
-                    "modelYili" => $modelYili[1],
-                    "aracKM" => $aracKM[1],
-                    "yakit" => $yakit[1],
-                    "vites" => $vites[1],
-                    "aracTuru" => $aracTuru[1],
-                    "silindir" => $silindir[1],
-                    "shaseNo" => $shaseNo[1],
-                    "hasarNedeni" => $hasarNedeni[1],
-                    "teklifKatlari" => $teklifKatlari[1],
-                ];
-
-            });
+        // Detayları filtreleyip düzeltmek için
+        if (!empty($detailData)) {
+            return $detailData[0]; // Eğer birden fazla varsa, ilkini döndürüyoruz
+        } else {
+            return []; // Eğer veri yoksa boş dizi döndürüyoruz
+        }
     }
 
-    public function parseNameData($html, $type)
+    public function parseNameData($html)
     {
         $crawler = new Crawler($html);
 
-        return $crawler->filter('.content-width.title')
-            ->each(function ($node) use ($type) {
-                $text = $node->text();
+        // İlk başta boş bir dizi tanımla
+        $data = [];
 
-                $text = str_replace("&nbsp;", " ", $text);
-                $veri = str_replace("SATIŞA HAZIR", "", $text);
+        // Veriyi filtrele ve parçala
+        $crawler->filter('.xad-breadcrumb h4')->each(function ($node) use (&$data) {
+            $text = $node->text();
+            $text = str_replace("&nbsp;", " ", $text);
+            $text = trim($text);
 
-                $explode = explode(" - ", $veri);
+            // Veriyi " - " ile parçalayarak marka, model ve yılı ayır
+            $explode = explode(" - ", $text);
 
-                $brand = $explode[0];
+            $data = [
+                'brand' => $explode[0] ?? '',
+                'model' => $explode[1] ?? '',
+                'year' => $explode[2] ?? '',
+            ];
+        });
 
-                $modelexplode = preg_replace("/^\d+\s*/", "", $explode[1] ?? null);
-
-                $modelimplode = explode(" ", $modelexplode);
-                $model = $modelimplode[0];
-
-                if ($type == "name") {
-                    return $veri;
-                } elseif ($type == "brand") {
-                    return $brand;
-                } elseif ($type == "model") {
-                    return $model;
-                }
-            });
+        return $data;
     }
 }

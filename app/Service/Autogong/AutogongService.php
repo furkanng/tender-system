@@ -12,7 +12,7 @@ class AutogongService
 
     const LOGIN_URL = "https://www.autogong.com/uye/uyeGiris";
     const ARSIV_URL = "https://www.autogong.com/ihale/arsivim/";
-    const ALL_CARS_URL = "https://www.autogong.com/ihale/butunaraclar/";
+    const ALL_CARS_URL = "https://www.autogong.com/ihale/";
     const ALL_CARS_DETAIL_URL = "https://www.autogong.com/ihale/ihale_detayi/";
 
     protected $username;

@@ -33,16 +33,18 @@ class DetailJob implements ShouldQueue
     {
         $outputData = $autogongService->getCarsDetail($this->keys) ?? null;
 
-        $car = Tender::query()->where("tender_no", $outputData["tender_no"])->first();
+        $car = Tender::query()->where("tender_no", $outputData["ihaleNo"])->first();
+
 
         if (!$car) {
             DB::table("tenders")->insert([
                 'company_id' => 1,
-                'tender_no' => $outputData['tender_no'],
+                'tender_no' => $outputData['ihaleNo'],
+                'tender_type' => $outputData['ihaleTipi'],
                 'plate' => $outputData['plaka'],
-                'name' => $outputData['name'],
-                'brand' => $outputData['brand'],
-                'model' => $outputData['model'],
+                'name' => $outputData['title']['brand'] . ' ' . $outputData['title']['model'],
+                'brand' => $outputData['title']['brand'],
+                'model' => $outputData['title']['model'],
                 'year' => $outputData['modelYili'],
                 'km' => $outputData['aracKM'],
                 'fuel_type' => $outputData['yakit'],
@@ -52,15 +54,14 @@ class DetailJob implements ShouldQueue
                 'sase_no' => $outputData['shaseNo'],
                 'car_type' => $outputData['aracTuru'],
                 'images' => $outputData['images'],
-                'serviceName' => $outputData['location']["ServisAdi"],
-                'address' => $outputData['location']["Adres"],
-                'servicePhone' => $outputData['location']["SabitTel"],
-                'city' => $outputData['location']["il"],
-                'district' => $outputData['location']["ilce"],
+                'serviceName' => $outputData['location']['ServisAdi'],
+                'address' => $outputData['location']['Adres'],
+                'servicePhone' => $outputData['location']['CepTel'],
+                'city' => $outputData['location']['il'],
+                'district' => $outputData['location']['ilce'],
                 'damages' => $outputData['damages'],
                 'created_at' => now(),
             ]);
         }
-
     }
 }
