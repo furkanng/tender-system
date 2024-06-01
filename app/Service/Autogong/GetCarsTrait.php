@@ -4,16 +4,21 @@ namespace App\Service\Autogong;
 
 use App\Jobs\Autogong\DetailJob;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait GetCarsTrait
 {
-    public function allCarsSave()
+    public function allCarsGet()
     {
-        $tenderNumbers = $this->getTenderNumber();
+        try {
+            $tenderNumbers = $this->getTenderNumber();
 
-        foreach ($tenderNumbers as $key) {
-            DetailJob::dispatch($key);
+            foreach ($tenderNumbers as $key) {
+                DetailJob::dispatch($key);
+            }
+        } catch (\Exception $e) {
+            $this->handleError($e);
         }
     }
 
@@ -21,18 +26,22 @@ trait GetCarsTrait
     {
         $tenderNumbers = [];
 
-        for ($sayfa = 1; $sayfa <= 1; $sayfa++) {
-            $response = $this->client->request("POST", self::ALL_CARS_URL, [
-                'form_params' => [
-                    'ref_no' => 1,
-                    'page' => $sayfa
-                ],
-                'timeout' => 20,
-                'cookies' => $this->jar,
-            ])->getBody()->getContents();
+        try {
+            for ($page = self::TENDER_FIRST_PAGE; $page <= self::TENDER_LAST_PAGE; $page++) {
+                $response = $this->client->request("POST", self::ALL_CARS_URL, [
+                    'form_params' => [
+                        'ref_no' => 1,
+                        'page' => $page
+                    ],
+                    'timeout' => 20,
+                    'cookies' => $this->jar,
+                ])->getBody()->getContents();
 
-            $pageTenderNumbers = $this->parseNumberData($response);
-            $tenderNumbers = array_merge($tenderNumbers, $pageTenderNumbers);
+                $pageTenderNumbers = $this->parseNumberData($response);
+                $tenderNumbers = array_merge($tenderNumbers, $pageTenderNumbers);
+            }
+        } catch (\Exception $e) {
+            $this->handleError($e);
         }
 
         return $tenderNumbers;
@@ -47,7 +56,7 @@ trait GetCarsTrait
             if (preg_match('/arac_liste_(\d+)/', $id, $matches)) {
                 return $matches[1];
             } else {
-                \Log::error("Hatalı veri: " . $id);
+                $this->handleError(new \Exception("Hatalı veri: " . $id));
                 return null;
             }
         });
@@ -59,202 +68,178 @@ trait GetCarsTrait
 
     public function getCarsDetail($number)
     {
-        $response = $this->client->request("GET", self::ALL_CARS_DETAIL_URL . $number, [
-            'timeout' => 20,
-            'cookies' => $this->jar,
-        ])->getBody()->getContents();
+        try {
+            $response = $this->client->request("GET", self::ALL_CARS_DETAIL_URL . $number, [
+                'timeout' => 20,
+                'cookies' => $this->jar,
+            ])->getBody()->getContents();
 
-        $carDetail = $this->parseDetailData($response);
-        $carDetail["location"] = $this->parseLocationData($response) ?? null;
-        $carDetail["damages"] = $this->parseDamageData($response) ?? null;
-        $carDetail['tender_no'] = $number;
-        $carDetail['images'] = $this->parseImageData($response) ?? null;
-        $carDetail["title"] = $this->parseNameData($response) ?? null;
-        $carDetail["closed_date"] = $this->parseClosedDate($response) ?? null;
-
-        return $carDetail;
-    }
-
-    public function parseClosedDate($html)
-    {
-        $crawler = new Crawler($html);
-
-        // JavaScript kodu içerisindeki ihale_bitis_tarihi değerini çekmek için regex kullanıyoruz
-        $pattern = '/"ihale_bitis_tarihi":\s*"([^"]+)"/';
-        preg_match($pattern, $html, $matches);
-
-        // Eşleşen değeri alıyoruz
-        if (!empty($matches) && isset($matches[1])) {
-            $ihaleBitisTarihi = $matches[1];
-        } else {
-            $ihaleBitisTarihi = '';
+            return array_filter($this->parseDetailData($response));
+        } catch (\Exception $e) {
+            $this->handleError($e);
+            return [];
         }
-
-        // ihale_bitis_tarihi değerini timestamp'e çeviriyoruz
-        if (!empty($ihaleBitisTarihi)) {
-            $timestamp = Carbon::parse($ihaleBitisTarihi)->timestamp;
-        } else {
-            $timestamp = null; // Eğer ihale_bitis_tarihi değeri boşsa null döndürüyoruz
-        }
-
-        return $timestamp;
     }
 
-    public function parseImageData($html)
-    {
-        $crawler = new Crawler($html);
-
-        $liElements = $crawler->filter('#lightgallery li[data-src]'); // data-src özelliğine sahip li etiketlerini seç
-
-        $imageUrls = [];
-
-        foreach ($liElements as $li) {
-            $liCrawler = new Crawler($li); // Her bir li için ayrı bir Crawler oluştur
-            $img = $liCrawler->filter('img'); // li içindeki img etiketlerini filtrele
-
-            if ($img->count() > 0) {
-                $imageUrl = $liCrawler->attr('data-src');
-                $imageUrls[] = $imageUrl;
-            }
-        }
-
-        return json_encode($imageUrls);
-    }
-
-    public function parseDamageData($html)
-    {
-        $crawler = new Crawler($html);
-
-        $data = $crawler->filter('.xad-damage-records .card .card-body .card-table')->each(function ($node) {
-            $text = $node->text();
-            $text = str_replace("&nbsp;", " ", $text);
-            $text = trim($text);
-
-            return $text;
-        });
-
-        // Veriyi düzenle ve istenen formatta döndür
-        return $data[0];
-    }
-
-    public function parseLocationData($html)
-    {
-        $crawler = new Crawler($html);
-
-        $data = [
-            "ServisAdi" => '',
-            "Adres" => '',
-            "CepTel" => '',
-            "il" => '',
-            "ilce" => '',
-            "contract" => '',
-        ];
-
-        $crawler->filter('.xad-damage-records .card .card-body .card-table .card-table-content')->each(function ($node) use (&$data) {
-            $title = $node->filter('.card-table-title')->text();
-            $info = $node->filter('.card-table-info')->text();
-
-            switch ($title) {
-                case 'Servis Adı':
-                    // 'Anlaşmasız' veya 'Anlaşmalı' kelimelerini kontrol et ve kaldır
-                    if (strpos($info, 'Anlaşmasız') !== false) {
-                        $data['contract'] = 'Anlaşmasız';
-                        $info = str_replace(' Anlaşmasız', '', $info);
-                    } else {
-                        $data['contract'] = 'Anlaşmalı';
-                        $info = str_replace(' Anlaşmalı', '', $info);
-                    }
-                    // 'span' etiketini kaldır
-                    $info = preg_replace('/<span[^>]*>.*<\/span>/', '', $info);
-                    $data['ServisAdi'] = trim($info);
-                    break;
-                case 'Adres':
-                    $data['Adres'] = $info;
-                    break;
-                case 'Cep Tel':
-                    $data['CepTel'] = $info;
-                    break;
-                case 'İl':
-                    $data['il'] = $info;
-                    break;
-                case 'İlçe':
-                    $data['ilce'] = $info;
-                    break;
-            }
-        });
-
-        return $data;
-    }
 
     public function parseDetailData($html)
     {
-        $crawler = new Crawler($html);
+        try {
+            $crawler = new Crawler($html);
 
-        // Tek bir araç detayını almak için
-        $detailData = $crawler->filterXpath('//div[@class="xad-detail"]')->each(function ($node) {
-            // İlgili alanların değerlerini alıyoruz
-            $ihaleNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale NO"]]')->text();
-            $ihaleTipi = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale Tipi"]]')->text();
-            $tsrsbBedeli = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="TSRSB Bedeli"]]')->text();
-            $bulunduguIl = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Bulunduğu İl"]]')->text();
-            $plaka = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Plaka"]]')->text();
-            $modelYili = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Model Yılı"]]')->text();
-            $aracKM = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç KM"]]')->text();
-            $yakit = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Yakıt"]]')->text();
-            $vites = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Vites"]]')->text();
-            $aracTuru = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç Türü"]]')->text();
-            $silindir = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Silindir"]]')->text();
-            $shaseNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Şase No"]]')->text();
-            $hasarNedeni = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Hasar Nedeni"]]')->text();
+            // Tek bir araç detayını almak için
+            $detailData = $crawler->filterXpath('//div[@class="xad-detail"]')->each(function ($node) {
+                // İlgili alanların değerlerini alıyoruz
+                $ihaleNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale NO"]]')->text();
+                $ihaleTipi = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale Tipi"]]')->text();
+                $tsrsbBedeli = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="TSRSB Bedeli"]]')->text();
+                $bulunduguIl = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Bulunduğu İl"]]')->text();
+                $plaka = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Plaka"]]')->text();
+                $modelYili = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Model Yılı"]]')->text();
+                $aracKM = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç KM"]]')->text();
+                $yakit = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Yakıt"]]')->text();
+                $vites = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Vites"]]')->text();
+                $aracTuru = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç Türü"]]')->text();
+                $silindir = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Silindir"]]')->text();
+                $shaseNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Şase No"]]')->text();
+                $hasarNedeni = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Hasar Nedeni"]]')->text();
 
-            return [
-                "ihaleNo" => trim($ihaleNo),
-                "ihaleTipi" => trim($ihaleTipi),
-                "tsrsbBedeli" => trim($tsrsbBedeli),
-                "bulunduguIl" => trim($bulunduguIl),
-                "plaka" => trim($plaka),
-                "modelYili" => trim($modelYili),
-                "aracKM" => trim($aracKM),
-                "yakit" => trim($yakit),
-                "vites" => trim($vites),
-                "aracTuru" => trim($aracTuru),
-                "silindir" => trim($silindir),
-                "shaseNo" => trim($shaseNo),
-                "hasarNedeni" => trim($hasarNedeni)
+                return [
+                    "tender_no" => trim($ihaleNo),
+                    "tender_doc" => trim($ihaleTipi),
+                    "tsrsb" => trim($tsrsbBedeli),
+                    "city" => trim($bulunduguIl),
+                    "plate" => trim($plaka),
+                    "year" => trim($modelYili),
+                    "km" => trim($aracKM),
+                    "fuel_type" => trim($yakit),
+                    "gear" => trim($vites),
+                    "car_type" => trim($aracTuru),
+                    "roll" => trim($silindir),
+                    "sase_no" => trim($shaseNo),
+                    "damages" => trim($hasarNedeni),
+                ];
+            });
+
+            $serviceData = [
+                "service_name" => '',
+                "address" => '',
+                "service_phone" => '',
+                "city" => '',
+                "district" => '',
+                "service_type" => '',
             ];
-        });
 
-        // Detayları filtreleyip düzeltmek için
-        if (!empty($detailData)) {
-            return $detailData[0]; // Eğer birden fazla varsa, ilkini döndürüyoruz
-        } else {
-            return []; // Eğer veri yoksa boş dizi döndürüyoruz
+            $crawler->filter('.xad-damage-records .card .card-body .card-table .card-table-content')->each(function ($node) use (&$serviceData) {
+                $title = $node->filter('.card-table-title')->text();
+                $info = $node->filter('.card-table-info')->text();
+
+                switch ($title) {
+                    case 'Servis Adı':
+                        if (strpos($info, 'Anlaşmasız') !== false) {
+                            $serviceData['service_type'] = 'Anlaşmasız';
+                            $info = str_replace(' Anlaşmasız', '', $info);
+                        } else {
+                            $serviceData['service_type'] = 'Anlaşmalı';
+                            $info = str_replace(' Anlaşmalı', '', $info);
+                        }
+                        $serviceData['service_name'] = trim($info);
+                        break;
+                    case 'Adres':
+                        $serviceData['address'] = $info;
+                        break;
+                    case 'Cep Tel':
+                        $serviceData['service_phone'] = $info;
+                        break;
+                    case 'İl':
+                        $serviceData['city'] = $info;
+                        break;
+                    case 'İlçe':
+                        $serviceData['district'] = $info;
+                        break;
+                }
+            });
+
+            $tenderData = array_merge($detailData[0], $serviceData);
+
+            $damageData = $crawler->filter('.xad-damage-records .card .card-body .card-table')->each(function ($node) {
+                $text = $node->text();
+                $text = str_replace("&nbsp;", " ", $text);
+                $text = trim($text);
+
+                return $text;
+            });
+
+            $tenderData["damages"] = $damageData[0];
+
+            $liElements = $crawler->filter('#lightgallery li[data-src]'); // data-src özelliğine sahip li etiketlerini seç
+
+            $imageUrls = [];
+
+            foreach ($liElements as $li) {
+                $liCrawler = new Crawler($li); // Her bir li için ayrı bir Crawler oluştur
+                $img = $liCrawler->filter('img'); // li içindeki img etiketlerini filtrele
+
+                if ($img->count() > 0) {
+                    $imageUrl = $liCrawler->attr('data-src');
+                    $imageUrls[] = $imageUrl;
+                }
+            }
+
+            $tenderData["images"] = json_encode($imageUrls);
+
+            $nameData = [];
+
+            $crawler->filter('.xad-breadcrumb h4')->each(function ($node) use (&$nameData) {
+                $text = $node->text();
+                $text = str_replace("&nbsp;", " ", $text);
+                $text = trim($text);
+
+                // Veriyi " - " ile parçalayarak marka, model ve yılı ayır
+                $explode = explode(" - ", $text);
+
+                $nameData = [
+                    'brand' => $explode[0] ?? '',
+                    'model' => $explode[1] ?? '',
+                ];
+            });
+
+            $tenderData = array_merge($tenderData, $nameData);
+
+            $pattern = '/"ihale_bitis_tarihi":\s*"([^"]+)"/';
+            preg_match($pattern, $html, $matches);
+
+            // Eşleşen değeri alıyoruz
+            if (!empty($matches) && isset($matches[1])) {
+                $ihaleBitisTarihi = $matches[1];
+            } else {
+                $ihaleBitisTarihi = '';
+            }
+
+            // ihale_bitis_tarihi değerini timestamp'e çeviriyoruz
+            if (!empty($ihaleBitisTarihi)) {
+                $timestamp = Carbon::parse($ihaleBitisTarihi)->timestamp;
+            } else {
+                $timestamp = null; // Eğer ihale_bitis_tarihi değeri boşsa null döndürüyoruz
+            }
+
+            $tenderData["closed_date"] = $timestamp;
+
+            return $tenderData;
+
+        } catch (\Exception $e) {
+            $this->handleError($e);
+            return [];
         }
     }
 
-    public function parseNameData($html)
+    private function handleError(\Exception $e)
     {
-        $crawler = new Crawler($html);
-
-        // İlk başta boş bir dizi tanımla
-        $data = [];
-
-        // Veriyi filtrele ve parçala
-        $crawler->filter('.xad-breadcrumb h4')->each(function ($node) use (&$data) {
-            $text = $node->text();
-            $text = str_replace("&nbsp;", " ", $text);
-            $text = trim($text);
-
-            // Veriyi " - " ile parçalayarak marka, model ve yılı ayır
-            $explode = explode(" - ", $text);
-
-            $data = [
-                'brand' => $explode[0] ?? '',
-                'model' => $explode[1] ?? '',
-                'year' => $explode[2] ?? '',
-            ];
-        });
-
-        return $data;
+        Log::error('An error occurred', [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
     }
+
 }

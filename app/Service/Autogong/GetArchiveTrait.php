@@ -12,7 +12,14 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait GetArchiveTrait
 {
-    public function getArchive($page)
+    public function getArchives()
+    {
+        for ($page = self::ARCHIVE_FIRST_PAGE; $page <= self::ARCHIVE_LAST_PAGE; $page++) {
+            ArchiveJob::dispatch($page);
+        }
+    }
+
+    public function getArchivePage($page)
     {
         $response = $this->client->request("GET", self::ARSIV_URL . "?per_page=$page", [
             'timeout' => 60,
@@ -20,14 +27,14 @@ trait GetArchiveTrait
         ])->getBody()->getContents();
 
 
-        return $this->parseArchiveData($response);
+        $this->parseArchiveData($response);
     }
 
     public function parseArchiveData($html)
     {
         $crawler = new Crawler($html);
 
-        $productTitles = $crawler->filterXpath('//div[@class="arsiv-row content-width"]')->each(function ($node) {
+        $cars = $crawler->filterXpath('//div[@class="arsiv-row content-width"]')->each(function ($node) {
             $text = $node->text();
             $data = trim(str_replace("&nbsp", "", $text));
 
@@ -42,16 +49,16 @@ trait GetArchiveTrait
                 $durum = str_replace(" Durum", "", $durum);
 
                 return [
-                    "firmaId" => 1,
-                    'ihaleNo' => $matches[1],
-                    'plaka' => $matches[2],
-                    'arac' => $matches[3],
-                    'sehir' => $matches[5],
-                    'tarih' => $matches[6],
-                    'sira' => $matches[7],
-                    'teklifim' => $matches[8],
-                    'kazananTeklif' => $kazananTeklif,
-                    'durum' => $durum,
+                    "company_id" => 1,
+                    'tender_no' => $matches[1],
+                    'plate' => $matches[2],
+                    'car' => $matches[3],
+                    'city' => $matches[5],
+                    'date' => $matches[6],
+                    'order' => $matches[7],
+                    'my_bid' => $matches[8],
+                    'bid_win' => $kazananTeklif,
+                    'status' => $durum,
                 ];
             } else {
                 \Log::error("Hatalı veri: " . $data);
@@ -61,68 +68,30 @@ trait GetArchiveTrait
 
         });
 
-        $this->dataArchiveControl(array_filter($productTitles));
-
-        return $productTitles;
+        $this->archiveSave(array_filter($cars));
     }
 
-    public function dataArchiveControl($productTitles)
+    public function archiveSave($cars)
     {
-        foreach ($productTitles as $product) {
-            // Veritabanında ilgili AracNo'ya sahip kaydı ara
-            $existingRecord = Archive::where('tender_no', $product['ihaleNo'])->first();
+        foreach ($cars as $car) {
 
-            $teklif = Bid::where('company_id', 1)->where('tender_id', $product['ihaleNo'])
-                ->where('transfer_status', '1')->first();
+            $existingRecord = Archive::where('tender_no', $car['tender_no'])->first();
 
-            if ($teklif !== null) {
-                $teklifVeren = User::where('id', $teklif->user_id)->first();
-                $product['teklifVerenIsim'] = $teklifVeren->name;
-                $product['teklifVerenNo'] = $teklifVeren->phone;
-            }
-
-            if ($existingRecord) {
-                // Veri tabanında kayıt var, güncelleme yapılması gerekiyor mu kontrol et
-                if ($existingRecord->status != $product['durum'] || $existingRecord->my_bid != $product['teklifim']) {
-                    // Kayıt güncellenmeli, örneğin:
-                    $existingRecord->status = $product['durum'];
-                    $existingRecord->my_bid = $product['teklifim'];
-                    $existingRecord->bid_win = $product['kazananTeklif'];
-                    $existingRecord->save();
-                    // Loglama
-                    \Log::info('Kayıt güncellendi: ' . $existingRecord->id);
-                }
-            } else {
-                // Veritabanında kayıt yok, yeni kayıt oluştur
+            if (!$existingRecord) {
                 DB::table("archives")->insert([
                     "company_id" => 1,
-                    "company_name" => "Autogong",
-                    'tender_no' => $product['ihaleNo'],
-                    'plate' => $product['plaka'],
-                    'car' => $product['arac'],
-                    'city' => $product['sehir'],
-                    'date' => Carbon::parse($product['tarih'])->timestamp,
-                    'order' => $product['sira'],
-                    'my_bid' => $product['teklifim'],
-                    'bid_win' => $product['kazananTeklif'],
-                    'status' => $product['durum'],
+                    'tender_no' => $car['tender_no'],
+                    'plate' => $car['plate'],
+                    'car' => $car['car'],
+                    'city' => $car['city'],
+                    'date' => Carbon::parse($car['date'])->timestamp,
+                    'order' => $car['order'],
+                    'my_bid' => $car['my_bid'],
+                    'bid_win' => $car['bid_win'],
+                    'status' => $car['status'],
                     'created_at' => now(),
                 ]);
-                // Loglama
-                \Log::info('Yeni kayıt oluşturuldu: ' . $product['ihaleNo']);
             }
-
-
-        }
-    }
-
-    public function archiveSave()
-    {
-        $startPage = 1;
-        $endPage = 40;
-
-        for ($page = $startPage; $page <= $endPage; $page++) {
-            ArchiveJob::dispatch($page);
         }
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DetailJob implements ShouldQueue
 {
@@ -31,40 +32,58 @@ class DetailJob implements ShouldQueue
      */
     public function handle(AutogongService $autogongService)
     {
-        $outputData = $autogongService->getCarsDetail($this->keys) ?? null;
+        try {
+            $outputData = $autogongService->getCarsDetail($this->keys);
 
-        $car = Tender::query()->where("tender_no", $outputData["ihaleNo"])->first();
+            $car = Tender::query()->where("tender_no", $outputData["tender_no"])->first();
 
-        if (!$car) {
-            DB::table("tenders")->insert([
+            $data = [
                 'company_id' => 1,
-                'tender_no' => $outputData['ihaleNo'],
-                'closed_date' => $outputData['closed_date'],
-                'tender_type' => $outputData['ihaleTipi'],
-                'plate' => $outputData['plaka'],
-                'name' => $outputData['title']['brand'] . ' ' . $outputData['title']['model'],
-                'brand' => $outputData['title']['brand'],
-                'model' => $outputData['title']['model'],
-                'year' => $outputData['modelYili'],
-                'km' => $outputData['aracKM'],
-                'fuel_type' => $outputData['yakit'],
-                'roll' => $outputData['silindir'],
-                'tsrsb' => $outputData['tsrsbBedeli'],
-                'gear' => $outputData['vites'],
-                'sase_no' => $outputData['shaseNo'],
-                'car_type' => $outputData['aracTuru'],
-                'images' => $outputData['images'],
-                'serviceName' => $outputData['location']['ServisAdi'],
-                'address' => $outputData['location']['Adres'],
-                'servicePhone' => $outputData['location']['CepTel'],
-                'city' => $outputData['location']['il'],
-                'district' => $outputData['location']['ilce'],
-                'damages' => $outputData['damages'],
+                'tender_no' => $outputData['tender_no'] ?? '',
+                'closed_date' => $outputData['closed_date'] ?? '',
+                'tender_doc' => $outputData['tender_doc'] ?? '',
+                'plate' => $outputData['plate'] ?? '',
+                'name' => ($outputData['brand'] ?? '') . ' ' . ($outputData['model'] ?? ''),
+                'brand' => $outputData['brand'] ?? '',
+                'model' => $outputData['model'] ?? '',
+                'year' => $outputData['year'] ?? '',
+                'km' => $outputData['km'] ?? '',
+                'fuel_type' => $outputData['fuel_type'] ?? '',
+                'roll' => $outputData['roll'] ?? '',
+                'tsrsb' => $outputData['tsrsb'] ?? '',
+                'gear' => $outputData['gear'] ?? '',
+                'sase_no' => $outputData['sase_no'] ?? '',
+                'car_type' => $outputData['car_type'] ?? '',
+                'images' => $outputData['images'] ?? '',
+                'service_name' => $outputData['service_name'] ?? '',
+                'address' => $outputData['address'] ?? '',
+                'service_phone' => $outputData['service_phone'] ?? '',
+                'service_type' => $outputData['service_type'] ?? '',
+                'city' => $outputData['city'] ?? '',
+                'district' => $outputData['district'] ?? '',
+                'damages' => $outputData['damages'] ?? '',
                 'created_at' => now(),
-            ]);
-        } else {
-            DB::table("tenders")->where("tender_no", $outputData['ihaleNo'])
-                ->update(['closed_date' => $outputData['closed_date']]);
+            ];
+
+            if (!$car) {
+                DB::table("tenders")->insert($data);
+            } else {
+                DB::table("tenders")->where("tender_no", $outputData['tender_no'])
+                    ->update([
+                        'closed_date' => $outputData['closed_date'] ?? $car->closed_date,
+                    ]);
+            }
+        } catch (\Exception $e) {
+            $this->handleError($e);
         }
+    }
+
+    private function handleError(\Exception $e)
+    {
+        Log::error('An error occurred', [
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
     }
 }

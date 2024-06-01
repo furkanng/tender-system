@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Service\Autogong;
+namespace App\Service\SovtajYeri;
 
 use App\Models\Company;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 
-class AutogongService
+class SovtajyeriService
 {
-    use GetArchiveTrait, GetCarsTrait, GetTenderTrait;
+    use GetTenderTrait, GetArchiveTrait;
 
-    const LOGIN_URL = "https://www.autogong.com/uye/uyeGiris";
-    const ARSIV_URL = "https://www.autogong.com/ihale/arsivim/";
-    const ALL_CARS_URL = "https://www.autogong.com/ihale/";
-    const ALL_CARS_DETAIL_URL = "https://www.autogong.com/ihale/ihale_detayi/";
+    const URL = "https://ihale.sovtajyeri.com";
+    const LOGIN_URL = "https://ihale.sovtajyeri.com/giris_kontrol.do?";
+    const ALL_TENDERS = "https://ihale.sovtajyeri.com/ihale/pert_ihaleler.do?route=&sayfa=";
+
+    const ARCHIVE_URL = "https://ihale.sovtajyeri.com/rapor/ihale_arsivim.do?route=rapor/ihale_arsivim";
     const TENDER_FIRST_PAGE = 1;
-    const TENDER_LAST_PAGE = 4;
-    const ARCHIVE_FIRST_PAGE = 1;
-    const ARCHIVE_LAST_PAGE = 40;
+    const TENDER_LAST_PAGE = 3;
 
     protected $username;
     protected $password;
@@ -26,7 +25,7 @@ class AutogongService
 
     public function __construct()
     {
-        $kullanici = Company::findOrFail(1);
+        $kullanici = Company::findOrFail(3);
         $this->username = $kullanici->email;
         $this->password = $kullanici->password;
 
@@ -38,13 +37,14 @@ class AutogongService
     protected function login()
     {
         $fields = [
-            "email" => $this->username,
-            "password" => $this->password,
+            "kullanici" => $this->username,
+            "sifre" => $this->password,
         ];
 
         $response = $this->loginPost($fields);
         $result = json_decode($response, true);
-        if ($result["result"] !== "success") {
+
+        if ($result["HATA"] == true) {
             echo "firmaya login olunamadı";
             exit();
         }

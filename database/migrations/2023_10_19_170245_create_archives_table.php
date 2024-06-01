@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('archives', function (Blueprint $table) {
             $table->id();
             $table->integer("company_id")->nullable();
-            $table->string("company_name")->nullable();
             $table->string("tender_no")->nullable();
             $table->string("plate")->nullable();
             $table->string("car")->nullable();

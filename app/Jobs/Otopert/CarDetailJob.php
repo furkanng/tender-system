@@ -18,14 +18,14 @@ class CarDetailJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $client;
+    protected $car;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($client)
+    public function __construct($car)
     {
-        $this->client = $client;
+        $this->car = $car;
     }
 
     /**
@@ -34,86 +34,59 @@ class CarDetailJob implements ShouldQueue
     public function handle(OtopertService $otopertService)
     {
         try {
-            $crawler = new Crawler($this->client);
 
-            $response = [];
-            $desiredPart = $crawler->filter('.b-goods-f h2')->each(function (Crawler $h2Node) use (&$response) {
-                try {
-                    // H2 içindeki ilk a etiketinin href değerini alıyoruz
-                    $firstHrefValue = $h2Node->filter('a')->first()->attr('href');
-                    return str_replace('https://www.otopert.com.tr/arac-detay/', '', $firstHrefValue);
-                } catch (\Exception $e) {
-                    $this->handleError($e);
-                    return null;
-                }
-            });
+            $detail = $otopertService->getCarDetails($this->car);
 
-            foreach ($desiredPart as $part) {
-                if ($part) {
-                    try {
-                        $response[] = $otopertService->getCarDetails($part);
-                    } catch (\Exception $e) {
-                        $this->handleError($e);
-                    }
+            $item = [
+                'ModelYear' => $detail['Model Yılı:'] ?? null,
+                'Brand' => $detail['Modeli:'] ?? null,
+                'Gear' => $detail['Vites:'] ?? null,
+                'Plate' => $detail['Plaka:'] ?? null,
+                'Km' => $detail['Km:'] ?? null,
+                'FuelType' => $detail['Yakıt Türü:'] ?? null,
+                'Damage' => $detail['Hasarı:'] ?? null,
+                'CarType' => $detail['Araç Türü:'] ?? null,
+                'Name' => $detail['Name'] ?? null,
+                'PlateStatus' => $detail['Plaka Durumu:'] ?? null,
+                'ServiceType' => $detail['Servis Türü:'] ?? null,
+                'ServiceCity' => $detail['Servis İli:'] ?? null,
+                'ServiceTel' => $detail['Servis Tel:'] ?? null,
+                'ServiceName' => $detail['Servisin Adı:'] ?? null,
+                'TenderNo' => $detail['TenderNo'] ?? null,
+                'TenderClosedDate' => $detail['TenderClosedDate'] ?? null,
+                'Images' => $detail['Images'] ?? null,
+            ];
+
+            try {
+                $car = Tender::query()->where("tender_no", rtrim($item['TenderNo'], '/'))->first();
+
+                if (!$car) {
+                    DB::table("tenders")->insert([
+                        'company_id' => 2,
+                        'tender_no' => rtrim($item['TenderNo'], '/'),
+                        'plate' => $item['Plate'],
+                        'name' => $item['Name'],
+                        'brand' => $item['Brand'],
+                        'year' => $item['ModelYear'],
+                        'km' => $item['Km'],
+                        'fuel_type' => $item['FuelType'],
+                        'gear' => $item['Gear'],
+                        'car_type' => $item['CarType'],
+                        'service_name' => $item["ServiceName"],
+                        'service_phone' => $item["ServiceTel"],
+                        'city' => $item["ServiceCity"],
+                        'service_type' => $item["ServiceType"],
+                        'tender_doc' => $item["PlateStatus"],
+                        'damages' => $item['Damage'],
+                        'closed_date' => $item['TenderClosedDate'],
+                        'images' => $item['Images'],
+                        'created_at' => now(),
+                    ]);
                 }
+            } catch (\Exception $e) {
+                $this->handleError($e);
             }
 
-            $renamedArray = [];
-
-            foreach ($response as $item) {
-                $renamedItem = [
-                    'ModelYear' => $item['Model Yılı:'] ?? null,
-                    'Brand' => $item['Modeli:'] ?? null,
-                    'Gear' => $item['Vites:'] ?? null,
-                    'Plate' => $item['Plaka:'] ?? null,
-                    'Km' => $item['Km:'] ?? null,
-                    'FuelType' => $item['Yakıt Türü:'] ?? null,
-                    'Damage' => $item['Hasarı:'] ?? null,
-                    'CarType' => $item['Araç Türü:'] ?? null,
-                    'Name' => $item['Name'] ?? null,
-                    'PlateStatus' => $item['Plaka Durumu:'] ?? null,
-                    'ServiceType' => $item['Servis Türü:'] ?? null,
-                    'ServiceCity' => $item['Servis İli:'] ?? null,
-                    'ServiceTel' => $item['Servis Tel:'] ?? null,
-                    'ServiceName' => $item['Servisin Adı:'] ?? null,
-                    'TenderNo' => $item['TenderNo'] ?? null,
-                    'TenderClosedDate' => $item['TenderClosedDate'] ?? null,
-                    'Images' => $item['Images'] ?? null,
-                ];
-
-                $renamedArray[] = $renamedItem;
-            }
-
-            foreach ($renamedArray as $item) {
-                try {
-                    $car = Tender::query()->where("tender_no", rtrim($item['TenderNo'], '/'))->first();
-
-                    if (!$car) {
-                        DB::table("tenders")->insert([
-                            'company_id' => 2,
-                            'tender_no' => rtrim($item['TenderNo'], '/'),
-                            'plate' => $item['Plate'],
-                            'name' => $item['Name'],
-                            'brand' => $item['Brand'],
-                            'year' => $item['ModelYear'],
-                            'km' => $item['Km'],
-                            'fuel_type' => $item['FuelType'],
-                            'gear' => $item['Gear'],
-                            'car_type' => $item['CarType'],
-                            'serviceName' => $item["ServiceName"],
-                            'servicePhone' => $item["ServiceTel"],
-                            'city' => $item["ServiceCity"],
-                            'district' => $item["ServiceType"],
-                            'damages' => $item['Damage'],
-                            'closed_date' => $item['TenderClosedDate'],
-                            'images' => $item['Images'],
-                            'created_at' => now(),
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                    $this->handleError($e);
-                }
-            }
         } catch (\Exception $e) {
             $this->handleError($e);
         }

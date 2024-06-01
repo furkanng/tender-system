@@ -53,31 +53,8 @@ trait GetArchiveTrait
         foreach ($tableData as $item) {
 
             $existingRecord = Archive::where('tender_no', $item['tender_no'])->first();
-            if ($existingRecord) {
 
-                $statusInDatabase = $existingRecord->status;
-                $myBidInDatabase = $existingRecord->my_bid;
-                $bigWinInDatabase = $existingRecord->big_win;
-
-                // Değerleri karşılaştır ve güncelleme yap
-                if ($item['status'] != $statusInDatabase) {
-                    $existingRecord->status = $item['status'];
-                }
-
-                if ($item['my_bid'] != $myBidInDatabase) {
-                    $existingRecord->my_bid = $item['my_bid'];
-                }
-
-                if ($item['bid_win'] != $bigWinInDatabase) {
-                    $existingRecord->bid_win = $item['bid_win'];
-                }
-
-                // Değişiklik varsa kaydı güncelle
-                if ($existingRecord->isDirty()) {
-                    $existingRecord->save();
-                }
-            } else {
-
+            if (!$existingRecord) {
                 DB::table('archives')->insert([
                     'company_id' => 2,
                     'tender_no' => $item['tender_no'],

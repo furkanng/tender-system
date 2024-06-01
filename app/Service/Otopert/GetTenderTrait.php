@@ -17,9 +17,36 @@ trait GetTenderTrait
                 "cookies" => $this->jar
             ])->getBody()->getContents();
 
-            CarDetailJob::dispatch($response);
+            $this->getCars($response);
         } catch (\Exception $e) {
             $this->handleError($e);
+        }
+    }
+
+    public function getCars($html)
+    {
+        $crawler = new Crawler($html);
+
+        $response = [];
+        $desiredPart = $crawler->filter('.b-goods-f h2')->each(function (Crawler $h2Node) use (&$response) {
+            try {
+                // H2 içindeki ilk a etiketinin href değerini alıyoruz
+                $firstHrefValue = $h2Node->filter('a')->first()->attr('href');
+                return str_replace('https://www.otopert.com.tr/arac-detay/', '', $firstHrefValue);
+            } catch (\Exception $e) {
+                $this->handleError($e);
+                return null;
+            }
+        });
+
+        foreach ($desiredPart as $part) {
+            if ($part) {
+                try {
+                    CarDetailJob::dispatch($part);
+                } catch (\Exception $e) {
+                    $this->handleError($e);
+                }
+            }
         }
     }
 

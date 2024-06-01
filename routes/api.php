@@ -1,10 +1,6 @@
 <?php
 
-use App\Mail\ErrorMail;
-use App\Service\Autogong\AutogongService;
-use App\Service\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,16 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get("test", function (Request $request) {
 
-    (new \App\Service\Autogong\AutogongService())->allCarsSave();
-    #(new \App\Service\Autogong\AutogongService())->archiveSave();
+    #(new \App\Service\Autogong\AutogongService())->allCarsGet();
+    #(new \App\Service\Autogong\AutogongService())->getArchives();
 
     #(new \App\Service\Otopert\OtopertService())->getAllCarsLite();
     #(new \App\Service\Otopert\OtopertService())->getArchiveData();
 
+    #(new \App\Service\SovtajYeri\SovtajyeriService())->AllCarsGet();
+    #(new \App\Service\SovtajYeri\SovtajyeriService())->AllArchivesGet();
 });

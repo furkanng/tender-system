@@ -29,7 +29,7 @@ class OtopertService
     public function __construct()
     {
 
-        $user = Company::findOrFail("2");
+        $user = Company::findOrFail(2);
         $this->username = $user->email;
         $this->password = $user->password;
 

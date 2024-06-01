@@ -29,6 +29,6 @@ class ArchiveJob implements ShouldQueue
      */
     public function handle(AutogongService $autogongService)
     {
-        $autogongService->getArchive($this->page);
+        $autogongService->getArchivePage($this->page);
     }
 }

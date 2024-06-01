@@ -3,13 +3,13 @@
 @section('title', 'Contact Page')
 @section('content')
     <div class="nav-align-top mb-4">
-        @if(session('message'))
-            <script>
-                $(document).ready(function () {
-                    $('#successModal').modal('show');
-                });
-            </script>
-        @endif
+            @if(session('message'))
+                <script>
+                    $(document).ready(function () {
+                        $('#successModal').modal('show');
+                    });
+                </script>
+            @endif
         <div class="tab-content">
             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
                 <div class="card-body">
