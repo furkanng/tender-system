@@ -32,6 +32,7 @@
                 <tr>
                     <th>Firma</th>
                     <th>Araç</th>
+                    <th>Resim</th>
                     <th>İhale No</th>
                     <th>Şehir</th>
                     <th>Tarih</th>
@@ -45,6 +46,16 @@
                         @php $company = \App\Models\Company::where("id",$archive->company_id)->first(); @endphp
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i>{{$company->name}}</td>
                         <td>{{$archive->car}}</td>
+                        <td>
+                            @if($archive->images)
+                            <a href="#">
+                            
+                            <img style="max-width:80px"
+                                 class="img-fluid img-responsive rounded product-image"
+                                 src="{{json_decode($archive["images"],true)[0]}}">
+                         </a>
+                         @endif
+                        </td>
                         <td><span class="badge bg-label-primary me-1">{{$archive->tender_no}}</span></td>
                         <td>{{$archive->city}}</td>
                         <td><span class="badge bg-label-secondary me-1">

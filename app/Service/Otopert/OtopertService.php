@@ -11,14 +11,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Archive;
 
+
 class OtopertService
 {
-    use GetTenderTrait, GetArchiveTrait;
+    use GetTenderTrait, GetArchiveTrait,OtopertPostBidTrait;
 
     const LOGIN_URL = "https://www.otopert.com.tr/anakontrol/girisyap";
     const TENDERS_URL_LITE = "https://www.otopert.com.tr/yayindaki-ihaleler-lite";
     const CARS_DETAILS = "https://www.otopert.com.tr/arac-detay/";
     const ARCHIVES = "https://www.otopert.com.tr/arsivim/?q=0";
+    const POST_TENDER = "https://www.otopert.com.tr/teklif_islemi";
 
     protected $username;
     protected $password;

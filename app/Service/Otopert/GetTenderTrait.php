@@ -49,6 +49,30 @@ trait GetTenderTrait
             }
         }
     }
+    
+    public function getCarBidId($crawler){
+        $numericValues = [];
+        try {
+            $elements = $crawler->filter('.teklif_alani');
+
+            $elements->each(function ($node) use (&$numericValues) {
+                $id = $node->attr('id');
+    
+                // Regex ile sayısal değeri ayıklayın
+                preg_match('/\d+/', $id, $matches);
+    
+                if (!empty($matches)) {
+                    $numericValues[] = $matches[0];
+                }
+            });
+            return $numericValues;
+        } catch (\Exception $e) {
+            $this->handleError($e);
+            return $numericValues;
+        }
+       
+
+    }
 
     public function getCarDetails($desiredPart)
     {
@@ -88,12 +112,16 @@ trait GetTenderTrait
             if (empty($carDetails)) {
                 throw new \Exception('Car details not found');
             }
+            $carBidId = $this->getCarBidId($crawler);
 
             $carDetails[0]['Name'] = $carName;
             $carDetails[0]['TenderNo'] = $desiredPart;
             $carDetails[0]['TenderClosedDate'] = Carbon::parse($dateInfo)->timestamp;
             $carDetails[0]['Images'] = $carImagesEncoded;
+            $carDetails[0]['CarBidId'] = $carBidId[0];
 
+            
+            
             $allDetailsData[] = $carDetails;
 
             $mergedArray = [];

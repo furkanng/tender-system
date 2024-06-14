@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -12,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = auth()->guard("user")->user()->id;
+        $user = auth()->guard("user")->user();
         return view("user.pages.profile", compact("user"));
     }
 
@@ -29,7 +31,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = auth()->guard("user")->user()->id;
+        $user = User::findOrFail($userId);
+
+        $input = array_filter($request->except('password'), function ($value) {
+            return $value !== null && $value !== '';
+        });
+    
+        // Şifre alanı kontrolü
+        if ($request->filled('password')) {
+            $input['password'] = Hash::make($request->input('password'));
+        }
+
+        $user->fill($input)->save();
+        return redirect()->route('user.profile.index')->with('message', 'İşlem Başarılı');
     }
 
     /**
@@ -53,7 +68,8 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       
+
     }
 
     /**

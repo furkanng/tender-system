@@ -56,9 +56,9 @@
                     <form method="POST" action="{{route("user.login")}}">
                         @csrf
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" name="email" id="floatingInput"
-                                   placeholder="email adresiniz">
-                            <label for="floatingInput">Email Adresi</label>
+                            <input type="text" class="form-control" name="login" id="floatingInput"
+                                   placeholder="Email/Telefon">
+                            <label for="floatingInput">Email / Telefon</label>
                         </div>
                         <div class="form-floating mb-4">
                             <input type="password" class="form-control" name="password" id="floatingPassword"

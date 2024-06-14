@@ -33,6 +33,7 @@ class Tender extends Model
         "district",
         "closed_date",
         "tender_type",
+        "car_bid_id",
         "status",
     ];
 }

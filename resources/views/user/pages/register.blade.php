@@ -66,6 +66,11 @@
                                    placeholder="Mail adresiniz">
                             <label for="floatingInput">Email Adresi</label>
                         </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="phone" id="floatingInput"
+                                   placeholder="Telefon numaranız">
+                            <label for="floatingInput">Telefon</label>
+                        </div>
                         <div class="form-floating mb-4">
                             <input type="password" class="form-control" name="password" id="floatingPassword"
                                    placeholder="Şifreniz">

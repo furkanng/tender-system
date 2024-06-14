@@ -16,16 +16,19 @@ class ArchiveController extends Controller
         $filter = $request->input('filter');
 
         $query = $filter
-            ? Archive::where('tender_no', 'LIKE', '%' . $filter . '%')
+            ? Archive::leftJoin('tenders', 'archives.tender_no', '=', 'tenders.tender_no')
+            ->select('archives.*', 'tenders.images')->where('tender_no', 'LIKE', '%' . $filter . '%')
                 //->orWhere('company_name', 'LIKE', '%' . $filter . '%')
                 ->orWhere('plate', 'LIKE', '%' . $filter . '%')
                 ->orWhere('car', 'LIKE', '%' . $filter . '%')
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
                 ->orWhere('status', 'LIKE', '%' . $filter . '%')
                 ->orderBy("date", "DESC")
-            : Archive::orderBy("date", "DESC");
+            : Archive::leftJoin('tenders', 'archives.tender_no', '=', 'tenders.tender_no')
+            ->select('archives.*', 'tenders.images')->orderBy("date", "DESC");
 
         $archives = $query->paginate(20);
+        //dd( $archives);
         $archives->appends(['filter' => $filter]);
         return view('panel.pages.arsiv', compact('archives'));
     }

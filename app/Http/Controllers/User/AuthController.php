@@ -17,13 +17,34 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        //$credentials = $request->only('email', 'password');
+        $login = $request->input('login'); 
+        $password = $request->input('password');
 
+        // Email ile giriş yapma denemesi
+    // E-posta veya telefon numarası olduğunu kontrol et
+    if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+        // Email ile giriş yapma denemesi
+        $credentials = ['email' => $login, 'password' => $password];
+    } else {
+        // Telefon numarası ile giriş yapma denemesi
+        $credentials = ['phone' => $login, 'password' => $password];
+    }
+
+    if (Auth::guard('user')->attempt($credentials)) {
+        return redirect()->route('user.home');
+    }
+    else{
+        return redirect()->route('front.login')->with('error', 'Giriş başarısız.');
+
+    }
+/*
         if (Auth::guard("user")->attempt($credentials)) {
             return redirect()->route('user.home');
         } else {
             return redirect()->route('front.login')->with('error', 'Giriş başarısız.');
-        }
+        }*/
+
     }
 
     public function logout()
@@ -36,8 +57,9 @@ class AuthController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "email" => "required|email",
+            //"email" => "required|email",
             "password" => "required|confirmed",
+            "phone"=>"required"
         ]);
 
         $model = new User();

@@ -36,6 +36,8 @@ class CarDetailJob implements ShouldQueue
         try {
 
             $detail = $otopertService->getCarDetails($this->car);
+            
+            
 
             $item = [
                 'ModelYear' => $detail['Model Yılı:'] ?? null,
@@ -55,6 +57,7 @@ class CarDetailJob implements ShouldQueue
                 'TenderNo' => $detail['TenderNo'] ?? null,
                 'TenderClosedDate' => $detail['TenderClosedDate'] ?? null,
                 'Images' => $detail['Images'] ?? null,
+                'CarBidId'=>$detail['CarBidId'] ?? null
             ];
 
             try {
@@ -80,6 +83,7 @@ class CarDetailJob implements ShouldQueue
                         'damages' => $item['Damage'],
                         'closed_date' => $item['TenderClosedDate'],
                         'images' => $item['Images'],
+                        'car_bid_id'=>$item['CarBidId'],
                         'created_at' => now(),
                     ]);
                 }

@@ -39,7 +39,7 @@
                     <th class="teklif-veren-isim">Teklif Veren İsim</th>
                     <th class="teklif-veren-numara">Teklif Veren Numarası</th>
                     <th>Teklif Miktarı</th>
-                    <th>İşlemler</th>
+                    {{-- <th>İşlemler</th>--}}
                 </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -77,7 +77,7 @@
                             {{$bid->bid_price}}
                         </td>
 
-
+{{--
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -99,6 +99,7 @@
                                 </div>
                             </div>
                         </td>
+--}}
                     </tr>
                 @endforeach
 

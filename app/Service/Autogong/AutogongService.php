@@ -3,17 +3,20 @@
 namespace App\Service\Autogong;
 
 use App\Models\Company;
+use App\Service\Autogong\AutoGongPostBidTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 
 class AutogongService
 {
-    use GetArchiveTrait, GetCarsTrait, GetTenderTrait;
+    use GetArchiveTrait, GetCarsTrait, GetTenderTrait,AutoGongPostBidTrait;
 
     const LOGIN_URL = "https://www.autogong.com/uye/uyeGiris";
     const ARSIV_URL = "https://www.autogong.com/ihale/arsivim/";
     const ALL_CARS_URL = "https://www.autogong.com/ihale/";
     const ALL_CARS_DETAIL_URL = "https://www.autogong.com/ihale/ihale_detayi/";
+
+    const
     const TENDER_FIRST_PAGE = 1;
     const TENDER_LAST_PAGE = 4;
     const ARCHIVE_FIRST_PAGE = 1;

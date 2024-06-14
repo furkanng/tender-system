@@ -12,14 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /*
-      $times = 100;
-
-  // İstenen sayıda seyiciyi çalıştırın
-  for ($i = 0; $i < $times; $i++) {
-      $this->call(UserSeeder::class);
-  }
-*/
+   
 
 
         $this->call([

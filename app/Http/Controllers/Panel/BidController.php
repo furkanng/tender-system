@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Bid;
-
+use App\Service\Otopert\OtopertService;
+use App\Service\Autogong\AutogongService;
 class BidController extends Controller
 {
     /**
@@ -21,7 +22,7 @@ class BidController extends Controller
         $bids = $query->paginate(20);
 
         return view('panel.pages.bid', compact('bids'));
-        
+
     }
     public function transferBids(Request $request) {
         $filter  = $request->input('filter');
@@ -70,18 +71,26 @@ class BidController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        
+            $otoperService = new OtopertService();
+            $autogongService = new AutogongService();
+
+
+
             $bid = Bid::findOrFail($id);
+
+            $otoperService->postTenderOtopert($bid);
+            $autogongService->postTenderAutogong($bid);
+
             $bid->fill(array_merge($request->all(),
                 ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
              if($request->has("transfer_status")){
                 return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
 
-             }  
+             }
              else{
                 return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
 
-             } 
+             }
     }
 
     /**
@@ -98,7 +107,7 @@ class BidController extends Controller
             return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');
 
         }
-        
+
 
 
     }
