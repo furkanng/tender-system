@@ -8,6 +8,17 @@
         $('#successModal').modal('show');
     });
 </script>
+<div class="alert alert-success alert-dismissible" role="alert" style="margin-top: 30px">
+    Teklif verme işlemi başarılı.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
+        Teklif tutarı hatalı! Lütfen 100'ün katları şeklinde tutar giriniz.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
 @endif
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
@@ -98,7 +109,7 @@
 
                                 <button class="btn btn-primary btn-sm" type="submit">Teklif Ver</button>
                             </form>
-                                
+
                             </div>
                             <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale
                                 No: {{$tender["tender_no"]}}

@@ -2,10 +2,23 @@
 
 @section('title', 'Home Page')
 @section('content')
+    @if(session('message'))
+        <script>
+            $(document).ready(function () {
+                $('#successModal').modal('show');
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger" role="alert">{{session('error')}}</div>
+    @endif
 
 
     <div class="card">
         <div class="row">
+
+
+
             <div class="col-4">
                 <h5 class="card-header">Tüm Teklifler</h5>
             </div>
@@ -28,9 +41,17 @@
 
 
         <div class="table-responsive text-nowrap">
+            <form action="{{ route('panel.transferCheckBids') }}" method="post">
+                @csrf
+                @method('PUT')
+                <button type="submit"  class="btn btn-primary" style="margin-left: 10px" id="transferCheckBids" name="transferCheckBids" >
+                    <i class="bx bx-transfer-alt me-1"></i>
+                    Seçilen İhaleleri Aktar
+                </button>
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th>#</th>
                     <th>İhale No</th>
                     <th>Resim</th>
                     <th>Araç İsmi</th>
@@ -47,6 +68,7 @@
 
                 @foreach($bids as $bid)
                     <tr>
+                        <td><input class="form-check-input" type="checkbox" id="bidCheck" value="{{ $bid->id }}" name="bid_ids[]"></td>
                         <td class="tender-no">{{$bid->tender->tender_no}}</td>
                         <td>
                             <a href="#">
@@ -151,7 +173,9 @@
 
                 </tbody>
             </table>
+            </form>
         </div>
+
     </div>
 
     {{-- {{ $tenders->links('pagination') }} --}}

@@ -20,13 +20,13 @@ trait AutoGongPostBidTrait
 
                 $postFields = [
 
-                    'ihaleRefNo' => $ihaleBilgileri->ihaleNo,
+                    'ihaleRefNo' => $bid->tender->tender_no,
 
-                    'teklifTutari' => $teklif->teklifFiyat
+                    'teklifTutari' => $bid->bid_price
 
                 ];
 
-                dd($postFields);
+               // dd($postFields);
                 /*
                 $response = $this->client->request("POST", self::POST_TENDER, [
                     "timeout" => 60,

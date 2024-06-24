@@ -63,10 +63,11 @@ Route::middleware("adminMiddleware")->group(function () {
         'edit' => 'panel.bid.edit',
         'update' => 'panel.bid.update',
         'destroy' => 'panel.bid.destroy',
+
     ]);
 
     Route::get('transfer-bids', [BidController::class, 'transferBids'])->name('panel.transferBid');
-
+    Route::put('transfer-checked-bids', [BidController::class, 'transferCheckedBids'])->name('panel.transferCheckBids');
     Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
         'index' => 'panel.archive.index',
         'show' => 'panel.archive.show',

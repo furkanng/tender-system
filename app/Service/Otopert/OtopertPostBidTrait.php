@@ -22,7 +22,7 @@ trait OtopertPostBidTrait
                     'id' => $bid->tender->car_bid_id,
                     'tutar' => $bid->bid_price
                 ];
-                dd($postFields);
+                //dd($postFields);
                 /*
                 $response = $this->client->request("POST", self::POST_TENDER, [
                     "timeout" => 60,

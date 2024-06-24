@@ -36,12 +36,15 @@ class BidController extends Controller
     public function store(Request $request)
     {
         $user = auth()->guard("user")->user();
-        
+
         $bidPrice = $request->input('bid');
         $tender_id = $request->query('tender_id');
         $tender = Tender::findOrFail($tender_id);
-        
 
+        if ($bidPrice % 100 != 0) {
+            return redirect()->route('user.tender.index')->with('error', 'Teklif Error');
+
+        }
 
         $bid = new Bid();
         $bid->fill(

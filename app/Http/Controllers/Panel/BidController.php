@@ -66,6 +66,44 @@ class BidController extends Controller
         //
     }
 
+    public  function transferCheckedBids(Request $request)
+    {
+        $bidIds = $request->input('bid_ids',[]);
+        $otoperService = new OtopertService();
+        $autogongService = new AutogongService();
+
+        foreach ($bidIds as $bidId) {
+            $bid = Bid::findOrFail($bidId);
+
+            $highestBid = Bid::where('tender_id', $bid->tender_id)->orderBy('bid_price', 'desc')->first();
+
+            //dd($highestBid);
+            if ($bid->bid_price < $highestBid->bid_price) {
+                $errorMessages[] = 'Sistemde tanımlı daha yüksek teklif bulunduğu için ' . $bid->tender->tender_no . ' nolu ihale aktarılamadı';
+
+            }
+            else{
+                if($bid->company_id == 2){
+                    $otoperService->postTenderOtopert($bid);
+                }
+                else if($bid->company_id == 1){
+                    $autogongService->postTenderAutogong($bid);
+                }
+
+                $bid->fill(array_merge($request->all(),
+                    ["transfer_status" => $request->has("transferCheckBids") ? 1 : 0]))->save();
+
+
+            }
+
+        }
+        if (!empty($errorMessages)) {
+            return redirect()->route('panel.bid.index')->with('error', implode(', ', $errorMessages));
+        }
+        return redirect()->route('panel.bid.index')->with('message', 'İşlem Başarılı');
+
+
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -78,19 +116,42 @@ class BidController extends Controller
 
             $bid = Bid::findOrFail($id);
 
-            $otoperService->postTenderOtopert($bid);
-            $autogongService->postTenderAutogong($bid);
+            $highestBid = Bid::where('tender_id', $bid->tender_id)->orderBy('bid_price', 'desc')->first();
 
-            $bid->fill(array_merge($request->all(),
-                ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
-             if($request->has("transfer_status")){
-                return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
+            if ($bid->bid_price < $highestBid->bid_price) {
 
-             }
-             else{
-                return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
 
-             }
+                return redirect()->route('panel.bid.index')->with('error', 'Sistemde tanımlı daha yüksek teklif bulunduğu için teklif aktarılamadı!');
+
+            }
+            else{
+
+
+                $bid->fill(array_merge($request->all(),
+                    ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
+                if($request->has("transfer_status")){
+
+                    if($bid->company_id == 2){
+                        $otoperService->postTenderOtopert($bid);
+                    }
+                    else if($bid->company_id == 1){
+                        $autogongService->postTenderAutogong($bid);
+                    }
+
+                    return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
+
+                }
+                else{
+                    return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
+
+                }
+            }
+
+
+
+
+
+
     }
 
     /**
