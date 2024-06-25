@@ -58,44 +58,56 @@
                         @csrf
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="name" id="floatingInput"
-                                   placeholder="İsim Soyisim">
-                            <label for="floatingInput">İsim Soyisim</label>
+                                   placeholder="İsim Soyisim" value="{{ old('name') }}">
+                            <label for="floatingInput">İsim Soyisim *</label>
+                            @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" name="email" id="floatingInput"
-                                   placeholder="Mail adresiniz">
+                                   placeholder="Mail adresiniz" value="{{ old('email') }}">
                             <label for="floatingInput">Email Adresi</label>
+                            @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" name="phone" id="floatingInput"
-                                   placeholder="Telefon numaranız">
-                            <label for="floatingInput">Telefon</label>
+                            <input type="text" class="form-control" required name="phone" id="floatingInput"
+                                   placeholder="Telefon numaranız" value="{{ old('phone') }}"
+                                   oninput="function formatPhoneNumber(input) {
+                                   var cleaned = ('' + input.value).replace(/\D/g, '');
+
+                                    // Parçalara ayırma
+                                    var match = cleaned.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
+
+                                    if (match) {
+                                        input.value = '(' + match[1] + ') ' + match[2] + ' ' + match[3] + ' ' + match[4];
+                                    }
+                                   }
+                                   formatPhoneNumber(this)" maxlength="10">
+                            <label for="floatingInput">Telefon *</label>
+                            @error('phone')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="password" class="form-control" name="password" id="floatingPassword"
+                            <input type="password" class="form-control" required name="password" id="floatingPassword"
                                    placeholder="Şifreniz">
-                            <label for="floatingPassword">Şifre</label>
+                            <label for="floatingPassword">Şifre *</label>
+                            @error('password')
+                            <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="password" class="form-control" name="password_confirmation"
+                            <input type="password" class="form-control" required name="password_confirmation"
                                    id="floatingPassword"
                                    placeholder="Şifre Tekrar">
-                            <label for="floatingPassword">Şifre Tekrar</label>
+                            <label for="floatingPassword">Şifre Tekrar *</label>
                         </div>
 
                         <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Kayıt Ol</button>
                     </form>
-                    @if (session('success'))
-                        <div id="response" class="alert alert-success"
-                             style="width: 400px; padding-top: 2px; display: flex; justify-content: center">
-                            {{ session('success') }}
-                        </div>
-                    @elseif(session('error'))
-                        <div id="response" class="alert alert-danger py-2 d-flex justify-content-center"
-                             style="width: 400px; padding-top: 2px;  display: flex; justify-content: center">
-                            {{ session('error') }}
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -114,12 +126,6 @@
 <script src="{{asset("user/lib/tempusdominus/js/moment-timezone.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js")}}"></script>
 
-
-<script>
-    setTimeout(function () {
-        document.getElementById('response').style.display = 'none';
-    }, 2000);
-</script>
 
 <!-- Template Javascript -->
 <script src="{{asset("user/js/main.js")}}"></script>

@@ -16,7 +16,7 @@ class UserObserver
         $name = $user->name;
         $address = $user->email;
 
-        Mail::to($address)->send(new RegisterMail($name, $address));
+        //Mail::to($address)->send(new RegisterMail($name, $address)); TODO
     }
 
     /**

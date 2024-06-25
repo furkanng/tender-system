@@ -23,7 +23,8 @@ class UserRegisterRequest extends FormRequest
     {
         return [
             "name" => "required",
-            //'email' => 'required|unique:App\Models\User,email',
+            'email' => 'required|unique:App\Models\User,email',
+            'phone' => 'required|unique:App\Models\User,phone',
             'password' => 'required|confirmed|min:8',
         ];
     }
@@ -33,9 +34,11 @@ class UserRegisterRequest extends FormRequest
         return [
             'name.required' => 'İsim alanı zorunludur.',
             'email.required' => 'E-posta alanı zorunludur.',
-            'email.unique' => 'Bu e-posta daha önceden kullanılmış.',
+            'email.unique' => 'Bu e-posta zaten kayıtlı.',
+            'phone.unique' => 'Bu telefon zaten kayıtlı.',
+            'phone.required' => 'Telefon alanı zorunludur.',
             'password.required' => 'Şifre alanı zorunludur.',
-            'password.confirmed' => 'Şifre doğrulama uyuşmuyor.',
+            'password.confirmed' => 'Şifreler birbiriyle uyuşmuyor.',
             'password.min' => 'Şifre en az 8 karakter olmalıdır.',
         ];
     }

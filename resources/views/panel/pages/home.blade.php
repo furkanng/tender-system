@@ -23,7 +23,7 @@
                         <div class="col-sm-5 text-center text-sm-left">
                             <div class="card-body pb-0 px-0 px-md-4">
                                 <img
-                                    src="../assets/img/illustrations/man-with-laptop-light.png"
+                                    src="{{asset("panel/assets/img/illustrations/man-with-laptop-light.png")}}"
                                     height="140"
                                     alt="View Badge User"
                                     data-app-dark-img="illustrations/man-with-laptop-dark.png"
@@ -39,20 +39,20 @@
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                
+
                                 <span class="fw-semibold d-block mb-1">Toplam Kullanıcılar</span>
                                 <h3 class="card-title mb-2">{{$usersCount}}</h3>
-                              
+
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-                               
+
                                 <span class="fw-semibold d-block mb-1">Toplam İhaleler</span>
                                 <h3 class="card-title text-nowrap mb-1">{{$tendersCount}}</h3>
-                             
+
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                     <div class="row row-bordered g-0">
                         <div class="col-md-8">
                             <h5 class="card-header m-0 me-2 pb-3">Son Eklenen İhaleler</h5>
-                            
+
                         </div>
                         <div class="card-body">
                             <ul class="p-0 m-0">
@@ -73,7 +73,7 @@
                                 $imagesArray = json_decode($item->images, true);
                                 $firstImage = isset($imagesArray[0]) ? $imagesArray[0] : null;
                                 @endphp
-                               
+
                                 <li class="d-flex mb-4 pb-1">
                                     <div class="avatar flex-shrink-0 me-3">
                                         <img src="{{$firstImage}}" alt="Tender" class="rounded"/>
@@ -84,7 +84,7 @@
                                         </div>
                                         <div class="user-progress d-flex align-items-center gap-1">
                                             <h6 class="mb-0">{{$item->serviceName}}</h6>
-                                      
+
                                         </div>
                                     </div>
                                 </li>
@@ -100,10 +100,10 @@
                     <div class="col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                
+
                                 <span class="d-block mb-1">Toplam Arşivler</span>
                                 <h3 class="card-title text-nowrap mb-2">{{$archivesCount}}</h3>
-                               
+
                             </div>
                         </div>
                     </div>

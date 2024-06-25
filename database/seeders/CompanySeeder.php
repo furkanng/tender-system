@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Company;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class CompanySeeder extends Seeder
 {
@@ -13,7 +14,8 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        \DB::table("companies")->delete();
+        DB::table("companies")->delete();
+
         $defaultData =
             [
                 ['id' => 1, 'name' => "Autogong", 'email' => 'vatanoto', "password" => "513545", "created_at" => now(), "updated_at" => now()],

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('password');
             $table->string('phone')->nullable();
             $table->integer('role')->default(0);
-            $table->boolean('status')->default(1);
+            $table->tinyInteger('status')->default(1);
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('district')->nullable();

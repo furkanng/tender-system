@@ -87,7 +87,7 @@
                     />
                 </div>
                 <div class="mb-3 col-md-6">
-                    <label for="name" class="form-label">Ofis</label>
+                    <label for="name" class="form-label">Şirket</label>
                     <input
                         class="form-control"
                         type="text"

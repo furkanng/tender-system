@@ -19,9 +19,7 @@ class UserController extends Controller
         $query = $filter
             ? User::where('name', 'LIKE', '%' . $filter . '%')
                 ->orWhere('email', 'LIKE', '%' . $filter . '%')
-                ->orWhere('role', 'LIKE', '%' . $filter . '%')
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
-                ->orWhere('status', 'LIKE', '%' . $filter . '%')
                 ->orderBy("created_at", "DESC")
             : User::orderBy("created_at", "DESC");
 
@@ -44,16 +42,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            "name" => "required",
-            "email" => "required|unique:App\Models\User,email",
-            "password" => "required",
-
-        ]);
         $user = new User();
-        $user->fill(array_merge([
-            'password' => Hash::make($request->password)
-        ], ["status" => $request->has("status") ? 1 : 0]))->fill($request->all())->save();
+        $user->fill(array_merge($request->all(), [
+            "status" => $request->has('status') == "on" ? 1 : 0,
+        ]))->save();
+
         return redirect()->route('panel.user.index')->with('message', 'Kayıt Başarılı');
     }
 
@@ -91,6 +84,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back()->with('message', 'Kullanıcı Silindi');
     }
 }

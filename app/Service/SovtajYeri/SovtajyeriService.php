@@ -16,7 +16,7 @@ class SovtajyeriService
 
     const ARCHIVE_URL = "https://ihale.sovtajyeri.com/rapor/ihale_arsivim.do?route=rapor/ihale_arsivim";
     const TENDER_FIRST_PAGE = 1;
-    const TENDER_LAST_PAGE = 3;
+    const TENDER_LAST_PAGE = 10;
 
     protected $username;
     protected $password;
