@@ -22,7 +22,13 @@
                 <div data-i18n="Analytics">Panel</div>
             </a>
         </li>
-
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Ayarlar</span></li>
+        <li class="menu-item">
+            <a href="{{ route('panel.general.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Tables">Genel Ayarlar</div>
+            </a>
+        </li>
         <!-- Layouts -->
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -83,24 +89,6 @@
         </li>
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                <div data-i18n="Account Settings">Kullanıcı Yönetimi</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="{{ route('panel.user.index') }}" class="menu-link">
-                        <div data-i18n="Account">Kullanıcılar</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ route('panel.user.create') }}" class="menu-link">
-                        <div data-i18n="Notifications">Kullanıcı Ekle</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                 <div data-i18n="Misc">Teklifler</div>
             </a>
@@ -117,16 +105,15 @@
                 </li>
             </ul>
         </li>
-        <!-- Components -->
+        <!-- Components
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
-        <!-- Cards -->
+
         <li class="menu-item">
             <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
                 <div data-i18n="Basic">Cards</div>
             </a>
         </li>
-        <!-- User interface -->
         <li class="menu-item">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-box"></i>
@@ -231,7 +218,6 @@
             </ul>
         </li>
 
-        <!-- Extended components -->
         <li class="menu-item">
             <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-copy"></i>
@@ -258,9 +244,8 @@
             </a>
         </li>
 
-        <!-- Forms & Tables -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
-        <!-- Forms -->
+
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -297,24 +282,38 @@
                 </li>
             </ul>
         </li>
-        <!-- Tables -->
+
         <li class="menu-item">
             <a href="tables-basic.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
                 <div data-i18n="Tables">Tables</div>
             </a>
         </li>
-        <!-- Misc -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
-        <li class="menu-item"> <a href="{{ route('panel.support.index') }}" class="menu-link"> <i
+
+        -->
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Kullanıcılar</span></li>
+
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Kullanıcı Yönetimi</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('panel.user.index') }}" class="menu-link">
+                        <div data-i18n="Account">Kullanıcı Listesi</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ route('panel.user.create') }}" class="menu-link">
+                        <div data-i18n="Notifications">Kullanıcı Ekle</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item"><a href="{{ route('panel.support.index') }}" class="menu-link"> <i
                     class="menu-icon tf-icons bx bx-support"></i>
                 <div data-i18n="Support">Destek Merkezi</div>
-            </a> </li>
-        <li class="menu-item">
-            <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                target="_blank" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Documentation">Documentation</div>
             </a>
         </li>
     </ul>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bid;
+use App\Models\Setting;
 use App\Models\Tender;
 use Illuminate\Http\Request;
 
@@ -15,10 +16,10 @@ class BidController extends Controller
     public function index()
     {
         $user = auth()->guard("user")->user();
-        $bids = Bid::where('user_id',$user->id)->get();
+        $bids = Bid::where('user_id', $user->id)->get();
 
 
-        return view('user.pages.myBids',compact('bids'));
+        return view('user.pages.myBids', compact('bids'));
 
     }
 
@@ -41,7 +42,9 @@ class BidController extends Controller
         $tender_id = $request->query('tender_id');
         $tender = Tender::findOrFail($tender_id);
 
-        if ($bidPrice % 100 != 0) {
+        $factor = Setting::query()->where("key", "site_tender_factor")->first();
+
+        if ($bidPrice % $factor != 0) {
             return redirect()->route('user.tender.index')->with('error', 'Teklif Error');
 
         }
@@ -49,11 +52,11 @@ class BidController extends Controller
         $bid = new Bid();
         $bid->fill(
             [
-                'user_id'=>$user->id,
-                'company_id'=>$tender->company_id,
-                'tender_id'=>$tender_id,
-                'bid_price'=>$bidPrice,
-                'tender_closed_date'=>$tender->closed_date
+                'user_id' => $user->id,
+                'company_id' => $tender->company_id,
+                'tender_id' => $tender_id,
+                'bid_price' => $bidPrice,
+                'tender_closed_date' => $tender->closed_date
 
             ]
 

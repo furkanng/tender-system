@@ -10,14 +10,12 @@
                     <div class="d-flex align-items-end row">
                         <div class="col-sm-7">
                             <div class="card-body">
-                                <h5 class="card-title text-primary">Hoşgeldiniz {{auth()->guard("admin")->user()->name}} 🎉</h5>
+                                <h5 class="card-title text-primary">Hoşgeldiniz {{auth()->guard("admin")->user()->name}}
+                                    🎉</h5>
                                 <p class="mb-4">
-                                    You have done <span class="fw-bold">72%</span> more sales today. Check your new
-                                    badge in
-                                    your profile.
+                                    Oto İhale Sistemine Hoşgeldiniz. Yönetim paneli üzerinden tüm işlemlerinizi
+                                    gerçekleştirebilirsiniz.
                                 </p>
-
-                                <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
                             </div>
                         </div>
                         <div class="col-sm-5 text-center text-sm-left">
@@ -39,20 +37,34 @@
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/user_dashboard.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
+                                </div>
                                 <span class="fw-semibold d-block mb-1">Toplam Kullanıcılar</span>
-                                <h3 class="card-title mb-2">{{$usersCount}}</h3>
-
+                                <h3 class="card-title mb-0">{{$usersCount}}</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-
-                                <span class="fw-semibold d-block mb-1">Toplam İhaleler</span>
-                                <h3 class="card-title text-nowrap mb-1">{{$tendersCount}}</h3>
-
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/tender_dashboard.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-3">Toplam İhaleler</span>
+                                <h3 class="card-title mb-2">{{$tendersCount}}</h3>
                             </div>
                         </div>
                     </div>
@@ -62,32 +74,32 @@
             <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
                 <div class="card">
                     <div class="row row-bordered g-0">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <h5 class="card-header m-0 me-2 pb-3">Son Eklenen İhaleler</h5>
-
                         </div>
                         <div class="card-body">
                             <ul class="p-0 m-0">
-                                @foreach ($lastSixTenders as $item )
-                                @php
-                                $imagesArray = json_decode($item->images, true);
-                                $firstImage = isset($imagesArray[0]) ? $imagesArray[0] : null;
-                                @endphp
+                                @foreach ($lastFiveTenders as $item )
+                                    @php
+                                        $imagesArray = json_decode($item->images, true);
+                                        $firstImage = $imagesArray[0] ?? null;
+                                    @endphp
 
-                                <li class="d-flex mb-4 pb-1">
-                                    <div class="avatar flex-shrink-0 me-3">
-                                        <img src="{{$firstImage}}" alt="Tender" class="rounded"/>
-                                    </div>
-                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                        <div class="me-2">
-                                            <h6 class="mb-0">{{$item->name}}</h6>
+                                    <li class="d-flex mb-3 pb-1">
+                                        <div class="avatar flex-shrink-0 me-3">
+                                            <img src="{{$firstImage}}" alt="Tender" class="rounded"/>
                                         </div>
-                                        <div class="user-progress d-flex align-items-center gap-1">
-                                            <h6 class="mb-0">{{$item->serviceName}}</h6>
+                                        <div
+                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                            <div class="me-2">
+                                                <h6 class="mb-0">{{$item->name}}</h6>
+                                            </div>
+                                            <div class="user-progress d-flex align-items-center gap-1">
+                                                <h6 class="mb-0">{{$item->serviceName}}</h6>
 
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -100,47 +112,40 @@
                     <div class="col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/archive_dashboard.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
+                                </div>
                                 <span class="d-block mb-1">Toplam Arşivler</span>
-                                <h3 class="card-title text-nowrap mb-2">{{$archivesCount}}</h3>
+                                <h3 class="card-title mb-4">{{$archivesCount}}</h3>
 
                             </div>
                         </div>
                     </div>
+
                     <div class="col-6 mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-start justify-content-between">
                                     <div class="avatar flex-shrink-0">
-                                        <img src="../assets/img/icons/unicons/cc-primary.png" alt="Credit Card"
-                                             class="rounded"/>
-                                    </div>
-                                    <div class="dropdown">
-                                        <button
-                                            class="btn p-0"
-                                            type="button"
-                                            id="cardOpt1"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
-                                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                        </div>
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/online_dashboard.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
                                     </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1">Transactions</span>
-                                <h3 class="card-title mb-2">$14,857</h3>
-                                <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                                    +28.14%</small>
+                                <span class="fw-semibold d-block mb-1">Online Kullanıcılar</span>
+                                <h3 class="card-title mb-0">{{$onlineUsers}}</h3>
                             </div>
                         </div>
                     </div>
-                    <!-- </div>
-    <div class="row"> -->
+
                     <div class="col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
@@ -148,14 +153,15 @@
                                     <div
                                         class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                                         <div class="card-title">
-                                            <h5 class="text-nowrap mb-2">Profile Report</h5>
-                                            <span class="badge bg-label-warning rounded-pill">Year 2021</span>
+                                            <h5 class="text-nowrap mb-2">Kullanıcı Kayıtları</h5>
+                                            <span
+                                                class="badge bg-label-warning rounded-pill">{{now()->format("Y")}}</span>
                                         </div>
                                         <div class="mt-sm-auto">
                                             <small class="text-success text-nowrap fw-semibold"
-                                            ><i class="bx bx-chevron-up"></i> 68.2%</small
+                                            ><i class="bx bx-chevron-up"></i>{{ number_format($percentageChange, 1) }}%</small
                                             >
-                                            <h3 class="mb-0">$84,686k</h3>
+                                            <h3 class="mb-0">{{ number_format($currentMonthCount) }} </h3>
                                         </div>
                                     </div>
                                     <div id="profileReportChart"></div>
@@ -172,95 +178,91 @@
                 <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                         <div class="card-title mb-0">
-                            <h5 class="m-0 me-2">Order Statistics</h5>
-                            <small class="text-muted">42.82k Total Sales</small>
-                        </div>
-                        <div class="dropdown">
-                            <button
-                                class="btn p-0"
-                                type="button"
-                                id="orederStatistics"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                            >
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
-                                <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                            </div>
+                            <h5 class="m-0 me-2">İhale İstatistikleri</h5>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex flex-column align-items-center gap-1">
-                                <h2 class="mb-2">8,258</h2>
-                                <span>Total Orders</span>
+                                <h2 class="mb-2">{{$tendersCount}} </h2>
+                                <span>Toplam İhale</span>
                             </div>
                             <div id="orderStatisticsChart"></div>
                         </div>
                         <ul class="p-0 m-0">
                             <li class="d-flex mb-4 pb-1">
                                 <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-primary"
-                            ><i class="bx bx-mobile-alt"></i
-                                ></span>
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/autogong.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="me-2">
-                                        <h6 class="mb-0">Electronic</h6>
-                                        <small class="text-muted">Mobile, Earbuds, TV</small>
+                                        <h6 class="mb-0">Autogong</h6>
                                     </div>
                                     <div class="user-progress">
-                                        <small class="fw-semibold">82.5k</small>
+                                        <small class="fw-semibold">{{$autogongCount}}</small>
                                     </div>
                                 </div>
                             </li>
                             <li class="d-flex mb-4 pb-1">
                                 <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-success"><i
-                                            class="bx bx-closet"></i></span>
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/otopert.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="me-2">
-                                        <h6 class="mb-0">Fashion</h6>
-                                        <small class="text-muted">T-shirt, Jeans, Shoes</small>
+                                        <h6 class="mb-0">Otopert</h6>
                                     </div>
                                     <div class="user-progress">
-                                        <small class="fw-semibold">23.8k</small>
+                                        <small class="fw-semibold">{{$otopertCount}}</small>
                                     </div>
                                 </div>
                             </li>
                             <li class="d-flex mb-4 pb-1">
                                 <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-info"><i
-                                            class="bx bx-home-alt"></i></span>
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("panel/assets/img/icons/unicons/sovtajyeri.jpeg")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="me-2">
-                                        <h6 class="mb-0">Decor</h6>
-                                        <small class="text-muted">Fine Art, Dining</small>
+                                        <h6 class="mb-0">Sovtajyeri</h6>
                                     </div>
                                     <div class="user-progress">
-                                        <small class="fw-semibold">849k</small>
+                                        <small class="fw-semibold">{{$sovtajyeriCount}}</small>
                                     </div>
                                 </div>
                             </li>
                             <li class="d-flex">
                                 <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-secondary"
-                            ><i class="bx bx-football"></i
-                                ></span>
+                                    <div class="avatar flex-shrink-0">
+                                        <img
+                                            src="{{asset("front/resimler/logo.png")}}"
+                                            alt="chart success"
+                                            class="rounded"
+                                        />
+                                    </div>
                                 </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="me-2">
-                                        <h6 class="mb-0">Sports</h6>
-                                        <small class="text-muted">Football, Cricket Kit</small>
+                                        <h6 class="mb-0">Oto İhale Sistemi</h6>
                                     </div>
                                     <div class="user-progress">
-                                        <small class="fw-semibold">99</small>
+                                        <small class="fw-semibold">{{$otoIhaleSistemiCount}}</small>
                                     </div>
                                 </div>
                             </li>
@@ -270,7 +272,7 @@
             </div>
             <!--/ Order Statistics -->
 
-            <!-- Expense Overview -->
+            <!-- Expense Overview
             <div class="col-md-6 col-lg-4 order-1 mb-4">
                 <div class="card h-100">
                     <div class="card-header">
@@ -329,13 +331,13 @@
                     </div>
                 </div>
             </div>
-            <!--/ Expense Overview -->
+             -->
 
             <!-- Transactions -->
             <div class="col-md-6 col-lg-4 order-2 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">Transactions</h5>
+                        <h5 class="card-title m-0 me-2">Geçmiş Talepler</h5>
                         <div class="dropdown">
                             <button
                                 class="btn p-0"

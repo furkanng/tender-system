@@ -18,7 +18,6 @@
     <title>Yönetim Paneli</title>
 
     <meta name="description" content=""/>
-
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{asset("panel/assets/img/favicon/favicon.ico")}}"/>
 

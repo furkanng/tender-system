@@ -10,27 +10,26 @@ Route::get('/kayit-ol', [HomeController::class, 'register'])->name('front.regist
 Route::get('/kurumsal', [HomeController::class, 'about'])->name('front.about');
 Route::get('/iletisim', [HomeController::class, 'contact'])->name('front.contact');
 
-
-Route::get("autogong-getcars",function (){
+Route::get("autogong-getcars", function () {
     (new \App\Service\Autogong\AutogongService())->allCarsGet();
 });
 
-Route::get("autogong-getarchive",function (){
+Route::get("autogong-getarchive", function () {
     (new \App\Service\Autogong\AutogongService())->getArchives();
 });
 
-Route::get("otopert-getcars",function (){
+Route::get("otopert-getcars", function () {
     (new \App\Service\Otopert\OtopertService())->getAllCarsLite();
 });
 
-Route::get("otopert-getarchive",function (){
+Route::get("otopert-getarchive", function () {
     (new \App\Service\Otopert\OtopertService())->getArchiveData();
 });
 
-Route::get("sovtajyeri-getcars",function (){
+Route::get("sovtajyeri-getcars", function () {
     (new \App\Service\SovtajYeri\SovtajyeriService())->AllCarsGet();
 });
 
-Route::get("sovtajyeri-getarchive",function (){
+Route::get("sovtajyeri-getarchive", function () {
     (new \App\Service\SovtajYeri\SovtajyeriService())->AllArchivesGet();
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Panel\BidController;
 use App\Http\Controllers\Panel\HomeController;
 use App\Http\Controllers\Panel\Setting\ApiController;
 use App\Http\Controllers\Panel\Setting\ContactController;
+use App\Http\Controllers\Panel\Setting\GeneralController;
 use App\Http\Controllers\Panel\Setting\MailController;
 use App\Http\Controllers\Panel\Setting\MediaController;
 use App\Http\Controllers\Panel\SupportController;
@@ -20,25 +21,37 @@ Route::get('giris-yap', [HomeController::class, 'loginGet'])->name('panel.login.
 Route::middleware("adminMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('panel.home');
 
-    Route::resource("contact", ContactController::class)->parameters(["contact" => "id"])->names([
-        'index' => 'panel.contact.index',
-        'store' => 'panel.contact.store'
-    ]);
+    Route::get('/chart-data', [HomeController::class, 'getChartData'])->name('front.chart.data');
+    Route::get('/tender-analystic-data', [HomeController::class, 'getTenderAnalysticData'])
+        ->name('front.tender.analystic.data');
 
-    Route::resource("api", ApiController::class)->parameters(["api" => "id"])->names([
-        'index' => 'panel.api.index',
-        'store' => 'panel.api.store'
-    ]);
+    Route::prefix("settings")->group(function () {
 
-    Route::resource("mail", MailController::class)->parameters(["mail" => "id"])->names([
-        'index' => 'panel.mail.index',
-        'store' => 'panel.mail.store'
-    ]);
+        Route::resource("contact", ContactController::class)->parameters(["contact" => "id"])->names([
+            'index' => 'panel.contact.index',
+            'store' => 'panel.contact.store'
+        ]);
 
-    Route::resource("media", MediaController::class)->parameters(["media" => "id"])->names([
-        'index' => 'panel.media.index',
-        'store' => 'panel.media.store'
-    ]);
+        Route::resource("api", ApiController::class)->parameters(["api" => "id"])->names([
+            'index' => 'panel.api.index',
+            'store' => 'panel.api.store'
+        ]);
+
+        Route::resource("mail", MailController::class)->parameters(["mail" => "id"])->names([
+            'index' => 'panel.mail.index',
+            'store' => 'panel.mail.store'
+        ]);
+
+        Route::resource("media", MediaController::class)->parameters(["media" => "id"])->names([
+            'index' => 'panel.media.index',
+            'store' => 'panel.media.store'
+        ]);
+
+        Route::resource("general", GeneralController::class)->parameters(["general" => "id"])->names([
+            'index' => 'panel.general.index',
+            'store' => 'panel.general.store',
+        ]);
+    });
 
     Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
         'index' => 'panel.tender.index',

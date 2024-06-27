@@ -97,21 +97,28 @@ class SettingSeeder extends Seeder
                 [
                     'title' => 'Set Site Title',
                     'key' => 'site_title',
-                    'value' => '',
+                    'value' => 'Oto İhale Sistemi',
                     "type" => 'text',
                     "group_key" => 'general_settings'
                 ],
                 [
                     'title' => 'Set Site Keywords',
                     'key' => 'site_keywords',
-                    'value' => '',
+                    'value' => 'oto ihale , hasarlı araç, alım satım',
                     "type" => 'text',
                     "group_key" => 'general_settings'
                 ],
                 [
                     'title' => 'Set Site Description',
                     'key' => 'site_description',
-                    'value' => '',
+                    'value' => 'Manisa Oto ihale araç alım satım.',
+                    "type" => 'text',
+                    "group_key" => 'general_settings'
+                ],
+                [
+                    'title' => 'Set Tender factor',
+                    'key' => 'site_tender_factor',
+                    'value' => '200',
                     "type" => 'text',
                     "group_key" => 'general_settings'
                 ],

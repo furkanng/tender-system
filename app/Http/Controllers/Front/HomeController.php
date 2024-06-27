@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Tender;
+use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class HomeController extends Controller
 {
@@ -12,12 +14,13 @@ class HomeController extends Controller
     {
         $model = new Setting();
         $contact = $model->get("contact_settings");
+        $general = $model->get("general_settings");
         $lastSixTenders = Tender::orderBy('id', 'desc')
             ->where("company_id", "!=", 99)
             ->whereNotNull("images")
             ->take(6)
             ->get();
-        return view('front.pages.home', compact(["lastSixTenders", "contact"]));
+        return view('front.pages.home', compact(["lastSixTenders", "contact", "general"]));
     }
 
     public function login()
