@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Panel\AdminController;
 use App\Http\Controllers\Panel\ArchiveController;
 use App\Http\Controllers\Panel\AuthController;
 use App\Http\Controllers\Panel\BidController;
@@ -101,6 +102,12 @@ Route::middleware("adminMiddleware")->group(function () {
         'update' => 'panel.support.update',
         'store' => 'panel.support.store',
         'destroy' => 'panel.support.destroy',
+    ]);
+
+    Route::resource("profile", AdminController::class)->parameters(["profile" => "id"])->names([
+        'index' => 'panel.profile.index',
+        'update' => 'panel.profile.update',
+        'destroy' => 'panel.profile.destroy',
     ]);
 
 

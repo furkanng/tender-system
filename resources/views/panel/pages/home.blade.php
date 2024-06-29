@@ -333,7 +333,7 @@
             </div>
              -->
 
-            <!-- Transactions -->
+            <!-- Transactions
             <div class="col-md-6 col-lg-4 order-2 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
@@ -452,7 +452,7 @@
                     </div>
                 </div>
             </div>
-            <!--/ Transactions -->
+           Transactions -->
         </div>
     </div>
 
