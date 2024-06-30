@@ -8,12 +8,12 @@ use GuzzleHttp\Cookie\CookieJar;
 
 class SovtajyeriService
 {
-    use GetTenderTrait, GetArchiveTrait;
+    use GetTenderTrait, GetArchiveTrait,SovtajYeriPostBidTrait;
 
     const URL = "https://ihale.sovtajyeri.com";
     const LOGIN_URL = "https://ihale.sovtajyeri.com/giris_kontrol.do?";
     const ALL_TENDERS = "https://ihale.sovtajyeri.com/ihale/pert_ihaleler.do?route=&sayfa=";
-
+    const POST_TENDER_SOVTAJYERI= "https://ihale.sovtajyeri.com/class/db_kayit.do";
     const ARCHIVE_URL = "https://ihale.sovtajyeri.com/rapor/ihale_arsivim.do?route=rapor/ihale_arsivim";
     const TENDER_FIRST_PAGE = 1;
     const TENDER_LAST_PAGE = 10;

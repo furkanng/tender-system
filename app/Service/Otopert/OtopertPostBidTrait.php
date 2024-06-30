@@ -9,29 +9,27 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait OtopertPostBidTrait
 {
-    public function postTenderOtopert($bids){
+    public function postTenderOtopert($bid){
 
         try {
-            if (!is_array($bids)) {
-                $bids = [$bids];
-            }
 
-            foreach($bids as $bid){
 
                 $postFields = [
                     'id' => $bid->tender->car_bid_id,
                     'tutar' => $bid->bid_price
                 ];
-                //dd($postFields);
-                /*
+
+
                 $response = $this->client->request("POST", self::POST_TENDER, [
                     "timeout" => 60,
                     "cookies" => $this->jar,
                     "form_params" => $postFields
-                ])->getBody()->getContents();*/
+                ])->getBody()->getContents();
+
+            $responses = ['Company' => 'Otopert', 'tender_no'=>$bid->tender->tender_no,'response' => $response];
+            return $responses;
 
 
-            }
 
         } catch (\Exception $e) {
 

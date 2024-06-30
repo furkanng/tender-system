@@ -2,6 +2,9 @@
 
 @section('title', 'Home Page')
 @section('content')
+    @if(session('error'))
+        <div class="alert alert-danger" role="alert">{{session('error')}}</div>
+    @endif
     @if(session('message'))
         <script>
             $(document).ready(function () {
@@ -9,10 +12,22 @@
             });
         </script>
     @endif
-    @if(session('error'))
-        <div class="alert alert-danger" role="alert">{{session('error')}}</div>
-    @endif
+<style>
+    .table-container {
+        display: flex;
+        justify-content: center;
+    }
 
+    .table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .table th, .table td {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+</style>
 
     <div class="card">
         <div class="row">
@@ -51,10 +66,10 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>İhale No</th>
+                    <th style="width: 5% !important;"><input class="form-check-input" type="checkbox" id="selectAll"></th>
+                    <th style="width: 10% !important;">İhale No</th>
                     <th>Resim</th>
-                    <th>Araç İsmi</th>
+                    <th style="width: 15% !important;">Araç İsmi</th>
                     <th>Firma İsmi</th>
                     <th>İhale Bitiş Tarihi</th>
                     <th>İl/İlçe</th>
@@ -68,7 +83,7 @@
 
                 @foreach($bids as $bid)
                     <tr>
-                        <td><input class="form-check-input" type="checkbox" id="bidCheck" value="{{ $bid->id }}" name="bid_ids[]"></td>
+                        <td><input class="form-check-input bidCheckbox" type="checkbox" id="bidCheck" value="{{ $bid->id }}" name="bid_ids[]"></td>
                         <td class="tender-no">{{$bid->tender->tender_no}}</td>
                         <td>
                             <a href="#">
@@ -103,32 +118,27 @@
 
                         <td>
                             <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item"
-                                       href="" data-bs-toggle="modal" data-bs-target="#bidEditModal{{$bid->id}}"
-                                    ><i class="bx bx-edit-alt me-1"></i>Düzenle</a
-                                    >
-                                    <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
+                                    <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#bidEditModal{{ $bid->id }}">
+                                        <i class="bx bx-edit-alt me-1"></i>Düzenle
+                                    </a>
+                                    <form action="{{ route('panel.bid.update', ['id' => $bid->id]) }}" method="post" id="updateForm">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="dropdown-item" id="transfer_status" name="transfer_status" >
-                                            <i class="bx bx-transfer-alt me-1"></i>
-                                            İhale Aktar
+                                        <button type="submit" class="dropdown-item" id="transfer_status" name="transfer_status">
+                                            <i class="bx bx-transfer-alt me-1"></i> İhale Aktar
                                         </button>
-                                </form>
-                                <form action="{{ route("panel.bid.destroy", ['id' => $bid->id]) }}"method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="dropdown-item" href="javascript:void(0);"
-                                    ><i class="bx bx-trash me-1"></i>Sil</button
-                                    >
-
-                                </form>
-
+                                    </form>
+                                    <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item" href="javascript:void(0);">
+                                            <i class="bx bx-trash me-1"></i> Sil
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </td>
@@ -179,5 +189,31 @@
     </div>
 
     {{-- {{ $tenders->links('pagination') }} --}}
+    <script>
+        $(document).ready(function() {
+            // Tümünü seç checkbox'ına tıklanma olayını dinleyin
+            $('#selectAll').click(function() {
+                if (this.checked) {
+                    $('.bidCheckbox').each(function() {
+                        this.checked = true;
+                    });
+                } else {
+                    $('.bidCheckbox').each(function() {
+                        this.checked = false;
+                    });
+                }
+            });
 
+            // Bireysel checkbox'lara tıklanma olayını dinleyin
+            $('.bidCheckbox').click(function() {
+                if ($('.bidCheckbox:checked').length == $('.bidCheckbox').length) {
+                    $('#selectAll').prop('checked', true);
+                } else {
+                    $('#selectAll').prop('checked', false);
+                }
+            });
+        });
+
+    </script>
 @endsection
+

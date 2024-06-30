@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tender;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TenderController extends Controller
@@ -14,9 +15,9 @@ class TenderController extends Controller
     public function index(Request $request)
     {
         $filter = $request->input('filter');
-
+        $now = Carbon::now()->timestamp;
         $query = $filter
-            ? Tender::where('tender_no', 'LIKE', '%' . $filter . '%')
+            ? Tender::where('closed_date', '>', $now)->orWhere('tender_no', 'LIKE', '%' . $filter . '%')
                 ->orWhere('name', 'LIKE', '%' . $filter . '%')
                 ->orWhere('brand', 'LIKE', '%' . $filter . '%')
                 ->orWhere('model', 'LIKE', '%' . $filter . '%')
@@ -28,7 +29,7 @@ class TenderController extends Controller
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
                 ->orWhere('district', 'LIKE', '%' . $filter . '%')
                 ->orderBy("created_at", "DESC")
-            : Tender::orderBy("created_at", "DESC");
+            : Tender::where('closed_date', '>', $now)->orderBy("created_at", "DESC");
 
         $tenders = $query->paginate(20);
 

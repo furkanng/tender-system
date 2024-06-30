@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bid;
 use App\Models\Setting;
 use App\Models\Tender;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BidController extends Controller
@@ -16,10 +17,10 @@ class BidController extends Controller
     public function index()
     {
         $user = auth()->guard("user")->user();
-        $bids = Bid::where('user_id', $user->id)->get();
+        $bids = Bid::where('user_id',$user->id)->get();
 
 
-        return view('user.pages.myBids', compact('bids'));
+        return view('user.pages.myBids',compact('bids'));
 
     }
 
@@ -38,30 +39,37 @@ class BidController extends Controller
     {
         $user = auth()->guard("user")->user();
 
+        $model = new Setting();
+        $general = $model->get("general_settings");
+        $tenderFactor = $general["site_tender_factor"];
         $bidPrice = $request->input('bid');
         $tender_id = $request->query('tender_id');
         $tender = Tender::findOrFail($tender_id);
 
-        $factor = Setting::query()->where("key", "site_tender_factor")->first();
+        $tenderClosedDate = Carbon::createFromTimestamp($tender["closed_date"]);
+        $now = Carbon::now();
+        if ($bidPrice % $tenderFactor != 0) {
+            return redirect()->back()->with('tenderFactorError',$tenderFactor );
 
-        if ($bidPrice % $factor != 0) {
-            return redirect()->route('user.tender.index')->with('error', 'Teklif Error');
+        }
 
+        if($tenderClosedDate->lessThan($now)){
+            return redirect()->back()->with('tenderClosedTimeError', 'Teklif Error');
         }
 
         $bid = new Bid();
         $bid->fill(
             [
-                'user_id' => $user->id,
-                'company_id' => $tender->company_id,
-                'tender_id' => $tender_id,
-                'bid_price' => $bidPrice,
-                'tender_closed_date' => $tender->closed_date
+                'user_id'=>$user->id,
+                'company_id'=>$tender->company_id,
+                'tender_id'=>$tender_id,
+                'bid_price'=>$bidPrice,
+                'tender_closed_date'=>$tender->closed_date
 
             ]
 
         )->save();
-        return redirect()->route('user.tender.index')->with('message', 'Kayıt Başarılı');
+        return redirect()->back()->with('message', 'Kayıt Başarılı');
 
 
     }
@@ -87,7 +95,26 @@ class BidController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        if (auth()->user()->role != 2) {
+            return redirect()->route('user.bid.index')->with('authorizeError', 'Yetkisiz işlem!Güncelleme yapabilmek için VIP yetkiniz olmalı');
+        }
+
+        $bid = Bid::findOrFail($id);
+
+        if($bid->transfer_status == 1){
+            return redirect()->route('user.bid.index')->with('transferredError', 'Verdiğiniz teklif aktarıldığı için düzenleme yapılamaz!');
+
+        }
+
+        $bid->fill([
+            'bid_price' => $request->bid_price,
+
+        ])->save();
+
+
+        return redirect()->route('user.bid.index')->with('message', 'İşlem Başarılı');
+
     }
 
     /**

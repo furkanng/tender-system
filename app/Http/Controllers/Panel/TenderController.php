@@ -15,6 +15,7 @@ class TenderController extends Controller
     {
         $filter = $request->input('filter');
 
+
         $query = $filter
             ? Tender::where('tender_no', 'LIKE', '%' . $filter . '%')
                 ->orWhere('name', 'LIKE', '%' . $filter . '%')

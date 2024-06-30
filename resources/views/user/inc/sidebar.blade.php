@@ -29,7 +29,7 @@
                 İhaleler</a>
             <a href="{{route("user.bid.index")}}" class="nav-item nav-link"><i
                     class="fa fa-car me-2"></i>Tekliflerim</a>
-            <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Arşiv</a>
+            <a href="{{route('user.archive.index')}}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Arşiv</a>
             <a href="{{route("user.support.index")}}" class="nav-item nav-link"><i class="bx bx-support me-2"></i>Destek
                 Talebi</a>
             <a href="{{route("user.profile.index")}}" class="nav-item nav-link"><i class='bx bx-user me-2'></i></i>

@@ -13,9 +13,16 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-@if(session('error'))
+@if(session('tenderFactorError'))
     <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
-        Teklif tutarı hatalı! Lütfen 100'ün katları şeklinde tutar giriniz.
+        Teklif tutarı hatalı! Lütfen {{session('tenderFactorError')}}'ün katları şeklinde tutar giriniz.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+@endif
+@if(session('tenderClosedTimeError'))
+    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
+        Teklif vermek istediğiniz ihalenin teklif süresi dolmuştur.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 

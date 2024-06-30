@@ -9,14 +9,9 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait AutoGongPostBidTrait
 {
-    public function postTenderAutogong($bids){
+    public function postTenderAutogong($bid){
 
         try {
-            if (!is_array($bids)) {
-                $bids = [$bids];
-            }
-
-            foreach($bids as $bid){
 
                 $postFields = [
 
@@ -26,20 +21,17 @@ trait AutoGongPostBidTrait
 
                 ];
 
-               // dd($postFields);
-                /*
+
                 $response = $this->client->request("POST", self::POST_TENDER, [
                     "timeout" => 60,
                     "cookies" => $this->jar,
                     "form_params" => $postFields
-                ])->getBody()->getContents();*/
-
-
-            }
+                ])->getBody()->getContents();
 
 
 
-
+            $responses = ['Company' => 'Autogong','tender_no'=>$bid->tender->tender_no, 'response' => $response];
+            return $responses;
 
         } catch (\Exception $e) {
 

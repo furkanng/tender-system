@@ -33,7 +33,16 @@
 
     <script src="{{ asset('panel/js/swiper-element-bundle.min.js') }}">
 
+
     </script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+    <!-- Bootstrap JS ve Popper.js (jQuery'ye benzer bir kütüphane) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
         swiper-container {
@@ -92,7 +101,7 @@
 </div>
 
 <!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{asset("user/lib/chart/chart.min.js")}}"></script>
 <script src="{{asset("user/lib/easing/easing.min.js")}}"></script>
@@ -101,7 +110,7 @@
 <script src="{{asset("user/lib/tempusdominus/js/moment.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/moment-timezone.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js")}}"></script>
-
+<script src="{{asset("panel/assets/vendor/libs/jquery/jquery.js")}}"></script>
 
 <script>
 

@@ -30,6 +30,15 @@ Route::middleware("userMiddleware")->group(function () {
         'update' => 'user.bid.update',
         'destroy' => 'user.bid.destroy',
     ]);
+    Route::resource("archive", \App\Http\Controllers\User\ArchiveController::class)->parameters(["archive" => "id"])->names([
+        'index' => 'user.archive.index',
+        'show' => 'user.archive.show',
+        'create' => 'user.archive.create',
+        'store' => 'user.archive.store',
+        'edit' => 'user.archive.edit',
+        'update' => 'user.archive.update',
+        'destroy' => 'user.archive.destroy',
+    ]);
 
     Route::resource("profile", UserController::class)->parameters(["profile" => "id"])->names([
         'index' => 'user.profile.index',

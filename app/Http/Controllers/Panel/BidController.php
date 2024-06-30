@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Service\SovtajYeri\SovtajyeriService;
 use Illuminate\Http\Request;
 use App\Models\Bid;
 use App\Service\Otopert\OtopertService;
@@ -18,7 +19,24 @@ class BidController extends Controller
         $filter  = $request->input('filter');
 
         $query = Bid::where('transfer_status','0')->orderBy("created_at","DESC");
-
+        if ($filter) {
+            $query->where(function($query) use ($filter) {
+                $query->whereHas('tender', function($q) use ($filter) {
+                    $q->where('tender_no', 'like', '%' . $filter . '%')
+                        ->orWhere('name', 'like', '%' . $filter . '%')
+                        ->orWhere('brand', 'like', '%' . $filter . '%')
+                        ->orWhere('model', 'like', '%' . $filter . '%')
+                        ->orWhere('city', 'like', '%' . $filter . '%')
+                        ->orWhere('district', 'like', '%' . $filter . '%');
+                })
+                    ->orWhereHas('company', function($q) use ($filter) {
+                        $q->where('name', 'like', '%' . $filter . '%');
+                    })
+                    ->orWhereHas('user', function($q) use ($filter) {
+                        $q->where('name', 'like', '%' . $filter . '%');
+                    });
+            });
+        }
         $bids = $query->paginate(20);
 
         return view('panel.pages.bid', compact('bids'));
@@ -29,6 +47,24 @@ class BidController extends Controller
 
         $query = Bid::where('transfer_status','1')->orderBy("created_at","DESC");
 
+        if ($filter) {
+            $query->where(function($query) use ($filter) {
+                $query->whereHas('tender', function($q) use ($filter) {
+                    $q->where('tender_no', 'like', '%' . $filter . '%')
+                        ->orWhere('name', 'like', '%' . $filter . '%')
+                        ->orWhere('brand', 'like', '%' . $filter . '%')
+                        ->orWhere('model', 'like', '%' . $filter . '%')
+                        ->orWhere('city', 'like', '%' . $filter . '%')
+                        ->orWhere('district', 'like', '%' . $filter . '%');
+                })
+                    ->orWhereHas('company', function($q) use ($filter) {
+                        $q->where('name', 'like', '%' . $filter . '%');
+                    })
+                    ->orWhereHas('user', function($q) use ($filter) {
+                        $q->where('name', 'like', '%' . $filter . '%');
+                    });
+            });
+        }
         $transferBids = $query->paginate(20);
 
         return view('panel.pages.transferBid', compact('transferBids'));
@@ -71,6 +107,7 @@ class BidController extends Controller
         $bidIds = $request->input('bid_ids',[]);
         $otoperService = new OtopertService();
         $autogongService = new AutogongService();
+        $sovtajyeriService = new SovtajyeriService();
 
         foreach ($bidIds as $bidId) {
             $bid = Bid::findOrFail($bidId);
@@ -84,10 +121,31 @@ class BidController extends Controller
             }
             else{
                 if($bid->company_id == 2){
-                    $otoperService->postTenderOtopert($bid);
+                    $response= $otoperService->postTenderOtopert($bid);
+
+                    $result =str_contains($response['response'], 'sonuc basarili');
+                    if($result == false){
+                        $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                    }
+
                 }
                 else if($bid->company_id == 1){
-                    $autogongService->postTenderAutogong($bid);
+                    $response = $autogongService->postTenderAutogong($bid);
+                    $responseJson = json_decode($response['response']);
+
+                        if($responseJson->success != "true"){
+                            $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                        }
+
+                }
+                else if($bid->company_id == 3){
+                    $response = $sovtajyeriService->postTenderSovtajYeri($bid);
+                    $responseDecode = json_decode($response['response']);
+
+                    if($responseDecode->HATA == 'true'){
+                        $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+
+                    }
                 }
 
                 $bid->fill(array_merge($request->all(),
@@ -97,9 +155,14 @@ class BidController extends Controller
             }
 
         }
+
+
+
+
         if (!empty($errorMessages)) {
             return redirect()->route('panel.bid.index')->with('error', implode(', ', $errorMessages));
         }
+
         return redirect()->route('panel.bid.index')->with('message', 'İşlem Başarılı');
 
 
@@ -111,47 +174,60 @@ class BidController extends Controller
     {
             $otoperService = new OtopertService();
             $autogongService = new AutogongService();
-
+            $sovtajyeriService = new SovtajyeriService();
 
 
             $bid = Bid::findOrFail($id);
 
             $highestBid = Bid::where('tender_id', $bid->tender_id)->orderBy('bid_price', 'desc')->first();
 
-            if ($bid->bid_price < $highestBid->bid_price) {
+        if($request->has("transfer_status")){
 
+            if ($bid->bid_price < $highestBid->bid_price) {
 
                 return redirect()->route('panel.bid.index')->with('error', 'Sistemde tanımlı daha yüksek teklif bulunduğu için teklif aktarılamadı!');
 
             }
             else{
 
+                if($bid->company_id == 2){
+                    $response = $otoperService->postTenderOtopert($bid);
+                    $result =str_contains($response['response'], 'sonuc basarili');
+                    if($result == false){
+                        return redirect()->route('panel.bid.index')->with('error', $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!');
+                    }
+                }
+                else if($bid->company_id == 1){
+                    $response = $autogongService->postTenderAutogong($bid);
+                    $responseJson = json_decode($response['response']);
+
+                    if($responseJson->success != "true") {
+                        return redirect()->route('panel.bid.index')->with('error', $bid->tender->tender_no . ' numaralı teklif aktarılırken bir sorun oluştu!');
+                    }
+                }
+                else if($bid->company_id == 3){
+                    $response =$sovtajyeriService->postTenderSovtajYeri($bid);
+                    $responseDecode = json_decode($response['response']);
+
+                    if($responseDecode->HATA == 'true'){
+                        return redirect()->route('panel.bid.index')->with('error', $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!');
+
+                    }
+                }
+
 
                 $bid->fill(array_merge($request->all(),
                     ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
-                if($request->has("transfer_status")){
 
-                    if($bid->company_id == 2){
-                        $otoperService->postTenderOtopert($bid);
-                    }
-                    else if($bid->company_id == 1){
-                        $autogongService->postTenderAutogong($bid);
-                    }
+                return redirect()->route('panel.bid.index')->with('message', 'İşlem Başarılı');
 
-                    return redirect()->route('panel.transferBid')->with('message', 'İşlem Başarılı');
 
-                }
-                else{
-                    return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
-
-                }
             }
 
-
-
-
-
-
+        }
+        else{
+            return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
+        }
     }
 
     /**
