@@ -16,16 +16,15 @@ class ArchiveController extends Controller
     {
         $user = auth()->guard("user")->user();
 
-        $bids = Bid::where('user_id',$user->id)->get();
+        $bids = Bid::where('user_id', $user->id)->get();
+
+        $archives = null;
 
         foreach ($bids as $bid) {
-
-            $archives = Archive::where("tender_no",$bid->tender->tender_no)->get();
+            $archives = Archive::where("tender_no", $bid->tender->tender_no)->get();
         }
 
-
-
-        return view('user.pages.myArchive',compact('archives'));
+        return view('user.pages.myArchive', compact('archives'));
 
     }
 

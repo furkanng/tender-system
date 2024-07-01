@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -19,57 +21,26 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $userId = auth()->guard("user")->user()->id;
-        $user = User::findOrFail($userId);
-
-        $input = array_filter($request->except('password'), function ($value) {
-            return $value !== null && $value !== '';
-        });
-    
-        // Şifre alanı kontrolü
-        if ($request->filled('password')) {
-            $input['password'] = Hash::make($request->input('password'));
-        }
-
-        $user->fill($input)->save();
-        return redirect()->route('user.profile.index')->with('message', 'İşlem Başarılı');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-       
+        if ($request->has("password") && $request->get("password") != null) {
+            $request->validate([
+                "password" => "required|min:8|confirmed",
+            ]);
+        }
 
+        $request->validate([
+            "city" => "required|sometimes",
+            "address" => "required|sometimes",
+            "district" => "required|sometimes",
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->fill($request->all())->save();
+
+        return redirect()->back()->with('message', 'İşlem Başarılı.');
     }
 
     /**
@@ -77,6 +48,16 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $model = User::findOrFail($id);
+
+        $image = $model->image;
+        if (isset($image)) {
+            Storage::delete("users/" . $model->image);
+        }
+
+        $model->image = null;
+        $model->save();
+
+        return redirect()->back()->with('message', 'İşlem Başarılı.');
     }
 }

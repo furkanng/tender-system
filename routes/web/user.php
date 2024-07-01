@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\ArchiveController;
 use App\Http\Controllers\User\BidController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\HomeController;
@@ -30,7 +31,7 @@ Route::middleware("userMiddleware")->group(function () {
         'update' => 'user.bid.update',
         'destroy' => 'user.bid.destroy',
     ]);
-    Route::resource("archive", \App\Http\Controllers\User\ArchiveController::class)->parameters(["archive" => "id"])->names([
+    Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
         'index' => 'user.archive.index',
         'show' => 'user.archive.show',
         'create' => 'user.archive.create',
@@ -42,10 +43,6 @@ Route::middleware("userMiddleware")->group(function () {
 
     Route::resource("profile", UserController::class)->parameters(["profile" => "id"])->names([
         'index' => 'user.profile.index',
-        'show' => 'user.profile.show',
-        'create' => 'user.profile.create',
-        'store' => 'user.profile.store',
-        'edit' => 'user.profile.edit',
         'update' => 'user.profile.update',
         'destroy' => 'user.profile.destroy',
     ]);

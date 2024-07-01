@@ -17,7 +17,8 @@ class TenderController extends Controller
         $filter = $request->input('filter');
         $now = Carbon::now()->timestamp;
         $query = $filter
-            ? Tender::where('closed_date', '>', $now)->orWhere('tender_no', 'LIKE', '%' . $filter . '%')
+            ? Tender::where('closed_date', '>', $now)
+                ->orWhere('tender_no', 'LIKE', '%' . $filter . '%')
                 ->orWhere('name', 'LIKE', '%' . $filter . '%')
                 ->orWhere('brand', 'LIKE', '%' . $filter . '%')
                 ->orWhere('model', 'LIKE', '%' . $filter . '%')

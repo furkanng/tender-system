@@ -20,8 +20,7 @@
     <meta name="description" content=""/>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{asset("panel/assets/img/favicon/favicon.ico")}}"/>
-
+    <link rel="icon" type="image/x-icon" href="{{asset("front/resimler/logo.png")}}"/>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>

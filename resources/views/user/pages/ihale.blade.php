@@ -2,31 +2,31 @@
 
 @section('title', 'Home Page')
 @section('content')
-@if(session('message'))
-<script>
-    $(document).ready(function () {
-        $('#successModal').modal('show');
-    });
-</script>
-<div class="alert alert-success alert-dismissible" role="alert" style="margin-top: 30px">
-    Teklif verme işlemi başarılı.
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-@if(session('tenderFactorError'))
-    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
-        Teklif tutarı hatalı! Lütfen {{session('tenderFactorError')}}'ün katları şeklinde tutar giriniz.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @if(session('message'))
+        <script>
+            $(document).ready(function () {
+                $('#successModal').modal('show');
+            });
+        </script>
+        <div class="alert alert-success alert-dismissible" role="alert" style="margin-top: 30px">
+            Teklif verme işlemi başarılı.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if(session('tenderFactorError'))
+        <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
+            Teklif tutarı hatalı! Lütfen {{session('tenderFactorError')}}'ün katları şeklinde tutar giriniz.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-@endif
-@if(session('tenderClosedTimeError'))
-    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
-        Teklif vermek istediğiniz ihalenin teklif süresi dolmuştur.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @endif
+    @if(session('tenderClosedTimeError'))
+        <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 30px">
+            Teklif vermek istediğiniz ihalenin teklif süresi dolmuştur.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-@endif
+    @endif
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-11">
@@ -36,10 +36,10 @@
                             @if(isset($tender["images"]))
                                 <div class="col-md-3 mt-1">
                                     <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
-                                    <img style="height: 200px;object-fit: cover;"
-                                         class="img-fluid img-responsive rounded product-image"
-                                         src="{{json_decode($tender["images"],true)[0]}}">
-                                        </a>
+                                        <img style="height: 200px;object-fit: cover;"
+                                             class="img-fluid img-responsive rounded product-image"
+                                             src="{{json_decode($tender["images"],true)[0]}}">
+                                    </a>
                                 </div>
                             @else
                                 <div class="col-md-3 mt-1">
@@ -55,10 +55,10 @@
                                 <div class="col-md-3 mt-1">
                                     <a href="{{route("user.tender.show",["id" => $tender["id"]])}}">
 
-                                    <img style="height: 200px;object-fit: cover;"
-                                         class="img-fluid img-responsive rounded product-image"
-                                         src="{{$images->url}}">
-                                        </a>
+                                        <img style="height: 200px;object-fit: cover;"
+                                             class="img-fluid img-responsive rounded product-image"
+                                             src="{{$images->url}}">
+                                    </a>
                                 </div>
                             @else
                                 <div class="col-md-3 mt-1">
@@ -108,14 +108,14 @@
                             <h6 class="text-success">Bitiş
                                 Tarihi: {{\Carbon\Carbon::createFromTimestamp($tender["closed_date"])->format('d.m.Y')}}</h6>
                             <div class="d-flex flex-row mt-4">
-                            <form action="{{route("user.bid.store",["tender_id" => $tender["id"]])}}" method="post">
-                                @csrf
-                                <input class="form" type="text" name="bid" id="bid" style="width: 100px;
+                                <form action="{{route("user.bid.store",["tender_id" => $tender["id"]])}}" method="post">
+                                    @csrf
+                                    <input class="form" type="text" name="bid" id="bid" style="width: 100px;
                                 height: 30px;
                                 margin-right: 20px;">
 
-                                <button class="btn btn-primary btn-sm" type="submit">Teklif Ver</button>
-                            </form>
+                                    <button class="btn btn-primary btn-sm" type="submit">Teklif Ver</button>
+                                </form>
 
                             </div>
                             <button class="btn btn-outline-primary btn-sm mt-2" type="button">İhale
