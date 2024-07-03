@@ -18,28 +18,35 @@ Route::post('sifre-yenileme', [AuthController::class, 'resetPassword'])->name('u
 
 Route::middleware("userMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('user.home');
-    Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
-        'index' => 'user.tender.index',
-        'show' => 'user.tender.show',
-    ]);
-    Route::resource("bid", BidController::class)->parameters(["bid" => "id"])->names([
-        'index' => 'user.bid.index',
-        'show' => 'user.bid.show',
-        'create' => 'user.bid.create',
-        'store' => 'user.bid.store',
-        'edit' => 'user.bid.edit',
-        'update' => 'user.bid.update',
-        'destroy' => 'user.bid.destroy',
-    ]);
-    Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
-        'index' => 'user.archive.index',
-        'show' => 'user.archive.show',
-        'create' => 'user.archive.create',
-        'store' => 'user.archive.store',
-        'edit' => 'user.archive.edit',
-        'update' => 'user.archive.update',
-        'destroy' => 'user.archive.destroy',
-    ]);
+
+    Route::middleware("UserCredentialsMiddleware")->group(function (){
+        Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
+            'index' => 'user.tender.index',
+            'show' => 'user.tender.show',
+        ]);
+
+        Route::resource("bid", BidController::class)->parameters(["bid" => "id"])->names([
+            'index' => 'user.bid.index',
+            'show' => 'user.bid.show',
+            'create' => 'user.bid.create',
+            'store' => 'user.bid.store',
+            'edit' => 'user.bid.edit',
+            'update' => 'user.bid.update',
+            'destroy' => 'user.bid.destroy',
+        ]);
+
+        Route::resource("archive", ArchiveController::class)->parameters(["archive" => "id"])->names([
+            'index' => 'user.archive.index',
+            'show' => 'user.archive.show',
+            'create' => 'user.archive.create',
+            'store' => 'user.archive.store',
+            'edit' => 'user.archive.edit',
+            'update' => 'user.archive.update',
+            'destroy' => 'user.archive.destroy',
+        ]);
+    });
+
+
 
     Route::resource("profile", UserController::class)->parameters(["profile" => "id"])->names([
         'index' => 'user.profile.index',

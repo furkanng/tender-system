@@ -30,22 +30,32 @@
             </div>
         </div>
         <div class="navbar-nav w-100">
-            <a href="{{ route('user.home') }}" class="nav-item nav-link {{ request()->routeIs('user.home') ? 'active' : '' }}">
+            <a href="{{ route('user.home') }}"
+               class="nav-item nav-link {{ request()->routeIs('user.home') ? 'active' : '' }}">
                 <i class="fa fa-home me-2"></i>Ana Sayfa
             </a>
-            <a href="{{ route('user.tender.index') }}" class="nav-item nav-link {{ request()->routeIs('user.tender.index') ? 'active' : '' }}">
-                <i class="fa fa-car me-2"></i>Tüm İhaleler
-            </a>
-            <a href="{{ route('user.bid.index') }}" class="nav-item nav-link {{ request()->routeIs('user.bid.index') ? 'active' : '' }}">
-                <i class="fa fa-car me-2"></i>Tekliflerim
-            </a>
-            <a href="{{ route('user.archive.index') }}" class="nav-item nav-link {{ request()->routeIs('user.archive.index') ? 'active' : '' }}">
-                <i class="fa fa-table me-2"></i>Arşiv
-            </a>
-            <a href="{{ route('user.support.index') }}" class="nav-item nav-link {{ request()->routeIs('user.support.index') ? 'active' : '' }}">
+            @php $user = auth()->guard("user")->user()  @endphp
+            @if(!empty($user->city) && !empty($user->district) && !empty($user->address) && !empty($user->phone))
+                <a href="{{ route('user.tender.index') }}"
+                   class="nav-item nav-link {{ request()->routeIs('user.tender.index') ? 'active' : '' }}">
+                    <i class="fa fa-car me-2"></i>Tüm İhaleler
+                </a>
+                <a href="{{ route('user.bid.index') }}"
+                   class="nav-item nav-link {{ request()->routeIs('user.bid.index') ? 'active' : '' }}">
+                    <i class="fa fa-car me-2"></i>Tekliflerim
+                </a>
+                <a href="{{ route('user.archive.index') }}"
+                   class="nav-item nav-link {{ request()->routeIs('user.archive.index') ? 'active' : '' }}">
+                    <i class="fa fa-table me-2"></i>Arşiv
+                </a>
+            @endif
+
+            <a href="{{ route('user.support.index') }}"
+               class="nav-item nav-link {{ request()->routeIs('user.support.index') ? 'active' : '' }}">
                 <i class="bx bx-support me-2"></i>Destek Talebi
             </a>
-            <a href="{{ route('user.profile.index') }}" class="nav-item nav-link {{ request()->routeIs('user.profile.index') ? 'active' : '' }}">
+            <a href="{{ route('user.profile.index') }}"
+               class="nav-item nav-link {{ request()->routeIs('user.profile.index') ? 'active' : '' }}">
                 <i class='bx bx-user me-2'></i> Profilim
             </a>
         </div>

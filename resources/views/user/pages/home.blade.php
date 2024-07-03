@@ -2,6 +2,37 @@
 
 @section('title', 'Home Page')
 @section('content')
+    @php $user = auth()->guard("user")->user()  @endphp
+    @if(empty($user->city) || empty($user->district) || empty($user->address) || empty($user->phone))
+        <div class="container-fluid pt-4 px-4">
+            <div class="card">
+                <div class="d-flex align-items-end row">
+                    <div class="col-sm-7">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">Hoşgeldiniz {{auth()->guard("user")->user()->name}}
+                                🎉</h5>
+                            <p class="mb-4 text-danger">
+                                Oto İhale Sistemine Hoşgeldiniz. İhalelere teklif verebilmek için öncelikle profilim
+                                sayfasında eksik bulunan iletişim bilgilerinizi doldurunuz.
+                            </p>
+                            <a href="{{route("user.profile.index")}}" class="btn btn-sm btn-outline-danger">Profilim</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                            <img
+                                src="{{asset("panel/assets/img/illustrations/man-with-laptop-light.png")}}"
+                                height="140"
+                                alt="View Badge User"
+                                data-app-dark-img="illustrations/man-with-laptop-dark.png"
+                                data-app-light-img="illustrations/man-with-laptop-light.png"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Sale & Revenue Start -->
     <div class="container-fluid pt-4 px-4">
