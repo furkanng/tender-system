@@ -427,15 +427,24 @@
 
             </div>
             <div class="tab-pane fade" id="navs-pills-justified-messages" role="tabpanel">
-                <p>
-                    Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
-                    cupcake gummi bears cake chocolate.
-                </p>
-                <p class="mb-0">
-                    Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
-                    roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
-                    jelly-o tart brownie jelly.
-                </p>
+                @php $logs = \App\Models\ActivityLog::query()
+                    ->where("tender_id", $tenders->id)
+                    ->orderBy("created_at", "DESC")
+                    ->get();
+                @endphp
+
+                @if($logs->count())
+                    @foreach($logs as $log)
+                        <p>
+                            {{$log->content . " ". \Illuminate\Support\Carbon::parse($log->created_at)
+                            ->format("Y-m-d H:i:s")}}
+                        </p>
+                    @endforeach
+                @else
+                    <p>
+                        Bu ihale ile alakalı henüz bir log kaydı bulunmamaktadır.
+                    </p>
+                @endif
             </div>
         </div>
     </div>

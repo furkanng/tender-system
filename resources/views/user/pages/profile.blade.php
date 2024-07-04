@@ -2,6 +2,13 @@
 
 @section('title', 'Home Page')
 @section('content')
+    @if(session('message'))
+        <script>
+            $(document).ready(function () {
+                $('#successModal').modal('show');
+            });
+        </script>
+    @endif
     <div class="container mt-5 mb-5">
         <div class="alert alert-secondary" role="alert">
             Herhangi bir veri kaydetmek için şifrenizi zorunlu olarak giriniz. (Yeni şifre oluşturmak için de
@@ -40,9 +47,8 @@
                             <div class="button-wrapper d-flex">
                                 <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
                                     <form method="POST" enctype="multipart/form-data"
-                                          action="{{route('user.profile.update',["id" => $user->id])}}" id="uploadForm">
+                                          action="{{route('user.profile.image')}}" id="uploadForm">
                                         @csrf
-                                        @method("PUT")
                                         <span class="d-none d-sm-block">Yeni Fotoğraf Yükle</span>
                                         <i class="bx bx-upload d-block d-sm-none"></i>
                                         <input
@@ -68,13 +74,6 @@
                             </div>
                         </div>
                     </div>
-                    @if(session('message'))
-                        <script>
-                            $(document).ready(function () {
-                                $('#successModal').modal('show');
-                            });
-                        </script>
-                    @endif
                     <hr class="my-0"/>
                     <div class="card-body">
                         <form id="formAccountSettings" method="POST"
@@ -92,7 +91,11 @@
                                         value="{{$user->name}}"
                                         autofocus
                                     />
+                                    @error('name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">E Mail *</label>
                                     <input
@@ -102,7 +105,11 @@
                                         name="email"
                                         value="{{$user->email}}"
                                     />
+                                    @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">Telefon *</label>
                                     <input
@@ -123,7 +130,11 @@
                                    }
                                    formatPhoneNumber(this)" maxlength="10"
                                     />
+                                    @error('phone')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">Adres *</label>
                                     <input
@@ -133,7 +144,11 @@
                                         name="address"
                                         value="{{$user->address}}"
                                     />
+                                    @error('address')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">Şehir *</label>
                                     <input
@@ -143,7 +158,11 @@
                                         name="city"
                                         value="{{$user->city}}"
                                     />
+                                    @error('city')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">İlçe *</label>
                                     <input
@@ -153,16 +172,24 @@
                                         name="district"
                                         value="{{$user->district}}"
                                     />
+                                    @error('district')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
-                                    <label for="email" class="form-label">Şifre *</label>
+                                    <label for="email" class="form-label">Şifre * <span class="text-danger">En az 8 karakter giriniz.</span></label>
                                     <input
                                         class="form-control"
                                         type="password"
                                         id="password"
                                         name="password"
                                     />
+                                    @error('password')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label for="email" class="form-label">Şifre Tekrar *</label>
                                     <input

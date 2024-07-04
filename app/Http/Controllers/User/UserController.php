@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,22 +24,20 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request, string $id)
     {
+        $user = User::findOrFail($id);
+
         if ($request->has("password") && $request->get("password") != null) {
             $request->validate([
                 "password" => "required|min:8|confirmed",
             ]);
+            $user->fill($request->all())->save();
+
+            return redirect()->back()->with('message', 'İşlem Başarılı.');
         }
 
-        $request->validate([
-            "city" => "required|sometimes",
-            "address" => "required|sometimes",
-            "district" => "required|sometimes",
-        ]);
-
-        $user = User::findOrFail($id);
-        $user->fill($request->all())->save();
+        $user->fill($request->except("password"))->save();
 
         return redirect()->back()->with('message', 'İşlem Başarılı.');
     }
@@ -60,4 +59,13 @@ class UserController extends Controller
 
         return redirect()->back()->with('message', 'İşlem Başarılı.');
     }
+
+    public function uploadImage(Request $request)
+    {
+        $user = auth()->guard("user")->user();
+        $user->fill($request->all())->save();
+        return redirect()->back()->with('message', 'İşlem Başarılı.');
+    }
+
+
 }

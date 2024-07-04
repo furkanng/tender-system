@@ -19,7 +19,7 @@ Route::post('sifre-yenileme', [AuthController::class, 'resetPassword'])->name('u
 Route::middleware("userMiddleware")->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('user.home');
 
-    Route::middleware("UserCredentialsMiddleware")->group(function (){
+    Route::middleware("UserCredentialsMiddleware")->group(function () {
         Route::resource("tender", TenderController::class)->parameters(["tender" => "id"])->names([
             'index' => 'user.tender.index',
             'show' => 'user.tender.show',
@@ -47,12 +47,13 @@ Route::middleware("userMiddleware")->group(function () {
     });
 
 
-
     Route::resource("profile", UserController::class)->parameters(["profile" => "id"])->names([
         'index' => 'user.profile.index',
         'update' => 'user.profile.update',
         'destroy' => 'user.profile.destroy',
     ]);
+
+    Route::post("profile/image", [UserController::class, "uploadImage"])->name("user.profile.image");
 
 
     Route::resource("support", SupportController::class)->parameters(["support" => "id"])->names([
