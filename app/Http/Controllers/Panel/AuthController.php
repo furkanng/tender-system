@@ -15,7 +15,7 @@ class AuthController extends Controller
         if (Auth::guard("admin")->attempt($credentials)) {
             return redirect()->route('panel.home');
         } else {
-            return redirect()->route('panel.login.get')->with('error', 'Giriş başarısız.');
+            return redirect()->route('panel.login.get')->with('loginError', 'Hatalı E-Posta veya Şifre girdiniz. Bilgileri kontrol ederek tekrar deneyiniz!');
         }
     }
 

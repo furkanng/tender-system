@@ -55,7 +55,16 @@
 <!-- Content -->
 
 <div class="container-xxl">
+    @if(session('loginError'))
+        <div class="alert alert-danger" role="alert" style="top: 100px;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;">{{ session('loginError') }}</div>
+    @endif
     <div class="authentication-wrapper authentication-basic container-p-y">
+
         <div class="authentication-inner">
             <!-- Register -->
             <div class="card">

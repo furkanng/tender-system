@@ -33,7 +33,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->attempt($credentials)) {
             return redirect()->route('user.home')->with('message', 'Giriş Başarılı.');
         } else {
-            return redirect()->route('front.login')->with('message', 'Giriş başarısız.');
+            return redirect()->route('front.login')->with('loginError', 'Hatalı E-Posta/Telefon veya Şifre girdiniz. Bilgileri kontrol ederek tekrar deneyiniz!');
         }
 
     }

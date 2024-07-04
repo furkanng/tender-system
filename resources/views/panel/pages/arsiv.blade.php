@@ -72,7 +72,7 @@
                          @endif
                         </td>
                         <td><span class="badge bg-label-primary me-1">{{$archive->tender_no}}</span></td>
-                        <td>{{$archive->bid_user_name}}</td>
+                        <td>{{$archive->bid_user_name ?? ""}}</td>
                         <td><span class="badge bg-label-secondary me-1">
                             @php
 
