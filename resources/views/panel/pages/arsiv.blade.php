@@ -2,7 +2,22 @@
 
 @section('title', 'Home Page')
 @section('content')
+<style>
+    .table-container {
+        display: flex;
+        justify-content: center;
+    }
 
+    .table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .table th, .table td {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+</style>
     <div class="card">
         <div class="row">
             <div class="col-4">
@@ -34,7 +49,7 @@
                     <th>Araç</th>
                     <th>Resim</th>
                     <th>İhale No</th>
-                    <th>Şehir</th>
+                    <th>Teklif Veren Kullanıcı</th>
                     <th>Tarih</th>
                     <th>Durum</th>
                     <th>İşlemler</th>
@@ -49,7 +64,7 @@
                         <td>
                             @if($archive->images)
                             <a href="#">
-                            
+
                             <img style="max-width:80px"
                                  class="img-fluid img-responsive rounded product-image"
                                  src="{{json_decode($archive["images"],true)[0]}}">
@@ -57,10 +72,10 @@
                          @endif
                         </td>
                         <td><span class="badge bg-label-primary me-1">{{$archive->tender_no}}</span></td>
-                        <td>{{$archive->city}}</td>
+                        <td>{{$archive->bid_user_name}}</td>
                         <td><span class="badge bg-label-secondary me-1">
                             @php
-                            
+
                             $date = Carbon\Carbon::parse((int)$archive->date);
 
                             // İstediğiniz tarih formatını kullanma
@@ -68,9 +83,9 @@
 
                             // Sonucu ekrana yazdırma
                             echo $dateFormat;
-                            @endphp 
-                        
-                        
+                            @endphp
+
+
                         </span></td>
                         <td>@if($archive->status == "KAZANDINIZ")
                                 <span class="badge bg-label-success me-1">{{$archive->status}}</span>
@@ -81,7 +96,7 @@
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown">
+                                        data-bs-toggle="dropdown" style="margin-left: 50px;">
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">

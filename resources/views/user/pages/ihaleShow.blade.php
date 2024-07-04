@@ -25,6 +25,31 @@
 
     @endif
 <style>
+    .tender-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #e5eff8;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .tender-label {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .countdown {
+        font-size: 1.2em;
+        color: #343a40;
+        display: flex;
+        align-items: center;
+    }
+
+    .countdown i {
+        margin-right: 5px;
+    }
     input[type="text"] {
         width: 200px;
         height: 30px;
@@ -102,7 +127,45 @@
                     @endif
                     <hr style="width: 70%; margin-left: auto;margin-right: auto; height: 2px;" class="bg-label-secondary">
                     <div class="card-body p-3">
-                        <div>
+                        @php
+                            $closedDateTimestamp = \Carbon\Carbon::createFromTimestamp($tender->closed_date)->format('M-d-Y H:i:s');
+                            $closedDateFormatted = \Carbon\Carbon::createFromTimestamp($tender->closed_date)->translatedFormat('d-m-Y');
+                        @endphp
+
+                        <div class="tender-info">
+                            <span class="tender-label">İhale Bitiş Tarihi: {{ $closedDateFormatted }}</span>
+                            <span class="countdown" id="gerisayim{{ $tender->id }}"></span>
+                        </div>
+
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', (event) => {
+                                var countDownDate{{ $tender->id }} = new Date("{{ $closedDateTimestamp }}").getTime();
+
+                                var x = setInterval(function() {
+
+                                    var now = new Date().getTime();
+                                    var distance = countDownDate{{ $tender->id }} - now;
+
+                                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                    if (hours < 10) { hours = '0' + hours; }
+                                    if (minutes < 10) { minutes = '0' + minutes; }
+                                    if (seconds < 10) { seconds = '0' + seconds; }
+
+                                    document.getElementById("gerisayim{{ $tender->id }}").innerHTML = '<i class="fa fa-clock"></i> ' + hours + ":" + minutes + ":" + seconds;
+
+                                    if (distance < 0) {
+                                        clearInterval(x);
+                                        document.getElementById("gerisayim{{ $tender->id }}").innerHTML = "<i class='fa fa-clock'></i> İhale Sona Erdi";
+                                    }
+
+                                }, 1000);
+                            });
+                        </script>
+                        <div style="display: flex;justify-content: center">
                             <form action="{{route("user.bid.store",["tender_id" => $tender["id"]])}}" method="post">
                                 @csrf
                                 <input class="form" type="text" name="bid" id="bid" placeholder="TEKLİF VER" >
@@ -110,6 +173,76 @@
                                 <button class="btn btn-primary btn-sm" type="submit">Teklif Ver</button>
                             </form>
                         </div>
+                        <div class="row p-3">
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>İhale ID:</strong> {{$tender["tender_no"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Marka:</strong> {{$tender["brand"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Model:</strong> {{$tender["model"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Model Yılı:</strong> {{$tender["year"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>KM:</strong> {{$tender["km"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Plaka:</strong> {{$tender["plate"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Yakıt Tipi:</strong> {{$tender["fuel_type"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>TSRB Bedeli:</strong> {{$tender["tsrb"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Vites Tipi:</strong> {{$tender["gear"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Araç Tipi:</strong> {{$tender["car_type"]}}
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>İhale Tipi:</strong> {{$tender["tender_doc"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>İhale Firması:</strong> {{\App\Models\Company::find($tender->company_id)->name ?? "Bilinmiyor"}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Araç Hasar Tipi:</strong> {{$tender["damages"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Servis Bilgisi:</strong> {{$tender["service_name"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Servis Adresi:</strong> {{$tender["address"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Servis Telefon:</strong> {{$tender["service_phone"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Servis Tipi:</strong> {{$tender["service_type"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Şehir:</strong> {{$tender["city"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>İlçe:</strong> {{$tender["district"]}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!--
                         <div class="row p-3">
                             <div class="col-md-6">
                             <table class="table table-striped">
@@ -164,10 +297,7 @@
                                         <td>İhale Tipi :</td>
                                         <td>{{$tender["tender_doc"]}}</td>
                                     </tr>
-                                    <tr>
-                                        <td>İhale Bitiş Tarihi :</td>
-                                        <td>{{\Carbon\Carbon::createFromTimestamp($tender->closed_date)->format('d.m.Y')}}</td>
-                                    </tr>
+
                                     <tr>
                                         <td>İhale Firması :</td>
                                         <td>{{\App\Models\Company::find($tender->company_id)->name ?? "Bilinmiyor"}}</td>
@@ -179,8 +309,6 @@
                             <div class="col-md-6">
                                 <table class="table table-striped">
                                     <tbody>
-
-
 
                                     <tr>
                                         <td>Araç Hasar Tipi :</td>
@@ -216,7 +344,7 @@
                                 </table>
                             </div>
                         </div>
-
+-->
                     </div>
                 </div>
             </div>

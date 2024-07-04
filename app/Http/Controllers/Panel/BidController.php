@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Bid;
 use App\Service\Otopert\OtopertService;
 use App\Service\Autogong\AutogongService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TransferBidMail;
 class BidController extends Controller
 {
     /**
@@ -108,6 +110,8 @@ class BidController extends Controller
         $otoperService = new OtopertService();
         $autogongService = new AutogongService();
         $sovtajyeriService = new SovtajyeriService();
+        $user = auth()->guard("user")->user();
+        $successMessages =[];
 
         foreach ($bidIds as $bidId) {
             $bid = Bid::findOrFail($bidId);
@@ -126,6 +130,7 @@ class BidController extends Controller
                     $result =str_contains($response['response'], 'sonuc basarili');
                     if($result == false){
                         $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                        continue;
                     }
 
                 }
@@ -135,6 +140,7 @@ class BidController extends Controller
 
                         if($responseJson->success != "true"){
                             $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                            continue;
                         }
 
                 }
@@ -144,27 +150,38 @@ class BidController extends Controller
 
                     if($responseDecode->HATA == 'true'){
                         $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                        continue;
 
                     }
                 }
 
+
+                Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
+
                 $bid->fill(array_merge($request->all(),
                     ["transfer_status" => $request->has("transferCheckBids") ? 1 : 0]))->save();
+                $successMessages[] = $bid->tender->tender_no." numaralı ihale başarıyla aktarılmıştır.";
+
+
 
 
             }
 
         }
 
-
-
+        $redirect = redirect()->route('panel.bid.index');
 
         if (!empty($errorMessages)) {
-            return redirect()->route('panel.bid.index')->with('error', implode(', ', $errorMessages));
+            $errorHtml = implode('<br>', $errorMessages);
+            $redirect->with('error', $errorHtml);
         }
 
-        return redirect()->route('panel.bid.index')->with('message', 'İşlem Başarılı');
+        if (!empty($successMessages)) {
+            $successHtml = implode('<br>', $successMessages);
+            $redirect->with('message', $successHtml);
+        }
 
+        return $redirect;
 
     }
     /**
@@ -172,9 +189,11 @@ class BidController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
             $otoperService = new OtopertService();
             $autogongService = new AutogongService();
             $sovtajyeriService = new SovtajyeriService();
+            $user = auth()->guard("user")->user();
 
 
             $bid = Bid::findOrFail($id);
@@ -191,6 +210,8 @@ class BidController extends Controller
             else{
 
                 if($bid->company_id == 2){
+
+
                     $response = $otoperService->postTenderOtopert($bid);
                     $result =str_contains($response['response'], 'sonuc basarili');
                     if($result == false){
@@ -214,12 +235,13 @@ class BidController extends Controller
 
                     }
                 }
+                Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
 
 
                 $bid->fill(array_merge($request->all(),
                     ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
 
-                return redirect()->route('panel.bid.index')->with('message', 'İşlem Başarılı');
+                return redirect()->route('panel.bid.index')->with('message', $bid->tender->tender_no.' numaralı ihale başarıyla aktarılmıştır');
 
 
             }

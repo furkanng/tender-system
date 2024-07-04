@@ -108,6 +108,6 @@
         </div>
     </div>
 
-    {{-- {{ $tenders->links('pagination') }} --}}
+     {{ $transferBids->links('pagination') }}
 
 @endsection

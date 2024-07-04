@@ -30,7 +30,7 @@ class TenderController extends Controller
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
                 ->orWhere('district', 'LIKE', '%' . $filter . '%')
                 ->orderBy("created_at", "DESC")
-            : Tender::where('closed_date', '>', $now)->orderBy("created_at", "DESC");
+            : Tender::where('closed_date', '>=', $now)->orderBy("created_at", "DESC");
 
         $tenders = $query->paginate(20);
 

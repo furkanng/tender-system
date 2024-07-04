@@ -17,7 +17,9 @@ class ArchiveController extends Controller
 
         $query = $filter
             ? Archive::leftJoin('tenders', 'archives.tender_no', '=', 'tenders.tender_no')
-            ->select('archives.*', 'tenders.images')->where('tender_no', 'LIKE', '%' . $filter . '%')
+                ->leftJoin('bids', 'tenders.id', '=', 'bids.tender_id')
+                ->leftJoin('users', 'bids.user_id', '=', 'users.id')
+            ->select('archives.*', 'tenders.images','users.name as bid_user_name')->where('tender_no', 'LIKE', '%' . $filter . '%')
                 //->orWhere('company_name', 'LIKE', '%' . $filter . '%')
                 ->orWhere('plate', 'LIKE', '%' . $filter . '%')
                 ->orWhere('car', 'LIKE', '%' . $filter . '%')
@@ -25,10 +27,14 @@ class ArchiveController extends Controller
                 ->orWhere('status', 'LIKE', '%' . $filter . '%')
                 ->orderBy("date", "DESC")
             : Archive::leftJoin('tenders', 'archives.tender_no', '=', 'tenders.tender_no')
-            ->select('archives.*', 'tenders.images')->orderBy("date", "DESC");
+                ->leftJoin('bids', 'tenders.id', '=', 'bids.tender_id')
+                ->leftJoin('users', 'bids.user_id', '=', 'users.id')
+            ->select('archives.*', 'tenders.images','users.name as bid_user_name')->orderBy("date", "DESC");
+
 
         $archives = $query->paginate(20);
-        //dd( $archives);
+
+
         $archives->appends(['filter' => $filter]);
         return view('panel.pages.arsiv', compact('archives'));
     }
