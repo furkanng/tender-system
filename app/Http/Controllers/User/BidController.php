@@ -50,7 +50,6 @@ class BidController extends Controller
         $now = Carbon::now();
         if ($bidPrice % $tenderFactor != 0) {
             return redirect()->back()->with('tenderFactorError',$tenderFactor );
-
         }
 
         if($tenderClosedDate->lessThan($now)){
@@ -67,8 +66,8 @@ class BidController extends Controller
                 'tender_closed_date'=>$tender->closed_date
 
             ]
-
         )->save();
+
         return redirect()->back()->with('message', 'Kayıt Başarılı');
 
 
