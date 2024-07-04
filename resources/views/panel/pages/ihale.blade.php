@@ -2,7 +2,13 @@
 
 @section('title', 'Home Page')
 @section('content')
-
+    @if(session('message'))
+        <script>
+            $(document).ready(function () {
+                $('#successModal').modal('show');
+            });
+        </script>
+    @endif
     <div class="card">
         <div class="row">
             <div class="col-4">
@@ -63,9 +69,14 @@
                                        href="{{route("panel.tender.edit", ['id' => $tender->id])}}"
                                     ><i class="bx bx-edit-alt me-1"></i>Düzenle</a
                                     >
-                                    <a class="dropdown-item" href="javascript:void(0);"
-                                    ><i class="bx bx-trash me-1"></i>Sil</a
-                                    >
+                                    <form action="{{ route('panel.tender.destroy', ['id' => $tender->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bx bx-trash me-1"></i> Sil
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         </td>

@@ -16,7 +16,7 @@ class AutogongService
     const ALL_CARS_URL = "https://www.autogong.com/ihale/";
     const ALL_CARS_DETAIL_URL = "https://www.autogong.com/ihale/ihale_detayi/";
 
-    const POST_TENDER = "http://www.autogong.com/ihale/teklif_kaydet";
+    const POST_TENDER = "https://www.autogong.com/ihale/teklif_kaydet";
     const TENDER_FIRST_PAGE = 1;
     const TENDER_LAST_PAGE = 4;
     const ARCHIVE_FIRST_PAGE = 1;

@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-            /*
             $settingsConfigArray = DB::table('settings')->where("group_key", "=", "email_settings")->get();
             $settingsConfig = [];
 
@@ -45,6 +44,5 @@ class AppServiceProvider extends ServiceProvider
             ];
 
             Config::set('mail', $mail);
-*/
     }
 }

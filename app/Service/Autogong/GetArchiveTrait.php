@@ -4,8 +4,6 @@ namespace App\Service\Autogong;
 
 use App\Jobs\Autogong\ArchiveJob;
 use App\Models\Archive;
-use App\Models\Bid;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\DomCrawler\Crawler;
@@ -15,7 +13,7 @@ trait GetArchiveTrait
     public function getArchives()
     {
         for ($page = self::ARCHIVE_FIRST_PAGE; $page <= self::ARCHIVE_LAST_PAGE; $page++) {
-            ArchiveJob::dispatch($page);
+            ArchiveJob::dispatchSync($page);
         }
     }
 
@@ -48,13 +46,27 @@ trait GetArchiveTrait
                 // Eğer "Durum" değeri "KAYBETTİNİZ Durum" gibi bir hata içeriyorsa, bu hatayı düzeltebilirsiniz.
                 $durum = str_replace(" Durum", "", $durum);
 
+                $parts = explode(' IP:', $matches[6]);
+                if (count($parts) > 1) {
+                    $timeString = trim($parts[0]);
+                } else {
+                    $timeString = $matches[6];
+                }
+
+                // Zaman dizesini tarih ve saat kısmından ayırın
+                $dateParts = explode(' ', $timeString);
+                $dateOnly = $dateParts[0];
+
+                // Carbon nesnesi oluşturun
+                $date = Carbon::createFromFormat('d.m.Y', $dateOnly);
+
                 return [
                     "company_id" => 1,
                     'tender_no' => $matches[1],
                     'plate' => $matches[2],
                     'car' => $matches[3],
                     'city' => $matches[5],
-                    'date' => $matches[6],
+                    'date' => $date->getTimestamp(),
                     'order' => $matches[7],
                     'my_bid' => $matches[8],
                     'bid_win' => $kazananTeklif,
@@ -84,7 +96,7 @@ trait GetArchiveTrait
                     'plate' => $car['plate'],
                     'car' => $car['car'],
                     'city' => $car['city'],
-                    'date' => Carbon::parse($car['date'])->timestamp,
+                    'date' => $car['date'],
                     'order' => $car['order'],
                     'my_bid' => $car['my_bid'],
                     'bid_win' => $car['bid_win'],

@@ -360,7 +360,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        fetch('http://127.0.0.1:8000/admin/chart-data').then(response => response.json())
+        fetch('https://otoihalesistemi.com/admin/chart-data').then(response => response.json())
             .then(data => {
                 const profileReportChartEl = document.querySelector('#profileReportChart'),
                     profileReportChartConfig = {
@@ -434,7 +434,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const chartOrderStatistics = document.querySelector('#orderStatisticsChart');
 
-        fetch('http://127.0.0.1:8000/admin/tender-analystic-data')
+        fetch('https://otoihalesistemi.com/admin/tender-analystic-data')
             .then(response => response.json())
             .then(data => {
                 const orderChartConfig = {

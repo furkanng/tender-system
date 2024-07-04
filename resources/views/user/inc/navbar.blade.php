@@ -81,8 +81,15 @@
         </div> -->
         <div class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" src="{{asset("user/img/no_profile.png")}}" alt=""
-                     style="width: 40px; height: 40px;">
+
+                @if(empty($user->image))
+                    <img class="rounded-circle me-lg-2" src="{{ asset('user/img/no_profile.png') }}"
+                         style="width: 40px; height: 40px;">
+                @else
+                    <img class="rounded-circle me-lg-2" src="{{ url('storage/users/'.$user->image) }}"
+                         style="width: 40px; height: 40px;">
+                @endif
+
                 <span class="d-none d-lg-inline-flex">
                     {{ mb_strtoupper(auth()->guard("user")->user()->name, 'UTF-8') }}</span>
             </a>

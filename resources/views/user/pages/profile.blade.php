@@ -10,10 +10,6 @@
         </script>
     @endif
     <div class="container mt-5 mb-5">
-        <div class="alert alert-secondary" role="alert">
-            Herhangi bir veri kaydetmek için şifrenizi zorunlu olarak giriniz. (Yeni şifre oluşturmak için de
-            kullanılır.)
-        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">

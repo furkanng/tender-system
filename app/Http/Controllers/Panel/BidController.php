@@ -155,11 +155,12 @@ class BidController extends Controller
                     }
                 }
 
+                $bid->fill(array_merge($request->all(),
+                    ["transfer_status" => $request->has("transferCheckBids") ? 1 : 0]))->save();
 
                 Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
 
-                $bid->fill(array_merge($request->all(),
-                    ["transfer_status" => $request->has("transferCheckBids") ? 1 : 0]))->save();
+
                 $successMessages[] = $bid->tender->tender_no." numaralı ihale başarıyla aktarılmıştır.";
 
 
@@ -235,11 +236,13 @@ class BidController extends Controller
 
                     }
                 }
-                Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
 
 
                 $bid->fill(array_merge($request->all(),
                     ["transfer_status" => $request->has("transfer_status") ? 1 : 0]))->save();
+
+                Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
+
 
                 return redirect()->route('panel.bid.index')->with('message', $bid->tender->tender_no.' numaralı ihale başarıyla aktarılmıştır');
 

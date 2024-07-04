@@ -25,7 +25,7 @@ class TenderController extends Controller
                 ->orWhere('plate', 'LIKE', '%' . $filter . '%')
                 ->orWhere('fuel_type', 'LIKE', '%' . $filter . '%')
                 ->orWhere('sase_no', 'LIKE', '%' . $filter . '%')
-                ->orWhere('servicePhone', 'LIKE', '%' . $filter . '%')
+                ->orWhere('service_phone', 'LIKE', '%' . $filter . '%')
                 ->orWhere('city', 'LIKE', '%' . $filter . '%')
                 ->orWhere('district', 'LIKE', '%' . $filter . '%')
                 ->orderBy("created_at", "DESC")
@@ -67,7 +67,7 @@ class TenderController extends Controller
             ->fill($request->except(["status", "tender_no"]))
             ->save();
 
-        return redirect()->route('panel.tender.edit', ['id' => $tender->id])->with('success', 'İşlem Başarılı');
+        return redirect()->route('panel.tender.edit', ['id' => $tender->id])->with('message', 'İşlem Başarılı');
     }
 
 
@@ -104,7 +104,7 @@ class TenderController extends Controller
         ])->fill([
             'status' => $request->has('status') ? 1 : 0,
         ])->fill($request->except(["status"]))->save();
-        return redirect()->route('panel.tender.index')->with('success', 'İşlem Başarılı');
+        return redirect()->route('panel.tender.index')->with('message', 'İşlem Başarılı');
     }
 
     /**
@@ -112,6 +112,9 @@ class TenderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $model = Tender::findOrFail($id);
+        $model->delete();
+
+        return redirect()->route('panel.tender.index')->with('message', 'İşlem Başarılı');
     }
 }
