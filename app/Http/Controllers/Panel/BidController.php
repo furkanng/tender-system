@@ -263,7 +263,6 @@ class BidController extends Controller
         $bid = Bid::findOrFail($id);
         if($bid->delete()){
             return redirect()->route('panel.bid.index')->with('message', 'Teklif Başarıyla Silindi');
-
         }
         else{
             return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');

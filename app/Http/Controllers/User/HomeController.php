@@ -29,7 +29,9 @@ class HomeController extends Controller
         $lastFiveTenders = Tender::where('closed_date', '>', $now)->orderBy('created_at', 'desc')->take(5)->get();
 
         foreach ($bids as $bid) {
-            $archivesCount = Archive::where("tender_no", $bid->tender->tender_no)->count();
+            if ($bid->tender){
+                $archivesCount = Archive::where("tender_no", $bid->tender->tender_no)->count();
+            }
         }
 
         return view('user.pages.home',
