@@ -11,9 +11,8 @@
 @endif
 @if(auth()->user()->role != 2)
 
-    <div class="alert alert-danger " role="alert" style="margin-top: 30px">
+    <div class="d-flex justify-content-center alert alert-danger" role="alert" style="margin-top: 30px;">
         VIP üyeliğiniz bulunmadığından teklif düzenleme işlemi kapalı !
-
     </div>
 @endif
 @if(session('transferredError'))

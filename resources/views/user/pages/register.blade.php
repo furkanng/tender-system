@@ -75,17 +75,7 @@
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" required name="phone" id="floatingInput"
                                    placeholder="Telefon numaranız" value="{{ old('phone') }}"
-                                   oninput="function formatPhoneNumber(input) {
-                                   var cleaned = ('' + input.value).replace(/\D/g, '');
-
-                                    // Parçalara ayırma
-                                    var match = cleaned.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
-
-                                    if (match) {
-                                        input.value = '(' + match[1] + ') ' + match[2] + ' ' + match[3] + ' ' + match[4];
-                                    }
-                                   }
-                                   formatPhoneNumber(this)" maxlength="10">
+                                   maxlength="10">
                             <label for="floatingInput">Telefon *</label>
                             @error('phone')
                             <div class="text-danger">{{ $message }}</div>

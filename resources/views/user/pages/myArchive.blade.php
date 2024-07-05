@@ -74,7 +74,7 @@
                         </table>
                     </div>
                 @else
-                    <div class="alert alert-secondary" role="alert">
+                    <div class="alert alert-secondary d-flex justify-content-center" role="alert">
                         Henüz Arşiviniz bulunmamaktadır ?
                     </div>
                 @endif

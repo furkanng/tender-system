@@ -128,7 +128,7 @@
                         <p style="font-size: 24px; ">{{$name}}</p>
 
                         <img
-                            src=" {{asset("front/resimler/logo.png")}}" width="125" height="120"
+                            src="{{asset("front/resimler/logo.png")}}" width="125" height="120"
                             style="display: block; border: 0px;"/>
                     </td>
                 </tr>

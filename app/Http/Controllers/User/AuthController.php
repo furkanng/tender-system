@@ -91,7 +91,7 @@ class AuthController extends Controller
                 "created_at" => $datetime
             ]);
 
-            return redirect()->route('front.login')->with('success', 'Mail Gönderildi.');
+            return redirect()->route('front.login')->with('success', 'Mail Gönderildi. Biraz uzun sürebilir bekleyiniz.');
 
 
         } else {

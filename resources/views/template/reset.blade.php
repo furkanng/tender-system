@@ -26,7 +26,7 @@
                 <tr>
                     <td style="text-align:center;">
                         <a href="{{$data["site_url"]}}" title="logo" target="_blank">
-                            <img width="60" src="https://i.ibb.co/hL4XZp2/android-chrome-192x192.png" title="logo"
+                            <img width="60" src="{{asset("front/resimler/logo.png")}}g" title="logo"
                                  alt="logo">
                         </a>
                     </td>
