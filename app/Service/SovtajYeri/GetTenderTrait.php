@@ -20,9 +20,10 @@ trait GetTenderTrait
                     'timeout' => 20,
                     'cookies' => $this->jar,
                 ])->getBody()->getContents();
-
                 $urls = $this->parseTenderLinks($response);
+
                 if (!empty($urls)) {
+
                     TenderDetailJob::dispatch($urls);
                 }
             } catch (\Exception $e) {
@@ -38,16 +39,17 @@ trait GetTenderTrait
 
             $urls = $crawler->filter('tr')->each(function (Crawler $node) {
                 $linkNode = $node->filter('a');
+
                 if ($linkNode->count() > 0) {
                     $link = $linkNode->attr('href');
-                    if (preg_match('/fncPopup/', $link)) {
-                        if (preg_match("/fncPopup\('([^']+)'/", $link, $matches)) {
-                            return $matches[1] ?? null;
-                        }
+
+                    if (preg_match('/javascript:window\.open\(\'([^\']+)\'/', $link, $matches)) {
+                        return $matches[1] ?? null;
                     } else {
                         Log::error("Hatalı veri: " . $link);
                     }
                 }
+
                 return null;
             });
 
