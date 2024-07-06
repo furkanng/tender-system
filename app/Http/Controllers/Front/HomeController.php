@@ -78,7 +78,7 @@ class HomeController extends Controller
             }
         );
 
-        return back()->with('message', 'İşlem Başarılı');
+        return back()->with('message', 'Sonuç Başarılı');
     }
 
 }
