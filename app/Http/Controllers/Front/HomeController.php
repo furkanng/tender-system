@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Setting;
 use App\Models\Tender;
-use App\Models\User;
-use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -35,14 +36,49 @@ class HomeController extends Controller
 
     public function about()
     {
-        return view('front.pages.about');
+        $model = new Setting();
+        $contact = $model->get("contact_settings");
+        $general = $model->get("general_settings");
+        return view('front.pages.about', compact(["contact", "general"]));
     }
 
     public function contact()
     {
         $model = new Setting();
         $contact = $model->get("contact_settings");
-        return view('front.pages.contact', compact('contact'));
+        $general = $model->get("general_settings");
+        return view('front.pages.contact', compact(['contact', 'general']));
+    }
+
+    public function storeContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+            'phone' => 'required'
+        ]);
+
+        $admin_mail = Admin::first()->email;
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => $request->subject,
+            'message' => $request->message,
+            'phone' => $request->phone,
+        ];
+
+        Mail::raw(
+            "Name: {$data['name']}\nEmail: {$data['email']}\nPhone: {$data['phone']}\n\nMessage:\n{$data['message']}",
+            function ($message) use ($data, $admin_mail) {
+                $message->to($admin_mail)
+                    ->subject($data['subject']);
+            }
+        );
+
+        return back()->with('message', 'İşlem Başarılı');
     }
 
 }

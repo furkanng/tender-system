@@ -56,29 +56,36 @@
                 </div>
                 <div class="col-md-6">
                     <div class="wow fadeInUp" data-wow-delay="0.5s">
-                        <form>
+                        <form action="{{route('front.contact.store')}}" method="POST">
+                            @csrf
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Adınız">
                                         <label for="name">İsim Soyisim</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Adresiniz">
                                         <label for="email">Eposta adresiniz</label>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="subject" placeholder="Subject">
+                                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Konu">
                                         <label for="subject">Konu</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="phone" id="phone" placeholder="Telefon">
+                                        <label for="phone">Telefon</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Leave a message here" id="message"
+                                        <textarea class="form-control" name="message" placeholder="Leave a message here" id="message"
                                                   style="height: 150px"></textarea>
                                         <label for="message">Mesajınız</label>
                                     </div>
@@ -88,6 +95,13 @@
                                 </div>
                             </div>
                         </form>
+                        @if(session('message'))
+                            <script>
+                                $(document).ready(function () {
+                                    $('#successModal').modal('show');
+                                });
+                            </script>
+                        @endif
                     </div>
                 </div>
             </div>

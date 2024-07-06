@@ -10,6 +10,8 @@ Route::get('/kayit-ol', [HomeController::class, 'register'])->name('front.regist
 Route::get('/kurumsal', [HomeController::class, 'about'])->name('front.about');
 Route::get('/iletisim', [HomeController::class, 'contact'])->name('front.contact');
 
+Route::post('/kayit', [HomeController::class, 'storeContact'])->name('front.contact.store');
+
 Route::get("autogong-getcars", function () {
     (new \App\Service\Autogong\AutogongService())->allCarsGet();
 });
