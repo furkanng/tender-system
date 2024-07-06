@@ -251,6 +251,8 @@ class BidController extends Controller
 
         }
         else{
+            $bid->fill(array_merge($request->all()))->save();
+
             return redirect()->route('panel.bid.index')->with('message', 'Teklif Güncellendi');
         }
     }
@@ -258,17 +260,23 @@ class BidController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request,string $id)
     {
-        $bid = Bid::findOrFail($id);
-        if($bid->delete()){
-            return redirect()->route('panel.bid.index')->with('message', 'Teklif Başarıyla Silindi');
-        }
-        else{
-            return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');
+        // Radiobutton seçimini al
+        $deleteOption = $request->input('deleteInput');
 
-        }
 
+        if ($deleteOption === 'yesDeleteInput') {
+            $bid = Bid::findOrFail($id);
+            if ($bid->delete()) {
+                return redirect()->route('panel.bid.index')->with('message', 'Teklif Başarıyla Silindi');
+            } else {
+                return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');
+            }
+        } else {
+
+            return redirect()->route('panel.bid.index')->with('error', 'Silme İşlemi İptal Edildi');
+        }
 
 
     }

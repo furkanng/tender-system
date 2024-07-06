@@ -23,6 +23,19 @@
         word-wrap: break-word;
         white-space: normal;
     }
+    .form-check{
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .form-check-input{
+
+        margin-top: 0px !important;
+    }
+    .modal-dialog{
+        max-width: 350px;
+    }
 </style>
 
     <div class="card">
@@ -121,6 +134,7 @@
                                     <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#bidEditModal{{ $bid->id }}">
                                         <i class="bx bx-edit-alt me-1"></i>Düzenle
                                     </a>
+                                    <input type="hidden" name="transfer_status">
                                     <form action="{{ route('panel.bid.update', ['id' => $bid->id]) }}" method="post" id="updateForm">
                                         @csrf
                                         @method('PUT')
@@ -128,17 +142,53 @@
                                             <i class="bx bx-transfer-alt me-1"></i> İhale Aktar
                                         </button>
                                     </form>
-                                    <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="dropdown-item" href="javascript:void(0);">
-                                            <i class="bx bx-trash me-1"></i> Sil
-                                        </button>
-                                    </form>
+                                    <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#bidDeleteModal{{ $bid->id }}">
+                                        <i class="bx bx-trash me-1"></i>Sil
+                                    </a>
                                 </div>
                             </div>
                         </td>
                     </tr>
+                    <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">
+                        @csrf
+                        @method('DELETE')
+                    <div class="modal fade" id="bidDeleteModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidDeleteModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h5 class="model-title">İhaleyi Sil</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="display: flex;justify-content: center;">
+                                    <div class="row">
+                                        <div class="col mb-3 text-center">
+                                            <p class="text-center" style="font-size: 16px">Silme işlemini onaylıyorsanız 'Evet' seçiniz.</p>
+                                            <div class="form-check" style="">
+                                                <label class="form-check-label" for="exampleRadios1" style="">
+                                                    Evet
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="deleteInput" style="margin-left: 40px !important" id="yesDeleteInput" value="yesDeleteInput" >
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label" for="exampleRadios2">
+
+                                                    Hayır
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="deleteInput" style="margin-left: 34px !important" id="noDeleteInput" value="noDeleteInput">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
+                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
                     <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
                         @csrf
                         @method('PUT')
