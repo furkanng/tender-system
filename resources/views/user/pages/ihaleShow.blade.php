@@ -147,6 +147,7 @@
                                     var now = new Date().getTime();
                                     var distance = countDownDate{{ $tender->id }} - now;
 
+                                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
                                     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                                     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                                     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -155,7 +156,9 @@
                                     if (minutes < 10) { minutes = '0' + minutes; }
                                     if (seconds < 10) { seconds = '0' + seconds; }
 
-                                    document.getElementById("gerisayim{{ $tender->id }}").innerHTML = '<i class="fa fa-clock"></i> ' + hours + ":" + minutes + ":" + seconds;
+                                    var countdownString = days + " gün " + hours + ":" + minutes + ":" + seconds;
+
+                                    document.getElementById("gerisayim{{ $tender->id }}").innerHTML = '<i class="fa fa-clock"></i> ' + countdownString;
 
                                     if (distance < 0) {
                                         clearInterval(x);
@@ -165,6 +168,7 @@
                                 }, 1000);
                             });
                         </script>
+
                         <div style="display: flex;justify-content: center">
                             <form action="{{route("user.bid.store",["tender_id" => $tender["id"]])}}" method="post">
                                 @csrf
@@ -215,12 +219,6 @@
                                         <strong>İhale Tipi:</strong> {{$tender["tender_doc"]}}
                                     </li>
                                     <li class="list-group-item">
-                                        <strong>İhale Firması:</strong> {{\App\Models\Company::find($tender->company_id)->name ?? "Bilinmiyor"}}
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Araç Hasar Tipi:</strong> {{$tender["damages"]}}
-                                    </li>
-                                    <li class="list-group-item">
                                         <strong>Servis Bilgisi:</strong> {{$tender["service_name"]}}
                                     </li>
                                     <li class="list-group-item">
@@ -237,6 +235,9 @@
                                     </li>
                                     <li class="list-group-item">
                                         <strong>İlçe:</strong> {{$tender["district"]}}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Araç Hasar Tipi:</strong> {{$tender["damages"]}}
                                     </li>
                                 </ul>
                             </div>

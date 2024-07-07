@@ -28,6 +28,7 @@
         display: flex;
         align-items: center;
         margin-bottom: 10px;
+        margin-left: 60px;
     }
     .form-check-input{
 
@@ -95,7 +96,13 @@
                         <td><input class="form-check-input bidCheckbox" type="checkbox" id="bidCheck" value="{{ $bid->id }}" name="bid_ids[]"></td>
                         <td class="tender-no">{{$bid->tender->tender_no}}</td>
                         <td>
-                            <a href="#">
+                            <a href="@if($bid->tender->company_id == 1)
+                                   {{\App\Service\Autogong\AutogongService::ALL_CARS_DETAIL_URL}}{{ $bid->tender->tender_no }}
+                                @elseif($bid->tender->company_id == 2)
+                                    {{\App\Service\Otopert\OtopertService::CARS_DETAILS}}{{ $bid->tender->tender_no }}
+                                @elseif($bid->tender->company_id == 3)
+                                    {{\App\Service\SovtajYeri\SovtajyeriService::URL}}{{ $bid->tender->tender_url }}
+                                @endif" target="_blank">
                                 <img style="max-width:80px"
                                      class="img-fluid img-responsive rounded product-image"
                                      src="{{json_decode($bid->tender["images"],true)[0]}}">
@@ -135,13 +142,7 @@
                                         <i class="bx bx-edit-alt me-1"></i>Düzenle
                                     </a>
                                     <input type="hidden" name="transfer_status">
-                                    <form action="{{ route('panel.bid.update', ['id' => $bid->id]) }}" method="post" id="updateForm">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="dropdown-item" id="transfer_status" name="transfer_status">
-                                            <i class="bx bx-transfer-alt me-1"></i> İhale Aktar
-                                        </button>
-                                    </form>
+
                                     <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#bidDeleteModal{{ $bid->id }}">
                                         <i class="bx bx-trash me-1"></i>Sil
                                     </a>
@@ -181,9 +182,9 @@
                                     </div>
 
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
-                                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    <button type="submit" class="btn btn-primary">Sil</button>
                                 </div>
                             </div>
                         </div>

@@ -104,6 +104,7 @@ class TenderDetailJob implements ShouldQueue
                             'status' => 1,
                             'closed_date' => Carbon::parse($details['closed_date'])->timestamp ?? null,
                             'created_at' => now(),
+                            'tender_url'=>$url
                         ]);
                     } else {
                         DB::table("tenders")->where("tender_no", $details['tender_no'])

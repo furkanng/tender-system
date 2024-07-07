@@ -95,7 +95,7 @@
                         @endphp
                         <tr>
                             <td>
-                                <img src="{{ $firstImage }}" alt="Tender" style="width: 150px; height: 100px;"/>
+                                <a href="{{ route('user.tender.show', ['id' => $item->id]) }}"><img src="{{ $firstImage }}" alt="Tender" style="width: 150px; height: 100px;"/></a>
                             </td>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->car_type }}</td>

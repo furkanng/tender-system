@@ -36,6 +36,7 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th>Resim</th>
                     <th>Araç</th>
                     <th>Firma</th>
                     <th>İhale Tipi</th>
@@ -47,6 +48,17 @@
                 <tbody class="table-border-bottom-0">
                 @foreach($tenders as $tender)
                     <tr>
+                        <td><a href="@if($tender->company_id == 1)
+                                   {{\App\Service\Autogong\AutogongService::ALL_CARS_DETAIL_URL}}{{ $tender->tender_no }}
+                                @elseif($tender->company_id == 2)
+                                    {{\App\Service\Otopert\OtopertService::CARS_DETAILS}}{{ $tender->tender_no }}
+                                @elseif($tender->company_id == 3)
+                                    {{\App\Service\SovtajYeri\SovtajyeriService::URL}}{{ $tender->tender_url }}
+                                @endif" target="_blank">
+                                <img style="max-width:80px;max-height: 100px"
+                                     class="img-fluid img-responsive rounded product-image"
+                                     src="{{json_decode($tender->images,true)[0]}}">
+                            </a></td>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> {{$tender->name}}</td>
                         <td>{{\App\Models\Company::find($tender->company_id)->name ?? "Bilinmiyor"}}</td>
                         <td><span class="badge bg-label-primary me-1">{{$tender->tender_type ?? "Bilinmiyor"}}</span>

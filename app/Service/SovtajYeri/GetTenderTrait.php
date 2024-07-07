@@ -43,6 +43,7 @@ trait GetTenderTrait
                 if ($linkNode->count() > 0) {
                     $link = $linkNode->attr('href');
 
+
                     if (preg_match('/javascript:window\.open\(\'([^\']+)\'/', $link, $matches)) {
                         return $matches[1] ?? null;
                     } else {
@@ -63,6 +64,7 @@ trait GetTenderTrait
     public function getTenderDetail($url)
     {
         try {
+
             return $this->client->request("GET", self::URL . $url, [
                 'timeout' => 20,
                 'cookies' => $this->jar,
