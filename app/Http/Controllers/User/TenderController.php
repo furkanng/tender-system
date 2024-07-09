@@ -16,23 +16,28 @@ class TenderController extends Controller
     {
         $filter = $request->input('filter');
         $now = Carbon::now()->timestamp;
-        $query = $filter
-            ? Tender::where('closed_date', '>', $now)
-                ->orWhere('tender_no', 'LIKE', '%' . $filter . '%')
-                ->orWhere('name', 'LIKE', '%' . $filter . '%')
-                ->orWhere('brand', 'LIKE', '%' . $filter . '%')
-                ->orWhere('model', 'LIKE', '%' . $filter . '%')
-                ->orWhere('year', 'LIKE', '%' . $filter . '%')
-                ->orWhere('plate', 'LIKE', '%' . $filter . '%')
-                ->orWhere('fuel_type', 'LIKE', '%' . $filter . '%')
-                ->orWhere('sase_no', 'LIKE', '%' . $filter . '%')
-                ->orWhere('servicePhone', 'LIKE', '%' . $filter . '%')
-                ->orWhere('city', 'LIKE', '%' . $filter . '%')
-                ->orWhere('district', 'LIKE', '%' . $filter . '%')
-                ->orderBy("created_at", "DESC")
-            : Tender::where('closed_date', '>=', $now)->orderBy("created_at", "DESC");
+
+        $query = Tender::query();
+
+        if ($filter) {
+            $query->where('closed_date', '>', $now)
+                ->where(function ($q) use ($filter) {
+                    $q->where('tender_no', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('name', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('brand', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('model', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('year', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('plate', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('city', 'LIKE', '%' . $filter . '%')
+                        ->orWhere('district', 'LIKE', '%' . $filter . '%');
+                })
+                ->orderBy("created_at", "DESC");
+        } else {
+            $query->where('closed_date', '>=', $now)->orderBy("created_at", "DESC");
+        }
 
         $tenders = $query->paginate(20);
+        $tenders->appends(['filter' => $filter]);
 
         return view('user.pages.ihale', compact('tenders'));
     }

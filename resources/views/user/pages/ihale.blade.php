@@ -25,11 +25,22 @@
             Teklif vermek istediğiniz ihalenin teklif süresi dolmuştur.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
     @endif
+
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-11">
+                <form action="{{ route('user.tender.index') }}" method="GET">
+                    <div class="input-group">
+                        <input type="search" placeholder="Marka, Model, İhale No Ara" aria-describedby="button-addon1"
+                               class="form-control border-0 bg-light" name="filter" value="{{ request('filter') }}">
+                        <div class="input-group-append">
+                            <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i
+                                    class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+
                 @foreach($tenders as $tender)
                     <div class="row p-2 bg-white border rounded mt-3">
                         @if($tender["company_id"] !== 99)
