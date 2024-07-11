@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Front\HomeController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,4 +35,8 @@ Route::get("sovtajyeri-getcars", function () {
 
 Route::get("sovtajyeri-getarchive", function () {
     (new \App\Service\SovtajYeri\SovtajyeriService())->AllArchivesGet();
+});
+
+Route::get("run-queue", function () {
+    Artisan::call('queue:work');
 });

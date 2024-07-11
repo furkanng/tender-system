@@ -57,7 +57,7 @@
                                 @endif" target="_blank">
                                 <img style="max-width:80px;max-height: 100px"
                                      class="img-fluid img-responsive rounded product-image"
-                                     src="{{json_decode($tender->images,true)[0]}}">
+                                     src="{{json_decode($tender->images,true)[0] ?? " "}}">
                             </a></td>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> {{$tender->name}}</td>
                         <td>{{\App\Models\Company::find($tender->company_id)->name ?? "Bilinmiyor"}}</td>

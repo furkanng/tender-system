@@ -17,10 +17,10 @@ class BidController extends Controller
     public function index()
     {
         $user = auth()->guard("user")->user();
-        $bids = Bid::where('user_id',$user->id)->get();
+        $bids = Bid::where('user_id', $user->id)->get();
 
 
-        return view('user.pages.myBids',compact('bids'));
+        return view('user.pages.myBids', compact('bids'));
 
     }
 
@@ -39,6 +39,10 @@ class BidController extends Controller
     {
         $user = auth()->guard("user")->user();
 
+        $request->validate([
+            "bid" => "required"
+        ]);
+
         $model = new Setting();
         $general = $model->get("general_settings");
         $tenderFactor = $general["site_tender_factor"];
@@ -49,21 +53,21 @@ class BidController extends Controller
         $tenderClosedDate = Carbon::createFromTimestamp($tender["closed_date"]);
         $now = Carbon::now();
         if ($bidPrice % $tenderFactor != 0) {
-            return redirect()->back()->with('tenderFactorError',$tenderFactor );
+            return redirect()->back()->with('tenderFactorError', $tenderFactor);
         }
 
-        if($tenderClosedDate->lessThan($now)){
+        if ($tenderClosedDate->lessThan($now)) {
             return redirect()->back()->with('tenderClosedTimeError', 'Teklif Error');
         }
 
         $bid = new Bid();
         $bid->fill(
             [
-                'user_id'=>$user->id,
-                'company_id'=>$tender->company_id,
-                'tender_id'=>$tender_id,
-                'bid_price'=>$bidPrice,
-                'tender_closed_date'=>$tender->closed_date
+                'user_id' => $user->id,
+                'company_id' => $tender->company_id,
+                'tender_id' => $tender_id,
+                'bid_price' => $bidPrice,
+                'tender_closed_date' => $tender->closed_date
 
             ]
         )->save();
@@ -101,7 +105,7 @@ class BidController extends Controller
 
         $bid = Bid::findOrFail($id);
 
-        if($bid->transfer_status == 1){
+        if ($bid->transfer_status == 1) {
             return redirect()->route('user.bid.index')->with('transferredError', 'Verdiğiniz teklif aktarıldığı için düzenleme yapılamaz!');
 
         }

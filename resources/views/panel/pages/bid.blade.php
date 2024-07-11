@@ -204,7 +204,7 @@
                                <div class="modal-body">
                                    <div class="row">
                                      <div class="col mb-3 text-center">
-                                        <img style="max-width:340px"
+                                        <img style="width:340px"
                                         class="img-fluid img-responsive rounded product-image"
                                         src="{{json_decode($bid->tender["images"],true)[0]}}">
                                      </div>
