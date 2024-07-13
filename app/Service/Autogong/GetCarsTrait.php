@@ -87,39 +87,28 @@ trait GetCarsTrait
         try {
             $crawler = new Crawler($html);
 
-            // Tek bir araç detayını almak için
-            $detailData = $crawler->filterXpath('//div[@class="xad-detail"]')->each(function ($node) {
-                // İlgili alanların değerlerini alıyoruz
-                $ihaleNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale NO"]]')->text();
-                $ihaleTipi = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="İhale Tipi"]]')->text();
-                $tsrsbBedeli = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="TSRSB Bedeli"]]')->text();
-                $bulunduguIl = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Bulunduğu İl"]]')->text();
-                $plaka = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Plaka"]]')->text();
-                $modelYili = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Model Yılı"]]')->text();
-                $aracKM = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç KM"]]')->text();
-                $yakit = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Yakıt"]]')->text();
-                $vites = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Vites"]]')->text();
-                $aracTuru = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Araç Türü"]]')->text();
-                $silindir = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Silindir"]]')->text();
-                $shaseNo = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Şase No"]]')->text();
-                $hasarNedeni = $node->filterXpath('.//div[@class="card-table-info"][preceding-sibling::div[text()="Hasar Nedeni"]]')->text();
-
-                return [
-                    "tender_no" => trim($ihaleNo),
-                    "tender_doc" => trim($ihaleTipi),
-                    "tsrsb" => trim($tsrsbBedeli),
-                    "city" => trim($bulunduguIl),
-                    "plate" => trim($plaka),
-                    "year" => trim($modelYili),
-                    "km" => trim($aracKM),
-                    "fuel_type" => trim($yakit),
-                    "gear" => trim($vites),
-                    "car_type" => trim($aracTuru),
-                    "roll" => trim($silindir),
-                    "sase_no" => trim($shaseNo),
-                    "damages" => trim($hasarNedeni),
-                ];
+            $detailData = [];
+            $crawler->filter('.xad-detail .card-table-content')->each(function ($node) use (&$detailData) {
+                $title = $node->filter('.card-table-title')->text();
+                $info = $node->filter('.card-table-info')->text();
+                $detailData[trim($title)] = trim($info);
             });
+
+            $detailData = [
+                "tender_no" => $detailData["İhale NO"] ?? null,
+                "tender_doc" => $detailData["Tescil Durumu"] ?? null,
+                "tsrsb" => $detailData["TSRSB Bedeli"] ?? null,
+                "city" => $detailData["Bulunduğu İl"] ?? null,
+                "plate" => $detailData["Plaka"] ?? null,
+                "year" => $detailData["Model Yılı"] ?? null,
+                "km" => $detailData["Araç KM"] ?? null,
+                "fuel_type" => $detailData["Yakıt"] ?? null,
+                "gear" => $detailData["Vites"] ?? null,
+                "car_type" => $detailData["Araç Türü"] ?? null,
+                "roll" => $detailData["Silindir"] ?? null,
+                "sase_no" => $detailData["Şase No"] ?? null,
+                "damages" => $detailData["Hasar Nedeni"] ?? null,
+            ];
 
             $serviceData = [
                 "service_name" => '',
@@ -148,8 +137,8 @@ trait GetCarsTrait
                     case 'Adres':
                         $serviceData['address'] = $info;
                         break;
-                    case 'Cep Tel':
-                        $serviceData['service_phone'] = $info;
+                    case 'Sabit Tel':
+                        $serviceData['service_phone'] = $node->filter('.card-table-info a')->text(); // Telefon numarası link içinde olduğu için bu şekilde alınmalı
                         break;
                     case 'İl':
                         $serviceData['city'] = $info;
@@ -160,17 +149,7 @@ trait GetCarsTrait
                 }
             });
 
-            $tenderData = array_merge($detailData[0], $serviceData);
-
-            $damageData = $crawler->filter('.xad-damage-records .card .card-body .card-table')->each(function ($node) {
-                $text = $node->text();
-                $text = str_replace("&nbsp;", " ", $text);
-                $text = trim($text);
-
-                return $text;
-            });
-
-            $tenderData["damages"] = $damageData[0];
+            $tenderData = array_merge($detailData, $serviceData);
 
             $liElements = $crawler->filter('#lightgallery li[data-src]'); // data-src özelliğine sahip li etiketlerini seç
 

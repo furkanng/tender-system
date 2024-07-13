@@ -18,7 +18,7 @@ class AutogongService
 
     const POST_TENDER = "https://www.autogong.com/ihale/teklif_kaydet";
     const TENDER_FIRST_PAGE = 1;
-    const TENDER_LAST_PAGE = 4;
+    const TENDER_LAST_PAGE = 20;
     const ARCHIVE_FIRST_PAGE = 1;
     const ARCHIVE_LAST_PAGE = 40;
 

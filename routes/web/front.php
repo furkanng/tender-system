@@ -14,7 +14,7 @@ Route::get('/iletisim', [HomeController::class, 'contact'])->name('front.contact
 Route::post('/kayit', [HomeController::class, 'storeContact'])->name('front.contact.store');
 
 Route::get("autogong-getcars", function () {
-    (new \App\Service\Autogong\AutogongService())->allCarsGet();
+   (new \App\Service\Autogong\AutogongService())->allCarsGet();
 });
 
 Route::get("autogong-getarchive", function () {
@@ -38,5 +38,5 @@ Route::get("sovtajyeri-getarchive", function () {
 });
 
 Route::get("run-queue", function () {
-    Artisan::call('queue:work');
+    Artisan::call('queue:work --max-time=3600');
 });
