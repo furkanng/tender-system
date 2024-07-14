@@ -149,14 +149,14 @@ class BidController extends Controller
                     $responseDecode = json_decode($response['response']);
 
                     if($responseDecode->HATA == 'true'){
-                        $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu!';
+                        $errorMessages[] = $bid->tender->tender_no.' numaralı teklif aktarılırken bir sorun oluştu! '.$responseDecode->ACIKLAMA;
                         continue;
 
                     }
                 }
 
                 $bid->fill(array_merge($request->all(),
-                    ["transfer_status" => $request->has("transferCheckBids") ? 1 : 0]))->save();
+                    ["transfer_status" =>  1 ]))->save();
 
                 Mail::to($user->email)->send(new TransferBidMail($user->name, $user->email,$bid->tender->name,$bid->tender->tender_no,json_decode($bid->tender->images,true)[0],$bid->bid_price));
 
@@ -260,23 +260,19 @@ class BidController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,string $id)
+    public function destroy(string $id)
     {
-        // Radiobutton seçimini al
-        $deleteOption = $request->input('deleteInput');
 
 
-        if ($deleteOption === 'yesDeleteInput') {
+
+
             $bid = Bid::findOrFail($id);
             if ($bid->delete()) {
                 return redirect()->route('panel.bid.index')->with('message', 'Teklif Başarıyla Silindi');
             } else {
                 return redirect()->route('panel.bid.index')->with('message', 'Silme İşlemi Başarısız');
             }
-        } else {
 
-            return redirect()->route('panel.bid.index')->with('error', 'Silme İşlemi İptal Edildi');
-        }
 
 
     }

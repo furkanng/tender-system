@@ -150,89 +150,81 @@
                             </div>
                         </td>
                     </tr>
-                    <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">
-                        @csrf
-                        @method('DELETE')
-                    <div class="modal fade" id="bidDeleteModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidDeleteModal"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header justify-content-center">
-                                    <h5 class="model-title">İhaleyi Sil</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" style="display: flex;justify-content: center;">
-                                    <div class="row">
-                                        <div class="col mb-3 text-center">
-                                            <p class="text-center" style="font-size: 16px">Silme işlemini onaylıyorsanız 'Evet' seçiniz.</p>
-                                            <div class="form-check" style="">
-                                                <label class="form-check-label" for="exampleRadios1" style="">
-                                                    Evet
-                                                </label>
-                                                <input class="form-check-input" type="radio" name="deleteInput" style="margin-left: 40px !important" id="yesDeleteInput" value="yesDeleteInput" >
-                                            </div>
-                                            <div class="form-check">
-                                                <label class="form-check-label" for="exampleRadios2">
 
-                                                    Hayır
-                                                </label>
-                                                <input class="form-check-input" type="radio" name="deleteInput" style="margin-left: 34px !important" id="noDeleteInput" value="noDeleteInput">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
-                                    <button type="submit" class="btn btn-primary">Sil</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </form>
-                    <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
-                        @csrf
-                        @method('PUT')
-                    <div class="modal fade" id="bidEditModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidEditModal"
-                        aria-hidden="true">
-                       <div class="modal-dialog modal-dialog-centered">
-                           <div class="modal-content">
-                               <div class="modal-header justify-content-center">
-                                <h5 class="model-title">İhale Düzenle</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                               </div>
-                               <div class="modal-body">
-                                   <div class="row">
-                                     <div class="col mb-3 text-center">
-                                        <img style="width:340px"
-                                        class="img-fluid img-responsive rounded product-image"
-                                        src="{{json_decode($bid->tender["images"],true)[0]}}">
-                                     </div>
-                                   </div>
-                                   <div class="row g-2">
-                                     <div class="col mb-0">
-                                       <label for="bid_price" class="form-label">Teklif Miktarı</label>
-                                       <input type="text" id="bid_price" name="bid_price" class="form-control" value="{{$bid->bid_price}}">
-                                     </div>
-
-                                   </div>
-                                 </div>
-                                 <div class="modal-footer">
-                                   <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
-                                   <button type="submit" class="btn btn-primary">Kaydet</button>
-                                 </div>
-                           </div>
-                       </div>
-                   </div>
-
-                </form>
                 @endforeach
 
                 </tbody>
             </table>
             </form>
         </div>
+        @foreach($bids as $bid)
 
+        <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">
+            @csrf
+            @method('DELETE')
+            <div class="modal fade" id="bidDeleteModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidDeleteModal"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-center">
+                            <h5 class="model-title">İhaleyi Sil</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="display: flex;justify-content: center;">
+                            <div class="row">
+                                <div class="col mb-3 text-center">
+                                    <p class="text-center" style="font-size: 16px">Silme işlemini onaylıyor musunuz ?</p>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
+                            <button type="submit" class="btn btn-primary">Sil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form action="{{ route("panel.bid.update", ['id' => $bid->id]) }}" method="post">
+            @csrf
+            @method('PUT')
+            <div class="modal fade" id="bidEditModal{{$bid->id}}" tabindex="-1" role="document" aria-labelledby="bidEditModal"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-center">
+                            <h5 class="model-title">İhale Düzenle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col mb-3 text-center">
+                                    <img style="width:340px"
+                                         class="img-fluid img-responsive rounded product-image"
+                                         src="{{json_decode($bid->tender["images"],true)[0]}}">
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col mb-0">
+                                    <label for="bid_price" class="form-label">Teklif Miktarı</label>
+                                    <input type="text" id="bid_price" name="bid_price" class="form-control" value="{{$bid->bid_price}}">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        @endforeach
     </div>
 
     {{-- {{ $tenders->links('pagination') }} --}}
