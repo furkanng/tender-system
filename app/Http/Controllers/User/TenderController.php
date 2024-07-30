@@ -15,6 +15,8 @@ class TenderController extends Controller
     public function index(Request $request)
     {
         $filter = $request->input('filter');
+        $brand = $request->input('brand');
+        $dateSort = $request->input('date_sort', 'desc'); // Default to 'desc' if not specified
         $now = Carbon::now()->timestamp;
 
         $query = Tender::query();
@@ -30,17 +32,37 @@ class TenderController extends Controller
                         ->orWhere('plate', 'LIKE', '%' . $filter . '%')
                         ->orWhere('city', 'LIKE', '%' . $filter . '%')
                         ->orWhere('district', 'LIKE', '%' . $filter . '%');
-                })
-                ->orderBy("created_at", "DESC");
+                });
         } else {
-            $query->where('closed_date', '>=', $now)->orderBy("created_at", "DESC");
+            $query->where('closed_date', '>=', $now);
+        }
+
+        if ($brand) {
+            $query->where('brand', $brand);
+        }
+
+        if ($dateSort) {
+            $query->orderBy('created_at', $dateSort);
+        } else {
+            $query->orderBy('created_at', 'desc');
         }
 
         $tenders = $query->paginate(20);
-        $tenders->appends(['filter' => $filter]);
+        $tenders->appends($request->all());
 
-        return view('user.pages.ihale', compact('tenders'));
+        // Available brands to filter
+        $brands = Tender::query()
+            ->select('brand')
+            ->whereNotNull('brand')
+            ->where('brand', '!=', '')
+            ->where('brand', '!=', '-')
+            ->distinct()
+            ->orderBy('brand')
+            ->pluck('brand');
+        return view('user.pages.ihale', compact('tenders', 'brands'));
     }
+
+
 
     /**
      * Display the specified resource.

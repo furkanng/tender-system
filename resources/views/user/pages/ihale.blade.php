@@ -30,16 +30,48 @@
     <div class="container mt-5 mb-5">
         <div class="d-flex justify-content-center row">
             <div class="col-md-11">
-                <form action="{{ route('user.tender.index') }}" method="GET">
-                    <div class="input-group">
-                        <input type="search" placeholder="Marka, Model, İhale No Ara" aria-describedby="button-addon1"
-                               class="form-control border-0 bg-light" name="filter" value="{{ request('filter') }}">
-                        <div class="input-group-append">
-                            <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i
-                                    class="fa fa-search"></i></button>
+
+                <div class="d-flex">
+                    <form action="{{ route('user.tender.index') }}" method="GET" id="filterForm" class="d-flex w-100">
+                        <div class="flex-grow-1 mr-2">
+                            <div class="input-group">
+                                <input type="search" placeholder="Marka, Model, İhale No Ara"
+                                       aria-describedby="button-addon1"
+                                       class="form-control border-0 bg-light" name="filter"
+                                       value="{{ request('filter') }}">
+                                <div class="input-group-append">
+                                    <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i
+                                            class="fa fa-search"></i></button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="mr-2">
+                            <select class="form-control" name="brand"
+                                    onchange="document.getElementById('filterForm').submit();">
+                                <option value="">Marka Seçin</option>
+                                @foreach($brands as $brand)
+                                    @if($brand != " " || $brand != "-")
+                                        <option
+                                            value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <select class="form-control" name="date_sort"
+                                    onchange="document.getElementById('filterForm').submit();">
+                                <option value="">Tarihe Göre Sırala</option>
+                                <option value="asc" {{ request('date_sort') == 'asc' ? 'selected' : '' }}>Eskiden
+                                    Yeniye
+                                </option>
+                                <option value="desc" {{ request('date_sort') == 'desc' ? 'selected' : '' }}>Yeniden
+                                    Eskiye
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
 
                 @foreach($tenders as $tender)
                     <div class="row p-2 bg-white border rounded mt-3">
@@ -185,3 +217,12 @@
     </style>
 
 @endsection
+
+<script>
+    document.querySelector('input[name="filter"]').addEventListener('input', function () {
+        clearTimeout(this.delay);
+        this.delay = setTimeout(function () {
+            document.getElementById('filterForm').submit();
+        }.bind(this), 500);
+    });
+</script>

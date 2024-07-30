@@ -19,9 +19,7 @@ class BidController extends Controller
         $user = auth()->guard("user")->user();
         $bids = Bid::where('user_id', $user->id)->get();
 
-
         return view('user.pages.myBids', compact('bids'));
-
     }
 
     /**

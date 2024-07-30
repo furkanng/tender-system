@@ -227,7 +227,7 @@
         @endforeach
     </div>
 
-    {{-- {{ $tenders->links('pagination') }} --}}
+     {{ $tenders->links('pagination') }}
     <script>
         $(document).ready(function() {
             // Tümünü seç checkbox'ına tıklanma olayını dinleyin
