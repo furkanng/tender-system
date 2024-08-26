@@ -99,7 +99,7 @@
                                    placeholder="Şifre Tekrar">
                             <label for="floatingPassword">Şifre Tekrar *</label>
                         </div>
-                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{ config('services.recaptcha.sitekey') }}"></div>
+                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{env("NOCAPTCHA_SITEKEY")}}"></div>
                         <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Kayıt Ol</button>
                     </form>
                 </div>

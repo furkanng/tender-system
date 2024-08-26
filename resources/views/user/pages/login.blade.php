@@ -44,7 +44,9 @@
 
     <!-- Sign In Start -->
     <div class="container-fluid">
-
+        @if ($errors->has('g-recaptcha-response'))
+            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+        @endif
         <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
             <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 @if(session('loginError'))
@@ -58,9 +60,6 @@
                         </a>
                         <h3>Giriş Yap</h3>
                     </div>
-                    @if ($errors->has('g-recaptcha-response'))
-                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                    @endif
                     <form method="POST" action="{{route("user.login")}}">
                         @csrf
 
@@ -74,7 +73,7 @@
                                    placeholder="şifreniz">
                             <label for="floatingPassword">Şifre</label>
                         </div>
-                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{ config('services.recaptcha.sitekey') }}"></div>
+                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{env("NOCAPTCHA_SITEKEY")}}"></div>
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">

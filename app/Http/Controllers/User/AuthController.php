@@ -8,6 +8,7 @@ use App\Mail\ResetMail;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,12 +18,19 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        $client = new Client;
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret'   => env("NOCAPTCHA_SECRET"),
+                'response' => $request->input('g-recaptcha-response'),
+            ],
+        ])->getBody()->getContents();
+
+        if (! json_decode($response, true)['success']) {
+            return redirect()->route('front.login')->with('loginError', 'recaptcha geçersiz');
+        }
         $login = $request->input('login');
         $password = $request->input('password');
-        $request->validate([
-
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
 
         // Email ile giriş yapma denemesi
         // E-posta veya telefon numarası olduğunu kontrol et
@@ -50,10 +58,18 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
-        $request->validate([
+        $client = new Client;
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret'   => env("NOCAPTCHA_SECRET"),
+                'response' => $request->input('g-recaptcha-response'),
+            ],
+        ])->getBody()->getContents();
 
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
+        if (! json_decode($response, true)['success']) {
+            return redirect()->route('front.login')->with('loginError', 'recaptcha geçersiz');
+        }
+
         $model = new User();
         $model->fill($request->all())->save();
 

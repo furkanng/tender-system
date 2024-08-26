@@ -113,7 +113,7 @@
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
-                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{ config('services.recaptcha.sitekey') }}"></div>
+                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{env("NOCAPTCHA_SITEKEY")}}"></div>
                         <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me"/>

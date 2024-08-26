@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,10 +11,18 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
+        $client = new Client;
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            'form_params' => [
+                'secret'   => env("NOCAPTCHA_SECRET"),
+                'response' => $request->input('g-recaptcha-response'),
+            ],
+        ])->getBody()->getContents();
 
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
+        if (! json_decode($response, true)['success']) {
+            return redirect()->route('front.login')->with('loginError', 'recaptcha geçersiz');
+        }
+        
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard("admin")->attempt($credentials)) {
