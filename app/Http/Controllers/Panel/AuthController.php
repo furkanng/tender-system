@@ -10,6 +10,10 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        $request->validate([
+
+            'g-recaptcha-response' => 'required|captcha',
+        ]);
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard("admin")->attempt($credentials)) {

@@ -35,6 +35,7 @@
 
 
     </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -111,6 +112,7 @@
 <script src="{{asset("user/lib/tempusdominus/js/moment-timezone.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js")}}"></script>
 <script src="{{asset("panel/assets/vendor/libs/jquery/jquery.js")}}"></script>
+
 
 <script>
 

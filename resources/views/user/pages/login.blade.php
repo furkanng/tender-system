@@ -58,8 +58,12 @@
                         </a>
                         <h3>Giriş Yap</h3>
                     </div>
+                    @if ($errors->has('g-recaptcha-response'))
+                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                    @endif
                     <form method="POST" action="{{route("user.login")}}">
                         @csrf
+
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="login" id="floatingInput"
                                    placeholder="Email/Telefon">
@@ -70,6 +74,7 @@
                                    placeholder="şifreniz">
                             <label for="floatingPassword">Şifre</label>
                         </div>
+                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{ config('services.recaptcha.sitekey') }}"></div>
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -113,7 +118,7 @@
 <script src="{{asset("user/lib/tempusdominus/js/moment.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/moment-timezone.min.js")}}"></script>
 <script src="{{asset("user/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js")}}"></script>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     setTimeout(function () {
         document.getElementById('response').style.display = 'none';

@@ -19,6 +19,10 @@ class AuthController extends Controller
     {
         $login = $request->input('login');
         $password = $request->input('password');
+        $request->validate([
+
+            'g-recaptcha-response' => 'required|captcha',
+        ]);
 
         // Email ile giriş yapma denemesi
         // E-posta veya telefon numarası olduğunu kontrol et
@@ -46,6 +50,10 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
+        $request->validate([
+
+            'g-recaptcha-response' => 'required|captcha',
+        ]);
         $model = new User();
         $model->fill($request->all())->save();
 

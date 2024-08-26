@@ -9,20 +9,8 @@
         <div class="alert alert-success" role="alert">{!! session('message') !!}</div>
     @endif
 <style>
-    .table-container {
-        display: flex;
-        justify-content: center;
-    }
 
-    .table {
-        width: 100%;
-        table-layout: fixed;
-    }
 
-    .table th, .table td {
-        word-wrap: break-word;
-        white-space: normal;
-    }
     .form-check{
         font-size: 18px;
         display: flex;
@@ -65,7 +53,7 @@
         </div>
 
 
-        <div class="table-responsive text-nowrap">
+
             <form action="{{ route('panel.transferCheckBids') }}" method="post">
                 @csrf
                 @method('PUT')
@@ -73,6 +61,7 @@
                     <i class="bx bx-transfer-alt me-1"></i>
                     Seçilen İhaleleri Aktar
                 </button>
+                <div class="table-responsive text-nowrap">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -155,8 +144,9 @@
 
                 </tbody>
             </table>
+                </div>
             </form>
-        </div>
+
         @foreach($bids as $bid)
 
         <form action="{{ route('panel.bid.destroy', ['id' => $bid->id]) }}" method="post" id="deleteForm">

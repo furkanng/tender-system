@@ -78,7 +78,9 @@
                     </div>
                     <!-- /Logo -->
 
-
+                    @if ($errors->has('g-recaptcha-response'))
+                        <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
+                    @endif
                     <form id="formAuthentication" class="mb-3" action="{{route("panel.login")}}" method="POST">
                         @csrf
                         <div class="mb-3">
@@ -111,6 +113,7 @@
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
+                        <div class="g-recaptcha" style="margin-top: 10px;margin-bottom: 10px" data-sitekey="{{ config('services.recaptcha.sitekey') }}"></div>
                         <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me"/>
@@ -137,7 +140,7 @@
 <script src="{{asset("panel/assets/vendor/libs/popper/popper.js")}}"></script>
 <script src="{{asset("panel/assets/vendor/js/bootstrap.js")}}"></script>
 <script src="{{asset("panel/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js")}}"></script>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="{{asset("panel/assets/vendor/js/menu.js")}}"></script>
 <!-- endbuild -->
 
